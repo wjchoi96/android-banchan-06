@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_round_white_radius_15"
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="장바구니 담기"
+        android:textColor="@color/grey_scale_black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="취소"
+        android:textColor="@color/grey_scale_black"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_menu_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="19dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:background="@color/primary_surface" />
+
+    <LinearLayout
+        android:id="@+id/layout_menu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@id/iv_menu_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_menu_image"
+        app:layout_constraintTop_toTopOf="@id/iv_menu_image">
+
+        <TextView
+            android:id="@+id/tv_menu_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:textColor="@color/grey_scale_black"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="오리주물럭" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+                android:id="@+id/tv_discount_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:textColor="@color/primary_main"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="10%" />
+
+            <TextView
+                android:id="@+id/tv_one_final_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:textColor="@color/grey_scale_black"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="12,950원" />
+
+            <TextView
+                android:id="@+id/tv_one_original_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/grey_scale_default"
+                android:textSize="14sp"
+                tools:text="17,000원" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btn_plus"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="2dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_menu">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            app:srcCompat="@drawable/ic_plus" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="44dp"
+        android:paddingHorizontal="3dp"
+        android:textColor="@color/grey_scale_black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/btn_plus"
+        app:layout_constraintEnd_toStartOf="@id/btn_plus"
+        app:layout_constraintTop_toTopOf="@id/btn_plus"
+        tools:text="1" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btn_minus"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        app:cardCornerRadius="22dp"
+        app:cardElevation="2dp"
+        app:layout_constraintEnd_toStartOf="@id/tv_quantity"
+        app:layout_constraintTop_toTopOf="@id/btn_plus">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="12dp"
+            app:srcCompat="@drawable/ic_minus" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_final_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:textColor="@color/grey_scale_black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/btn_plus"
+        app:layout_constraintEnd_toStartOf="@id/btn_minus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/btn_plus"
+        tools:text="12,950원" />
+
+    <Button
+        android:id="@+id/btn_add_to_cart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/selector_main_button"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_plus"
+        tools:text="n개 담기" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
