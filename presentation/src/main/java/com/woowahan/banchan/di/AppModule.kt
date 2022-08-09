@@ -8,6 +8,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * App
+ * Retrofit
+ * ApiService, Room
+ * DataSource
+ * Repository
+ * UseCase
+ *
+ * 순으로 종속성 주입
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
