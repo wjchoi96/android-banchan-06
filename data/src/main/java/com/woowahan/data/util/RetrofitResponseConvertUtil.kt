@@ -14,8 +14,8 @@ object RetrofitResponseConvertUtil {
 
     private fun <T>getDataOrError(response: Response<T>): Response<T> {
         val errorMessage: String? = when {
-            response.body() == null -> "api response body is null"
             !response.isSuccessful -> response.errorBody()?.string() ?: response.message()
+            response.body() == null -> "api response body is null"
             else -> null
         }
         return if(errorMessage == null){
@@ -27,9 +27,9 @@ object RetrofitResponseConvertUtil {
 
     private fun <T>getDataOrError(response: Response<T>, statusCode: Int?): Response<T> {
         val errorMessage: String? = when {
-            statusCode == null || statusCode != 200 -> "api response status code is not 200[$statusCode]"
-            response.body() == null -> "api response body is null"
             !response.isSuccessful -> response.errorBody()?.string() ?: response.message()
+            response.body() == null -> "api response body is null"
+            statusCode == null || statusCode != 200 -> "api response status code is not 200[$statusCode]"
             else -> null
         }
         return if(errorMessage == null){
