@@ -12,18 +12,20 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <ImageView
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             android:loadImageUseCoil="@{banchan.imageUrl}"
             android:id="@+id/iv_menu_image"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/yellow_fbf5e0" />
+            tools:background="@drawable/bg_image_placeholder" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_add_cart"
@@ -114,7 +116,7 @@
         </LinearLayout>
 
         <TextView
-            android:visibility="@{banchan.salePrice != null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{banchan.salePrice != null ? View.VISIBLE : View.INVISIBLE}"
             android:text="@{banchan.price}"
             android:id="@+id/tv_original_price"
             android:layout_width="0dp"
