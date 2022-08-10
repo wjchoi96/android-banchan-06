@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainDishBanchanViewModel @Inject constructor(
     private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _dataLoading: MutableLiveData<Boolean> = MutableLiveData()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -24,8 +24,10 @@ class MainDishBanchanViewModel @Inject constructor(
     private val _banchans: MutableLiveData<List<BanchanModel>> = MutableLiveData()
     val banchans: LiveData<List<BanchanModel>> = _banchans
 
-    fun fetchMainDishBanchans(){
-        if(_dataLoading.value == true)
+    var isGridView = true
+
+    fun fetchMainDishBanchans() {
+        if (_dataLoading.value == true)
             return
         viewModelScope.launch {
             _dataLoading.value = true

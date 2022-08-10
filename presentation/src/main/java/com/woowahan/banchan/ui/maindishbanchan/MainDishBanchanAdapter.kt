@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
+import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ItemBachanListBannerBinding
+import com.woowahan.banchan.databinding.ItemMenuHorizontalBinding
 import com.woowahan.banchan.databinding.ItemMenuVerticalBinding
 import com.woowahan.banchan.databinding.ItemViewModeToggleHeaderBinding
 import com.woowahan.domain.model.BanchanModel
@@ -16,12 +18,13 @@ import kotlinx.coroutines.withContext
 
 class MainDishBanchanAdapter(
     private val bannerTitle: String,
-    private val filterTypeList: List<String>
-): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+    private val filterTypeList: List<String>,
+    private val toggleListener: (Int) -> Unit,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var isGridView: Boolean = true
     private val banchanList = mutableListOf<BanchanModel>()
 
-    fun updateList(newList: List<BanchanModel>){
+    fun updateList(newList: List<BanchanModel>) {
         CoroutineScope(Dispatchers.Default).launch {
             val diffCallback = BanchanModelDiffUtilCallback(banchanList, newList)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
@@ -34,10 +37,22 @@ class MainDishBanchanAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
+        return when (viewType) {
             BanchanModel.ViewType.Banner.value -> BanchanListBannerViewHolder.from(parent)
-            BanchanModel.ViewType.Header.value -> ViewModelToggleHeaderViewHolder.from(parent)
-            else -> MainDishBanchanViewHolder.from(parent)
+            BanchanModel.ViewType.Header.value -> ViewModelToggleHeaderViewHolder.from(
+                parent,
+                isGridView
+            ) {
+                toggleListener(it)
+                isGridView = (it == R.id.rb_grid)
+            }
+            else -> {
+                if (isGridView) {
+                    MainDishBanchanVerticalViewHolder.from(parent)
+                } else {
+                    MainDishBanchanHorizontalViewHolder.from(parent)
+                }
+            }
         }
     }
 
@@ -46,10 +61,11 @@ class MainDishBanchanAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder){
+        when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
             is ViewModelToggleHeaderViewHolder -> holder.bind(filterTypeList)
-            is MainDishBanchanViewHolder -> holder.bind(banchanList[position])
+            is MainDishBanchanVerticalViewHolder -> holder.bind(banchanList[position])
+            is MainDishBanchanHorizontalViewHolder -> holder.bind(banchanList[position])
         }
     }
 
@@ -57,44 +73,93 @@ class MainDishBanchanAdapter(
 
     class BanchanListBannerViewHolder(
         private val binding: ItemBachanListBannerBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(parent: ViewGroup): BanchanListBannerViewHolder = BanchanListBannerViewHolder(
-                ItemBachanListBannerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemBachanListBannerBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
         }
-        fun bind(title: String){
+
+        fun bind(title: String) {
             binding.bannerTitle = title
             binding.showBestLabel = false
         }
     }
 
     class ViewModelToggleHeaderViewHolder(
-        private val binding: ItemViewModeToggleHeaderBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+        private val binding: ItemViewModeToggleHeaderBinding,
+        private val isGridView: Boolean,
+        private val toggleListener: (Int) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun from(parent: ViewGroup): ViewModelToggleHeaderViewHolder = ViewModelToggleHeaderViewHolder(
-                ItemViewModeToggleHeaderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
+            fun from(
+                parent: ViewGroup,
+                isGridView: Boolean,
+                toggleListener: (Int) -> Unit
+            ): ViewModelToggleHeaderViewHolder =
+                ViewModelToggleHeaderViewHolder(
+                    ItemViewModeToggleHeaderBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    ),
+                    isGridView,
+                    toggleListener
+                )
         }
 
-        fun bind(filterTypeList: List<String>){
-
+        fun bind(filterTypeList: List<String>) {
+            if (isGridView) {
+                binding.rbGrid.isChecked = true
+            } else {
+                binding.rbLinear.isChecked = true
+            }
+            binding.rgViewGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
+                toggleListener(checkedId)
+            }
         }
     }
 
-    class MainDishBanchanViewHolder(
+    class MainDishBanchanVerticalViewHolder(
         private val binding: ItemMenuVerticalBinding
-    ): RecyclerView.ViewHolder(binding.root){
+    ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun from(parent: ViewGroup): MainDishBanchanViewHolder = MainDishBanchanViewHolder(
-                ItemMenuVerticalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            )
+            fun from(parent: ViewGroup): MainDishBanchanVerticalViewHolder =
+                MainDishBanchanVerticalViewHolder(
+                    ItemMenuVerticalBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
         }
 
-        fun bind(item: BanchanModel){
+        fun bind(item: BanchanModel) {
             binding.banchan = item
         }
     }
 
+
+    class MainDishBanchanHorizontalViewHolder(
+        private val binding: ItemMenuHorizontalBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): MainDishBanchanHorizontalViewHolder =
+                MainDishBanchanHorizontalViewHolder(
+                    ItemMenuHorizontalBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+        }
+
+        fun bind(item: BanchanModel) {
+            binding.banchan = item
+        }
+    }
 }
