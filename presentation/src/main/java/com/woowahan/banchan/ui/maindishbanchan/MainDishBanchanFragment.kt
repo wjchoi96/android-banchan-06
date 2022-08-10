@@ -62,8 +62,8 @@ class MainDishBanchanFragment: BaseFragment<FragmentMainDishBanchanBinding>() {
                 val column = idx % spanCount
                 val margin = 16.dp(context)
                 val spacing = 8.dp(context)
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+                outRect.left = spacing - column * spacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
 
                 when(column){
                     0 -> {
