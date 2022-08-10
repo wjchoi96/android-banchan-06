@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="banner_title"
+            type="String" />
+        <variable
+            name="show_best_label"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/banchan_list_banner_height"
+        android:background="@color/yellow_fbf5e0"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        >
+
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_title"
+
+            android:visibility="@{show_best_label ? View.VISIBLE : View.GONE}"
+            android:id="@+id/tv_best_label"
+            tools:text="기획전"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/tv_best_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:text="@{banner_title}"
+            android:id="@+id/tv_title"
+            tools:text="모두가 좋아하는\n든든한 메인 요리"
+            android:textColor="@color/black_000000"
+            android:textSize="32sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
