@@ -40,6 +40,6 @@ data class BanchanModel(
 
     private fun priceStrToLong(priceStr: String): Long {
         val temp = priceStr.filter{ it.isDigit() }
-        return temp.toLong()
+        return if(temp.isBlank()) 0L else temp.toLong()
     }
 }
