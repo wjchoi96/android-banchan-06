@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Banchan</string>
+    <string name="cart_add_title">장바구니 담기</string>
+    <string name="cart_add_cancel">취소</string>
 </resources>
