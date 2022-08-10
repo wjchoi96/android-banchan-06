@@ -15,7 +15,7 @@
         tools:background="@color/yellow_fbf5e0" />
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_select_item"
+        android:id="@+id/cv_add_cart"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginEnd="8dp"
@@ -26,6 +26,7 @@
         app:layout_constraintEnd_toEndOf="@id/iv_menu_image">
 
         <ImageView
+            android:id="@+id/iv_add_cart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="5dp"
