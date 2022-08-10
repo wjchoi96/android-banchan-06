@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.woowahan.banchan">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".application.BanchanOrderApplication"
         android:allowBackup="true"
