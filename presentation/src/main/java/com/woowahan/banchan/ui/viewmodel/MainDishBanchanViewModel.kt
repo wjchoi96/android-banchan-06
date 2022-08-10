@@ -18,6 +18,9 @@ class MainDishBanchanViewModel @Inject constructor(
     private val _dataLoading: MutableLiveData<Boolean> = MutableLiveData()
     val dataLoading: LiveData<Boolean> = _dataLoading
 
+    private val _refreshDataLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val refreshDataLoading: LiveData<Boolean> = _refreshDataLoading
+
     private val _errorMessage: MutableLiveData<String> = MutableLiveData()
     val errorMessage: LiveData<String> = _errorMessage
 
@@ -25,8 +28,10 @@ class MainDishBanchanViewModel @Inject constructor(
     val banchans: LiveData<List<BanchanModel>> = _banchans
 
     fun fetchMainDishBanchans(){
-        if(_dataLoading.value == true)
+        if(_dataLoading.value == true) {
+            _refreshDataLoading.value = false
             return
+        }
         viewModelScope.launch {
             _dataLoading.value = true
             fetchMainDishBanchanUseCase.invoke()
@@ -37,8 +42,15 @@ class MainDishBanchanViewModel @Inject constructor(
                     _errorMessage.value = it.message
                 }.also {
                     _dataLoading.value = false
+                    if(_refreshDataLoading.value == true)
+                        _refreshDataLoading.value = false
                 }
         }
+    }
+
+    fun onRefresh(){
+        _refreshDataLoading.value = true
+        fetchMainDishBanchans()
     }
 
 }
