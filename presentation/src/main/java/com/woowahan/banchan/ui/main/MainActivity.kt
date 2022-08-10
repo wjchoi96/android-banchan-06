@@ -10,7 +10,9 @@ import com.woowahan.banchan.ui.bestbanchan.BestBanchanFragment
 import com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanFragment
 import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity: BaseActivity<ActivityMainBinding>() {
 
     private val fragmentList: List<Pair<String, Fragment>> by lazy {
