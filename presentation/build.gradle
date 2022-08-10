@@ -70,4 +70,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.40"
     kapt "com.google.dagger:hilt-android-compiler:2.40"
 
+    //coil
+    implementation "io.coil-kt:coil:2.1.0"
+
 }
