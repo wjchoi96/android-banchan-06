@@ -1,6 +1,7 @@
 package com.woowahan.data.entity
 
 import com.google.gson.annotations.SerializedName
+import com.woowahan.domain.model.BanchanModel
 
 data class BanchanEntity(
     @SerializedName("alt")
@@ -16,15 +17,18 @@ data class BanchanEntity(
     @SerializedName("image")
     val image: String,
     @SerializedName("n_price")
-    val nPrice: String,
+    val nPrice: String?,
     @SerializedName("s_price")
     val sPrice: String,
     @SerializedName("title")
     val title: String
 ){
-    companion object {
-        fun toDomain(){
-
-        }
-    }
+    fun toDomain(): BanchanModel = BanchanModel(
+        hash = this.detailHash,
+        title = this.title,
+        description = this.description,
+        imageUrl = this.image,
+        price = if(!nPrice.isNullOrBlank()) nPrice else sPrice,
+        salePrice = if(!nPrice.isNullOrBlank()) sPrice else null,
+    )
 }
