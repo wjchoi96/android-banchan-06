@@ -11,7 +11,7 @@
         android:layout_height="130dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:background="@color/primary_surface" />
+        tools:background="@color/yellow_fbf5e0" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_select_item"
@@ -51,7 +51,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="4dp"
-            android:textColor="@color/black"
+            android:textColor="@color/black_000000"
             android:textSize="14sp"
             android:textStyle="bold"
             tools:text="제품명" />
@@ -63,7 +63,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="5dp"
-            android:textColor="@color/grey_scale_default"
+            android:textColor="@color/grey_828282"
             android:textSize="12sp"
             android:textStyle="bold"
             tools:text="제품설명" />
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:textColor="@color/primary_accent"
+                android:textColor="@color/orange_f46700"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="할인율" />
@@ -92,7 +92,7 @@
                 android:layout_marginEnd="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/black"
+                android:textColor="@color/black_000000"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="최종가격" />
@@ -105,7 +105,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="5dp"
-            android:textColor="@color/grey_scale_default"
+            android:textColor="@color/grey_828282"
             android:textSize="12sp"
             tools:text="정가" />
     </LinearLayout>

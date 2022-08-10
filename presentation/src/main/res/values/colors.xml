@@ -8,15 +8,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="grey_scale_black">#FF000000</color>
-    <color name="grey_scale_default">#FF828282</color>
-    <color name="grey_scale_line">#FFDDDDDD</color>
-    <color name="grey_scale_surface">#FFF8F7F7</color>
-    <color name="grey_scale_white">#FFFFFFFF</color>
-    <color name="grey_scale_black30">#4D000000</color>
+    <color name="black_000000">#FF000000</color>
+    <color name="grey_828282">#FF828282</color>
+    <color name="white_dddddd">#FFDDDDDD</color>
+    <color name="white_f8f7f7">#FFF8F7F7</color>
+    <color name="white_ffffff">#FFFFFFFF</color>
+    <color name="black_4d000000">#4D000000</color>
 
-    <color name="primary_accent">#FFF46700</color>
-    <color name="primary_main">#FFF9BA70</color>
-    <color name="primary_disabled">#FFFCDCB7</color>
-    <color name="primary_surface">#FFFBF5E0</color>
+    <color name="orange_f46700">#FFF46700</color>
+    <color name="yellow_f9ba70">#FFF9BA70</color>
+    <color name="yellow_fcdcb7">#FFFCDCB7</color>
+    <color name="yellow_fbf5e0">#FFFBF5E0</color>
 </resources>

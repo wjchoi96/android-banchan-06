@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="장바구니 담기"
-        android:textColor="@color/grey_scale_black"
+        android:textColor="@color/black_000000"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="취소"
-        android:textColor="@color/grey_scale_black"
+        android:textColor="@color/black_000000"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +38,7 @@
         android:layout_marginTop="19dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
-        tools:background="@color/primary_surface" />
+        tools:background="@color/yellow_fbf5e0" />
 
     <LinearLayout
         android:id="@+id/layout_menu"
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="2dp"
-            android:textColor="@color/grey_scale_black"
+            android:textColor="@color/black_000000"
             android:textSize="14sp"
             android:textStyle="bold"
             tools:text="오리주물럭" />
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:textColor="@color/primary_main"
+                android:textColor="@color/yellow_f9ba70"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="10%" />
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
-                android:textColor="@color/grey_scale_black"
+                android:textColor="@color/black_000000"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="12,950원" />
@@ -92,7 +92,7 @@
                 android:id="@+id/tv_one_original_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/grey_scale_default"
+                android:textColor="@color/grey_828282"
                 android:textSize="14sp"
                 tools:text="17,000원" />
         </LinearLayout>
@@ -123,7 +123,7 @@
         android:gravity="center"
         android:minWidth="44dp"
         android:paddingHorizontal="3dp"
-        android:textColor="@color/grey_scale_black"
+        android:textColor="@color/black_000000"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/btn_plus"
         app:layout_constraintEnd_toStartOf="@id/btn_plus"
@@ -152,7 +152,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:textColor="@color/grey_scale_black"
+        android:textColor="@color/black_000000"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/btn_plus"
