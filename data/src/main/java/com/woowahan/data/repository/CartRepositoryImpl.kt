@@ -50,4 +50,12 @@ class CartRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun fetchCartItems(): Result<List<Pair<BanchanModel, Int>>> {
+        return withContext(coroutineDispatcher){
+            kotlin.runCatching {
+                cartDataSource.fetchCartItems()
+            }
+        }
+    }
 }

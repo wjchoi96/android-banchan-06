@@ -10,4 +10,6 @@ interface CartDataSource {
     suspend fun removeCartItems(hashes: List<String>): List<BanchanModel?>
 
     suspend fun updateCartItem(hash: String, count: Int): Pair<BanchanModel, Int>?
+
+    suspend fun fetchCartItems(): List<Pair<BanchanModel, Int>>
 }

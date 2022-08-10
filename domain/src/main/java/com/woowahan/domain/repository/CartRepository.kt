@@ -10,4 +10,6 @@ interface CartRepository {
     suspend fun removeCartItems(hashes: List<String>): Result<Boolean>
 
     suspend fun updateCartItem(hash: String, count: Int): Result<Boolean>
+
+    suspend fun fetchCartItems(): Result<List<Pair<BanchanModel, Int>>>
 }
