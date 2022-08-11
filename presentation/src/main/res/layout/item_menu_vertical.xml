@@ -6,6 +6,10 @@
         <variable
             name="banchan"
             type="com.woowahan.domain.model.BanchanModel" />
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanAdapter.MainDishBanchanVerticalViewHolder" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +17,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <ImageView
             android:adjustViewBounds="true"
@@ -39,6 +44,7 @@
             app:layout_constraintEnd_toEndOf="@id/iv_menu_image">
 
             <ImageView
+                android:onClickListener="@{()-> holder.banchanInsertCartListener.invoke(banchan)}"
                 android:id="@+id/iv_add_cart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

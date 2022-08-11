@@ -24,6 +24,7 @@ class MainDishBanchanAdapter(
     private val filterTypeList: List<String>,
     private val onItemSelectedListener: AdapterView.OnItemSelectedListener,
     private val toggleListener: (Int) -> Unit,
+    private val banchanInsertCartListener: (BanchanModel) -> (Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
     private val banchanList = mutableListOf<BanchanModel>()
@@ -52,7 +53,7 @@ class MainDishBanchanAdapter(
             }
             else -> {
                 if (isGridView) {
-                    MainDishBanchanVerticalViewHolder.from(parent)
+                    MainDishBanchanVerticalViewHolder.from(parent, banchanInsertCartListener)
                 } else {
                     MainDishBanchanHorizontalViewHolder.from(parent)
                 }
@@ -146,21 +147,27 @@ class MainDishBanchanAdapter(
     }
 
     class MainDishBanchanVerticalViewHolder(
-        private val binding: ItemMenuVerticalBinding
+        private val binding: ItemMenuVerticalBinding,
+        val banchanInsertCartListener: (BanchanModel) -> (Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun from(parent: ViewGroup): MainDishBanchanVerticalViewHolder =
+            fun from(
+                parent: ViewGroup,
+                banchanInsertCartListener: (BanchanModel) -> (Unit)
+            ): MainDishBanchanVerticalViewHolder =
                 MainDishBanchanVerticalViewHolder(
                     ItemMenuVerticalBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
-                    )
+                    ),
+                    banchanInsertCartListener
                 )
         }
 
         fun bind(item: BanchanModel) {
             binding.banchan = item
+            binding.holder = this
         }
     }
 
