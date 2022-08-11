@@ -26,16 +26,16 @@ class MainDishBanchanViewModel @Inject constructor(
     private val _errorMessage: MutableLiveData<String> = MutableLiveData()
     val errorMessage: LiveData<String> = _errorMessage
 
-    private lateinit var defaultBanchans: List<BanchanModel>
-    private val _banchans: MutableLiveData<List<BanchanModel>> = MutableLiveData()
-
     private val _gridViewMode: MutableLiveData<Boolean> = MutableLiveData()
     val gridViewMode: LiveData<Boolean> = _gridViewMode
 
     private val _showCartBottomSheet: MutableLiveData<CartItemInsertBottomSheet> = MutableLiveData()
     val showCartBottomSheet: LiveData<CartItemInsertBottomSheet> = _showCartBottomSheet
 
+    private val _banchans: MutableLiveData<List<BanchanModel>> = MutableLiveData()
     val banchans: LiveData<List<BanchanModel>> = _banchans
+
+    private lateinit var defaultBanchans: List<BanchanModel>
 
     fun fetchMainDishBanchans() {
         if (_dataLoading.value == true) {
