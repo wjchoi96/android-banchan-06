@@ -28,8 +28,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     private val adapter: MainDishBanchanAdapter by lazy {
         MainDishBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
-            resources.getStringArray(R.array.banchan_filter).toList(),
-            filterSelectedListener
+            BanchanModel.getFilterList(),
+            filterSelectedListener,
         ) { isGridView ->
             if (isGridView) {
                 setUpGridRecyclerView()
