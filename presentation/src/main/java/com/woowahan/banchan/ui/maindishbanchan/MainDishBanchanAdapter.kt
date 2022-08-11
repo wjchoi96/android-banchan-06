@@ -160,6 +160,8 @@ class MainDishBanchanAdapter(
                 }
             }
 
+            binding.spinnerFilterType.onItemSelectedListener = filterSelectedListener
+            
             binding.spinnerFilterType.adapter = adapter
 
             binding.rgViewGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
