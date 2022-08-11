@@ -55,7 +55,7 @@ class MainDishBanchanViewModel @Inject constructor(
         }
     }
 
-    fun filterBanchan(filterType: BanchanModel.FilterType) {
+    private fun filterBanchan(filterType: BanchanModel.FilterType) {
         if (filterType ==
             BanchanModel.FilterType.Default
         ) {
@@ -74,6 +74,23 @@ class MainDishBanchanViewModel @Inject constructor(
 
     val viewModeToggleEvent: (Boolean)->(Unit) = {
         _gridViewMode.value = it
+    }
+
+    fun filterItemSelect(position: Int){
+        when (position) {
+            BanchanModel.FilterType.Default.value -> {
+                filterBanchan(BanchanModel.FilterType.Default)
+            }
+            BanchanModel.FilterType.PriceHigher.value -> {
+                filterBanchan(BanchanModel.FilterType.PriceHigher)
+            }
+            BanchanModel.FilterType.PriceLower.value -> {
+                filterBanchan(BanchanModel.FilterType.PriceLower)
+            }
+            else -> {
+                filterBanchan(BanchanModel.FilterType.SalePercentHigher)
+            }
+        }
     }
 
     fun onRefresh() {

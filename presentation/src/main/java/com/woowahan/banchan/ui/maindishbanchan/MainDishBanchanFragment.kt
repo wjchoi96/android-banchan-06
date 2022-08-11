@@ -131,20 +131,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
 
     private val filterSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            when (position) {
-                BanchanModel.FilterType.Default.value -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.Default)
-                }
-                BanchanModel.FilterType.PriceHigher.value -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.PriceHigher)
-                }
-                BanchanModel.FilterType.PriceLower.value -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.PriceLower)
-                }
-                else -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.SalePercentHigher)
-                }
-            }
+            viewModel.filterItemSelect(position)
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) {
