@@ -77,9 +77,9 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         repeatOnStarted {
             viewModel.eventFlow.collect {
                 when(it){
-                    is MainDishBanchanViewModel.UIEvent.ShowToast -> showToast(context, it.message)
-                    is MainDishBanchanViewModel.UIEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
-                    is MainDishBanchanViewModel.UIEvent.ShowCartBottomSheet -> {
+                    is MainDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+                    is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                    is MainDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
                         it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
                     }
                 }

@@ -35,7 +35,7 @@ class MainDishBanchanViewModel @Inject constructor(
     private val _banchans: MutableStateFlow<List<BanchanModel>> = MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
-    private val _eventFlow: MutableSharedFlow<UIEvent> = MutableSharedFlow()
+    private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private lateinit var defaultBanchans: List<BanchanModel>
@@ -54,7 +54,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
-                        _eventFlow.emit(UIEvent.ShowToast(message))
+                        _eventFlow.emit(UiEvent.ShowToast(message))
                     }
                 }.also {
                     _dataLoading.value = false
@@ -76,7 +76,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
-                        _eventFlow.emit(UIEvent.ShowToast(message))
+                        _eventFlow.emit(UiEvent.ShowToast(message))
                     }
                 }
             }
@@ -95,7 +95,7 @@ class MainDishBanchanViewModel @Inject constructor(
                     val dialog = CartItemInsertBottomSheet(banchan){ item, count ->
                         insertItemsToCart(item, count)
                     }
-                    _eventFlow.emit(UIEvent.ShowCartBottomSheet(dialog))
+                    _eventFlow.emit(UiEvent.ShowCartBottomSheet(dialog))
                 }
             }
         }
@@ -111,7 +111,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
-                        _eventFlow.emit(UIEvent.ShowToast(message))
+                        _eventFlow.emit(UiEvent.ShowToast(message))
                     }
                 }.also {
                     _dataLoading.emit(false)
@@ -129,7 +129,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
-                        _eventFlow.emit(UIEvent.ShowSnackBar(message))
+                        _eventFlow.emit(UiEvent.ShowSnackBar(message))
                     }
                 }.also {
                     _dataLoading.emit(false)
@@ -160,9 +160,9 @@ class MainDishBanchanViewModel @Inject constructor(
         fetchMainDishBanchans()
     }
 
-    sealed class UIEvent {
-        data class ShowToast(val message: String) : UIEvent()
-        data class ShowSnackBar(val message: String) : UIEvent()
-        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UIEvent()
+    sealed class UiEvent {
+        data class ShowToast(val message: String) : UiEvent()
+        data class ShowSnackBar(val message: String) : UiEvent()
+        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
     }
 }
