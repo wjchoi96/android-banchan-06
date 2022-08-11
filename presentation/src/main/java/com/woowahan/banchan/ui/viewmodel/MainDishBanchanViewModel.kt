@@ -76,8 +76,8 @@ class MainDishBanchanViewModel @Inject constructor(
         _gridViewMode.value = it
     }
 
-    fun filterItemSelect(position: Int){
-        when (position) {
+    val filterItemSelect: (Int)->Unit = {
+        when (it) {
             BanchanModel.FilterType.Default.value -> {
                 filterBanchan(BanchanModel.FilterType.Default)
             }

@@ -32,7 +32,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         MainDishBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
-            filterSelectedListener,
+            viewModel.filterItemSelect,
             viewModel.viewModeToggleEvent
         )
     }
@@ -132,14 +132,4 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         this.adapter = adapterRef
     }
 
-    private val filterSelectedListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            viewModel.filterItemSelect(position)
-        }
-
-        override fun onNothingSelected(p0: AdapterView<*>?) {
-            TODO("Not yet implemented")
-        }
-
-    }
 }
