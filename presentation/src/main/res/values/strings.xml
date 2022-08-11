@@ -11,11 +11,4 @@
 
     <!-- use at main dish -->
     <string name="main_dish_banchan_banner_title">모두가 좋아하는\n든든한 메인 요리</string>
-
-    <string-array name="banchan_filter">
-        <item>기본 정렬순</item>
-        <item>금액 높은순</item>
-        <item>금액 낮은순</item>
-        <item>할인율순</item>
-    </string-array>
 </resources>
