@@ -96,7 +96,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
-                    android:text="@{banchan.salePrice + `%`}"
+                    android:text="@{banchan.salePercent + `%`}"
                     android:textColor="@color/orange_f46700"
                     android:textSize="14sp"
                     android:textStyle="bold"

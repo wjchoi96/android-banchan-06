@@ -91,7 +91,7 @@
 
             <TextView
                 android:visibility="@{banchan.salePrice != null ? View.VISIBLE : View.GONE}"
-                android:text="@{banchan.salePrice + `%`}"
+                android:text="@{banchan.salePercent + `%`}"
                 android:id="@+id/tv_discount_rate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
