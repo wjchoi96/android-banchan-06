@@ -28,6 +28,9 @@ class MainDishBanchanViewModel @Inject constructor(
     private lateinit var defaultBanchans: List<BanchanModel>
     private val _banchans: MutableLiveData<List<BanchanModel>> = MutableLiveData()
 
+    private val _gridViewMode: MutableLiveData<Boolean> = MutableLiveData()
+    val gridViewMode: LiveData<Boolean> = _gridViewMode
+
     val banchans: LiveData<List<BanchanModel>> = _banchans
 
     fun fetchMainDishBanchans() {
@@ -67,6 +70,10 @@ class MainDishBanchanViewModel @Inject constructor(
                     _errorMessage.value = it.message
                 }
         }
+    }
+
+    val viewModeToggleEvent: (Boolean)->(Unit) = {
+        _gridViewMode.value = it
     }
 
     fun onRefresh() {

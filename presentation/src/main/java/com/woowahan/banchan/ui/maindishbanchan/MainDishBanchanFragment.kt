@@ -30,14 +30,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             getString(R.string.main_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
             filterSelectedListener,
-        ) { isGridView ->
-            if (isGridView) {
-                setUpGridRecyclerView()
-            } else {
-                setUpLinearRecyclerView()
-            }
-            binding.rvMainDish.refresh()
-        }
+            viewModel.viewModeToggleEvent
+        )
     }
 
     private val spanCount = 2
@@ -84,6 +78,15 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
 
         viewModel.banchans.observe(viewLifecycleOwner) {
             adapter.updateList(it)
+        }
+
+        viewModel.gridViewMode.observe(viewLifecycleOwner){
+            if (it) {
+                setUpGridRecyclerView()
+            } else {
+                setUpLinearRecyclerView()
+            }
+            binding.rvMainDish.refresh()
         }
     }
 
