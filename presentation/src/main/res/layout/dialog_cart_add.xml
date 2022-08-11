@@ -189,7 +189,7 @@
             tools:text="12,950원" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:onClickListener="@{()->dialog.insertListener.invoke(banchan)}"
+            android:onClickListener="@{()->dialog.insertButtonClick.invoke(banchan, dialog.itemCount)}"
             android:text="@{Integer.toString(dialog.itemCount) + `개 담기`}"
             android:id="@+id/btn_add_to_cart"
             android:layout_width="0dp"

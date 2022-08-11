@@ -14,7 +14,7 @@ import timber.log.Timber
 
 class CartItemInsertBottomSheet constructor(
     private val banchan: BanchanModel,
-    val insertListener: (BanchanModel) -> (Unit)
+    private val insertListener: (BanchanModel, Int) -> (Unit)
 ): BottomSheetDialogFragment() {
     private var _binding: DialogCartAddBinding? = null
     private val binding get() = _binding ?: error("Binding not Initialized")
@@ -37,6 +37,11 @@ class CartItemInsertBottomSheet constructor(
             setCartCost(it-1)
         }
     }
+    val insertButtonClick: (BanchanModel, Int) -> (Unit) = { banchan, count ->
+        insertListener(banchan, count)
+        this.dismiss()
+    }
+
     private fun setCartCost(count: Int){
         _cartCost.value = when(banchan.salePriceRaw){
             0L -> (banchan.priceRaw * count).toCashString() + "원"
