@@ -63,7 +63,7 @@ class MainDishBanchanAdapter(
             else -> {
                 when(isGridView){
                     true -> MainDishBanchanVerticalViewHolder.from(parent, banchanInsertCartListener)
-                    false -> MainDishBanchanHorizontalViewHolder.from(parent)
+                    false -> MainDishBanchanHorizontalViewHolder.from(parent, banchanInsertCartListener)
                 }
             }
         }
@@ -201,21 +201,27 @@ class MainDishBanchanAdapter(
 
 
     class MainDishBanchanHorizontalViewHolder(
-        private val binding: ItemMenuHorizontalBinding
+        private val binding: ItemMenuHorizontalBinding,
+        val banchanInsertCartListener: (BanchanModel) -> (Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun from(parent: ViewGroup): MainDishBanchanHorizontalViewHolder =
+            fun from(
+                parent: ViewGroup,
+                banchanInsertCartListener: (BanchanModel) -> (Unit)
+            ): MainDishBanchanHorizontalViewHolder =
                 MainDishBanchanHorizontalViewHolder(
                     ItemMenuHorizontalBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
-                    )
+                    ),
+                    banchanInsertCartListener
                 )
         }
 
         fun bind(item: BanchanModel) {
             binding.banchan = item
+            binding.holder = this
         }
     }
 }
