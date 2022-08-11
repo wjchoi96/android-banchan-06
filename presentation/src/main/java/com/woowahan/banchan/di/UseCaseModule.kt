@@ -1,5 +1,6 @@
 package com.woowahan.banchan.di
 
+import com.woowahan.data.repository.CartRepositoryImpl
 import com.woowahan.domain.repository.BanchanRepository
 import com.woowahan.domain.usecase.*
 import dagger.Module
@@ -26,5 +27,21 @@ object UseCaseModule {
     @Provides
     fun provideFetchSideDishBanchanUseCase(impl: BanchanRepository) =
         FetchSideDishBanchanUseCase(impl)
+
+    @Provides
+    fun provideFetchCartItemsUseCase(impl: CartRepositoryImpl) =
+        FetchCartItemsUseCase(impl)
+
+    @Provides
+    fun provideRemoveCartItemUseCase(impl: CartRepositoryImpl) =
+        RemoveCartItemUseCase(impl)
+
+    @Provides
+    fun provideRemoveCartItemsUseCase(impl: CartRepositoryImpl) =
+        RemoveCartItemsUseCase(impl)
+
+    @Provides
+    fun provideUpdateCartItemUseCase(impl: CartRepositoryImpl) =
+        UpdateCartItemUseCase(impl)
 
 }
