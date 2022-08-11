@@ -3,7 +3,7 @@ package com.woowahan.banchan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
-import com.woowahan.banchan.util.FilterBanchanListUtil
+import com.woowahan.banchan.util.filterType
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchMainDishBanchanUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,7 +67,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 _banchans.value = defaultBanchans
             } else {
                 kotlin.runCatching {
-                    _banchans.value = FilterBanchanListUtil.filter(defaultBanchans, filterType)
+                    _banchans.value = _banchans.value.filterType(filterType)
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
