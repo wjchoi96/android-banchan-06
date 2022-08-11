@@ -6,7 +6,7 @@ import com.woowahan.domain.repository.CartRepository
 class FetchCartItemsUseCase(
     private val cartRepository: CartRepository
 ) {
-    suspend operator fun invoke(): Result<List<Pair<BanchanModel, Int>>>{
+    suspend operator fun invoke(): Result<Map<String, Pair<BanchanModel, Int>>>{
         return kotlin.runCatching {
             cartRepository.fetchCartItems().getOrThrow()
         }

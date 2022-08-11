@@ -42,7 +42,8 @@ class CartDataSourceImpl @Inject constructor(): CartDataSource {
         return cart[hash]
     }
 
-    override suspend fun fetchCartItems(): List<Pair<BanchanModel, Int>> {
-        return cart.values.toList()
+    override suspend fun fetchCartItems(): Map<String, Pair<BanchanModel, Int>> {
+        return cart
     }
+
 }
