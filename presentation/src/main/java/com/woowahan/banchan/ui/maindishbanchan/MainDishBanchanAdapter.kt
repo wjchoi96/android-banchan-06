@@ -1,6 +1,7 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -128,11 +129,20 @@ class MainDishBanchanAdapter(
                 binding.rbLinear.isChecked = true
             }
 
-            val adapter = ArrayAdapter(
+            val adapter = object : ArrayAdapter<String>(
                 binding.root.context,
-                android.R.layout.simple_spinner_dropdown_item,
+                R.layout.item_filter_spinner,
+                R.id.tv_filter_name,
                 filterTypeList
-            )
+            ) {
+                override fun getDropDownView(
+                    position: Int,
+                    convertView: View?,
+                    parent: ViewGroup
+                ): View {
+                    return super.getDropDownView(position, convertView, parent)
+                }
+            }
 
             binding.spinnerFilterType.onItemSelectedListener = onItemSelectedListener
 

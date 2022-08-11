@@ -3,7 +3,10 @@ package com.woowahan.banchan.ui.maindishbanchan
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -127,7 +130,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     }
 
     private val filterSelectedListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+        override fun onItemSelected(p0: AdapterView<*>?, view: View?, position: Int, p3: Long) {
             when (position) {
                 BanchanModel.FilterType.Default.value -> {
                     viewModel.filterBanchan(BanchanModel.FilterType.Default)
