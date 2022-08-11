@@ -27,8 +27,4 @@ object UseCaseModule {
     fun provideFetchSideDishBanchanUseCase(impl: BanchanRepository) =
         FetchSideDishBanchanUseCase(impl)
 
-    @Provides
-    fun provideFilterBanchanUseCase() =
-        FilterBanchanUseCase()
-
 }

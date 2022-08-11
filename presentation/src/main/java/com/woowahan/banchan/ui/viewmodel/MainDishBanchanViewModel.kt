@@ -4,17 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.banchan.util.FilterBanchanListUtil
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchMainDishBanchanUseCase
-import com.woowahan.domain.usecase.FilterBanchanUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainDishBanchanViewModel @Inject constructor(
-    private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase,
-    private val filterBanchanUseCase: FilterBanchanUseCase
+    private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase
 ) : ViewModel() {
     private val _dataLoading: MutableLiveData<Boolean> = MutableLiveData()
     val dataLoading: LiveData<Boolean> = _dataLoading
@@ -61,14 +60,12 @@ class MainDishBanchanViewModel @Inject constructor(
         ) {
             _banchans.value = defaultBanchans
         } else {
-            filterBanchanUseCase(defaultBanchans, filterType)
-                .onSuccess {
-                    _banchans.value = it
-                }
-                .onFailure {
-                    it.printStackTrace()
-                    _errorMessage.value = it.message
-                }
+            kotlin.runCatching {
+                _banchans.value = FilterBanchanListUtil.filter(defaultBanchans, filterType)
+            }.onFailure {
+                it.printStackTrace()
+                _errorMessage.value = it.message
+            }
         }
     }
 
