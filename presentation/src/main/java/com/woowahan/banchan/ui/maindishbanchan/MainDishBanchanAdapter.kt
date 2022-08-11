@@ -1,7 +1,6 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -22,8 +21,8 @@ import kotlinx.coroutines.withContext
 class MainDishBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
-    private val onItemSelectedListener: AdapterView.OnItemSelectedListener,
-    private val toggleListener: (Boolean) -> Unit,
+    private val filterSelectedListener: AdapterView.OnItemSelectedListener,
+    private val viewTypeListener: (Boolean) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
     private val banchanList = mutableListOf<BanchanModel>()
@@ -47,7 +46,7 @@ class MainDishBanchanAdapter(
                 parent,
                 isGridView
             ) {
-                toggleListener(it)
+                viewTypeListener(it)
                 isGridView = it
             }
             else -> {
@@ -69,7 +68,7 @@ class MainDishBanchanAdapter(
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
             is ViewModelToggleHeaderViewHolder -> holder.bind(
                 filterTypeList,
-                onItemSelectedListener
+                filterSelectedListener
             )
             is MainDishBanchanVerticalViewHolder -> holder.bind(banchanList[position])
             is MainDishBanchanHorizontalViewHolder -> holder.bind(banchanList[position])
