@@ -3,6 +3,7 @@ package com.woowahan.banchan.ui.maindishbanchan
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +27,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     private val adapter: MainDishBanchanAdapter by lazy {
         MainDishBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
-            emptyList(),
+            resources.getStringArray(R.array.banchan_filter).toList(),
+            onFilterSelectedListener
         ) { checkedId ->
             when (checkedId) {
                 R.id.rb_grid -> {
@@ -124,5 +126,52 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         val adapterRef = this.adapter
         this.adapter = null
         this.adapter = adapterRef
+    }
+
+    private val onFilterSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
+            val headers = viewModel.banchans.value?.subList(0, 2)?.toMutableList()
+            var body = viewModel.banchans.value?.subList(2, viewModel.banchans.value?.lastIndex!!)!!
+
+            body = when (position) {
+                0 -> {
+                    viewModel.banchans.value!!.subList(2, viewModel.banchans.value!!.lastIndex)
+                }
+                1 -> {
+                    body.sortedBy {
+                        if (it.salePrice != null) {
+                            -it.salePriceRaw
+                        } else {
+                            -it.priceRaw
+                        }
+                    }
+                }
+                2 -> {
+                    body.sortedBy {
+                        if (it.salePrice != null) {
+                            it.salePriceRaw
+                        } else {
+                            it.priceRaw
+                        }
+                    }
+                }
+                3 -> {
+                    body.sortedBy { -it.salePercent }
+                }
+                else -> {
+                    body
+                }
+            }
+
+            headers?.addAll(body)
+            headers?.let {
+                adapter.updateList(headers)
+            }
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+            TODO("Not yet implemented")
+        }
+
     }
 }

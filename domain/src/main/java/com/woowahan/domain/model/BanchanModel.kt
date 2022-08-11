@@ -26,7 +26,7 @@ data class BanchanModel(
 
     val priceRaw: Long = priceStrToLong(price)
 
-    private val salePriceRaw: Long =
+    val salePriceRaw: Long =
         if(salePrice.isNullOrBlank()) 0 else priceStrToLong(salePrice)
 
     val salePercent: Int

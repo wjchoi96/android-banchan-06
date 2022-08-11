@@ -1,7 +1,10 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
@@ -19,6 +22,7 @@ import kotlinx.coroutines.withContext
 class MainDishBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
+    private val onItemSelectedListener: AdapterView.OnItemSelectedListener,
     private val toggleListener: (Int) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
@@ -63,7 +67,10 @@ class MainDishBanchanAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
-            is ViewModelToggleHeaderViewHolder -> holder.bind(filterTypeList)
+            is ViewModelToggleHeaderViewHolder -> holder.bind(
+                filterTypeList,
+                onItemSelectedListener
+            )
             is MainDishBanchanVerticalViewHolder -> holder.bind(banchanList[position])
             is MainDishBanchanHorizontalViewHolder -> holder.bind(banchanList[position])
         }
@@ -112,12 +119,26 @@ class MainDishBanchanAdapter(
                 )
         }
 
-        fun bind(filterTypeList: List<String>) {
+        fun bind(
+            filterTypeList: List<String>,
+            onItemSelectedListener: AdapterView.OnItemSelectedListener
+        ) {
             if (isGridView) {
                 binding.rbGrid.isChecked = true
             } else {
                 binding.rbLinear.isChecked = true
             }
+
+            val adapter = ArrayAdapter(
+                binding.root.context,
+                android.R.layout.simple_spinner_dropdown_item,
+                filterTypeList
+            )
+
+            binding.spinnerFilterType.onItemSelectedListener = onItemSelectedListener
+
+            binding.spinnerFilterType.adapter = adapter
+
             binding.rgViewGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
                 toggleListener(checkedId)
             }
