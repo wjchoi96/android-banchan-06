@@ -1,4 +1,4 @@
-package com.woowahan.banchan.ui.main
+package com.woowahan.banchan.ui.root
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,7 +13,7 @@ import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity: BaseActivity<ActivityMainBinding>() {
+class RootActivity: BaseActivity<ActivityMainBinding>() {
 
     private val fragmentList: List<Pair<String, Fragment>> by lazy {
         listOf(
@@ -23,8 +23,8 @@ class MainActivity: BaseActivity<ActivityMainBinding>() {
             getString(R.string.side_dish_banchan_title) to SideDishBanchanFragment()
         )
     }
-    private val pagerAdapter: MainTabPagerAdapter by lazy {
-        MainTabPagerAdapter(this, fragmentList)
+    private val pagerAdapter: RootTabPagerAdapter by lazy {
+        RootTabPagerAdapter(this, fragmentList)
     }
 
     override val layoutResId: Int
