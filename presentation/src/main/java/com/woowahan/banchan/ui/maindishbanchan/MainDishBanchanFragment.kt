@@ -4,7 +4,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +13,7 @@ import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.dp
 import com.woowahan.banchan.util.repeatOnStarted
+import com.woowahan.banchan.util.showSnackBar
 import com.woowahan.banchan.util.showToast
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,8 +74,11 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
 
     private fun observeData() {
         repeatOnStarted {
-            viewModel.errorMessage.collect {
-                showToast(context, it)
+            viewModel.eventFlow.collect {
+                when(it){
+                    is MainDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+                    is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                }
             }
         }
 
