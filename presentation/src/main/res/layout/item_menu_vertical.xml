@@ -10,6 +10,10 @@
         <variable
             name="holder"
             type="com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanAdapter.MainDishBanchanVerticalViewHolder" />
+
+        <variable
+            name="isCartItem"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp"
-                android:src="@drawable/ic_cart" />
+                android:src="@{isCartItem ? @drawable/ic_arrow_left : @drawable/ic_cart}" />
         </androidx.cardview.widget.CardView>
 
         <TextView
