@@ -35,6 +35,8 @@ object UseCaseModule {
     @Provides
     fun provideRemoveCartItemUseCase(impl: CartRepositoryImpl) =
         RemoveCartItemUseCase(impl)
+    fun provideInsertCartItemsUseCase(repo: CartRepository) =
+        InsertCartItemUseCase(repo)
 
     @Provides
     fun provideRemoveCartItemsUseCase(impl: CartRepositoryImpl) =
