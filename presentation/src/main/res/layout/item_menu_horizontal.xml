@@ -46,7 +46,7 @@
             app:layout_constraintEnd_toEndOf="@id/iv_menu_image">
 
             <ImageView
-                android:onClickListener="@{()-> holder.banchanInsertCartListener.invoke(banchan)}"
+                android:onClickListener="@{()-> holder.banchanInsertCartListener.invoke(banchan, isCartItem)}"
                 android:id="@+id/iv_add_cart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

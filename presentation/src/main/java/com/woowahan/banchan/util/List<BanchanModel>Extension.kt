@@ -3,10 +3,10 @@ package com.woowahan.banchan.util
 import com.woowahan.domain.model.BanchanModel
 import timber.log.Timber
 
-fun List<BanchanModel>.getNewListApplyCartState(banchanModel: BanchanModel): List<BanchanModel>{
+fun List<BanchanModel>.getNewListApplyCartState(banchanModel: BanchanModel, state: Boolean): List<BanchanModel>{
     this.indices.find { this[it].hash == banchanModel.hash }?.let { position ->
         val newList = this.toMutableList().apply {
-            this[position] = this[position].copy(isCartItem = !this[position].isCartItem)
+            this[position] = this[position].copy(isCartItem = state)
         }
         Timber.d("getNewListApplyCartState[$position] => ${newList[position].isCartItem}")
         return newList

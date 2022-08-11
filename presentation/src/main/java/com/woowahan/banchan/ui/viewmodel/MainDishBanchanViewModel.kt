@@ -8,6 +8,7 @@ import com.woowahan.banchan.util.getNewListApplyCartState
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchMainDishBanchanUseCase
 import com.woowahan.domain.usecase.InsertCartItemUseCase
+import com.woowahan.domain.usecase.RemoveCartItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainDishBanchanViewModel @Inject constructor(
     private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase,
-    private val insertCartItemUseCase: InsertCartItemUseCase
+    private val insertCartItemUseCase: InsertCartItemUseCase,
+    private val removeCartItemUseCase: RemoveCartItemUseCase
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -85,12 +87,35 @@ class MainDishBanchanViewModel @Inject constructor(
         _gridViewMode.value = it
     }
 
-    val clickInsertCartButton: (BanchanModel)->(Unit) = {
+    val clickInsertCartButton: (BanchanModel, Boolean)->(Unit) = { banchan, isCartItem ->
         viewModelScope.launch {
-            val dialog = CartItemInsertBottomSheet(it){ item, count ->
-                insertItemsToCart(item, count)
+            when(isCartItem){
+                true -> removeItemFromCart(banchan)
+                else -> {
+                    val dialog = CartItemInsertBottomSheet(banchan){ item, count ->
+                        insertItemsToCart(item, count)
+                    }
+                    _eventFlow.emit(UIEvent.ShowCartBottomSheet(dialog))
+                }
             }
-            _eventFlow.emit(UIEvent.ShowCartBottomSheet(dialog))
+        }
+    }
+
+    private fun removeItemFromCart(banchanModel: BanchanModel){
+        viewModelScope.launch {
+            _dataLoading.emit(true)
+            removeCartItemUseCase.invoke(banchanModel.hash)
+                .onSuccess {
+                    defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, false)
+                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
+                }.onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UIEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.emit(false)
+                }
         }
     }
 
@@ -99,8 +124,8 @@ class MainDishBanchanViewModel @Inject constructor(
             _dataLoading.emit(true)
             insertCartItemUseCase.invoke(banchanModel, count)
                 .onSuccess {
-                    defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel)
-                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel)
+                    defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, true)
+                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->

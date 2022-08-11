@@ -28,7 +28,7 @@ class MainDishBanchanAdapter(
     private val filterTypeList: List<String>,
     private val filterSelectedListener: (Int) -> Unit,
     private val viewTypeListener: (Boolean) -> Unit,
-    private val banchanInsertCartListener: (BanchanModel) -> (Unit)
+    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
     private var selectedItemPosition: Int = 0
@@ -206,12 +206,12 @@ class MainDishBanchanAdapter(
 
     class MainDishBanchanVerticalViewHolder(
         private val binding: ItemMenuVerticalBinding,
-        val banchanInsertCartListener: (BanchanModel) -> (Unit)
+        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                banchanInsertCartListener: (BanchanModel) -> (Unit)
+                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
             ): MainDishBanchanVerticalViewHolder =
                 MainDishBanchanVerticalViewHolder(
                     ItemMenuVerticalBinding.inflate(
@@ -239,12 +239,12 @@ class MainDishBanchanAdapter(
 
     class MainDishBanchanHorizontalViewHolder(
         private val binding: ItemMenuHorizontalBinding,
-        val banchanInsertCartListener: (BanchanModel) -> (Unit)
+        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                banchanInsertCartListener: (BanchanModel) -> (Unit)
+                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
             ): MainDishBanchanHorizontalViewHolder =
                 MainDishBanchanHorizontalViewHolder(
                     ItemMenuHorizontalBinding.inflate(
