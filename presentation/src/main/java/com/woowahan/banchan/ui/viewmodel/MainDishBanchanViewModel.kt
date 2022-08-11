@@ -1,7 +1,5 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
@@ -34,10 +32,6 @@ class MainDishBanchanViewModel @Inject constructor(
 
     private val _eventFlow: MutableSharedFlow<UIEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
-
-    private val _showCartBottomSheet: MutableLiveData<CartItemInsertBottomSheet> = MutableLiveData()
-    val showCartBottomSheet: LiveData<CartItemInsertBottomSheet> = _showCartBottomSheet
-
 
     private lateinit var defaultBanchans: List<BanchanModel>
 
@@ -89,10 +83,12 @@ class MainDishBanchanViewModel @Inject constructor(
     }
 
     val clickInsertCartButton: (BanchanModel)->(Unit) = {
-        val dialog = CartItemInsertBottomSheet(it){ item, count ->
-            insertItemsToCart(item, count)
+        viewModelScope.launch {
+            val dialog = CartItemInsertBottomSheet(it){ item, count ->
+                insertItemsToCart(item, count)
+            }
+            _eventFlow.emit(UIEvent.ShowCartBottomSheet(dialog))
         }
-        _showCartBottomSheet.value = dialog
     }
     private fun insertItemsToCart(banchanModel: BanchanModel, count: Int){
 
@@ -124,5 +120,6 @@ class MainDishBanchanViewModel @Inject constructor(
     sealed class UIEvent {
         data class ShowToast(val message: String) : UIEvent()
         data class ShowSnackBar(val message: String) : UIEvent()
+        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UIEvent()
     }
 }

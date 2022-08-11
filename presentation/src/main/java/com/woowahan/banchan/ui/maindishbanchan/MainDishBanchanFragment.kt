@@ -79,6 +79,9 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                 when(it){
                     is MainDishBanchanViewModel.UIEvent.ShowToast -> showToast(context, it.message)
                     is MainDishBanchanViewModel.UIEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                    is MainDishBanchanViewModel.UIEvent.ShowCartBottomSheet -> {
+                        it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                    }
                 }
             }
         }
@@ -100,9 +103,6 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             }
         }
 
-        viewModel.showCartBottomSheet.observe(viewLifecycleOwner){
-            it.show(childFragmentManager, "cart_bottom_sheet")
-        }
     }
 
     private val gridItemDecoration = object : RecyclerView.ItemDecoration() {
