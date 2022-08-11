@@ -11,7 +11,7 @@ class CartDataSourceImpl @Inject constructor(): CartDataSource {
     private val cart = mutableMapOf<String, Pair<BanchanModel, Int>>()
 
     // 단순 추가 -> 추가된 항목 리턴
-    override suspend fun insertCartItem(banchan: BanchanModel, count: Int): Pair<BanchanModel, Int>?? {
+    override suspend fun insertCartItem(banchan: BanchanModel, count: Int): Pair<BanchanModel, Int>? {
         cart[banchan.hash] = banchan to count
         return cart[banchan.hash]
     }

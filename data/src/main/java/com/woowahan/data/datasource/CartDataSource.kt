@@ -3,7 +3,7 @@ package com.woowahan.data.datasource
 import com.woowahan.domain.model.BanchanModel
 
 interface CartDataSource {
-    suspend fun insertCartItem(banchan: BanchanModel, count: Int): Pair<BanchanModel, Int>??
+    suspend fun insertCartItem(banchan: BanchanModel, count: Int): Pair<BanchanModel, Int>?
 
     suspend fun removeCartItem(hash: String): BanchanModel?
 
