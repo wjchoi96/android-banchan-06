@@ -18,8 +18,10 @@ object UseCaseModule {
         FetchBestBanchanUseCase(repo)
 
     @Provides
-    fun provideFetchMainDishBanchanUseCase(impl: BanchanRepository) =
-        FetchMainDishBanchanUseCase(impl)
+    fun provideFetchMainDishBanchanUseCase(
+        repo: BanchanRepository,
+        fetchCartItemsUseCase: FetchCartItemsUseCase
+    ) = FetchMainDishBanchanUseCase(repo, fetchCartItemsUseCase)
 
     @Provides
     fun provideFetchSoupDishBanchanUseCase(repo: BanchanRepository) =
