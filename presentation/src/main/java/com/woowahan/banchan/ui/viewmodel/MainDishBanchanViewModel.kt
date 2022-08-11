@@ -1,7 +1,5 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.util.FilterBanchanListUtil
@@ -31,8 +29,8 @@ class MainDishBanchanViewModel @Inject constructor(
     private val _banchans: MutableStateFlow<List<BanchanModel>> = MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
-    private val _errorMessage: MutableSharedFlow<String> = MutableSharedFlow()
-    val errorMessage = _errorMessage.asSharedFlow()
+    private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
+    val eventFlow = _eventFlow.asSharedFlow()
 
 
     private lateinit var defaultBanchans: List<BanchanModel>
@@ -51,7 +49,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
-                        _errorMessage.emit(message)
+                        _eventFlow.emit(UiEvent.ShowToast(message))
                     }
                 }.also {
                     _dataLoading.value = false
@@ -73,7 +71,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
-                        _errorMessage.emit(message)
+                        _eventFlow.emit(UiEvent.ShowToast(message))
                     }
                 }
             }
@@ -106,4 +104,8 @@ class MainDishBanchanViewModel @Inject constructor(
         fetchMainDishBanchans()
     }
 
+    sealed class UiEvent {
+        data class ShowToast(val message: String) : UiEvent()
+        data class ShowSnackBar(val message: String) : UiEvent()
+    }
 }
