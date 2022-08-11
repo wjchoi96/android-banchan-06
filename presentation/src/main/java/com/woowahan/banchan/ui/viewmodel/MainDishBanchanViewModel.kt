@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.filterType
+import com.woowahan.banchan.util.getNewListApplyCartState
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchMainDishBanchanUseCase
+import com.woowahan.domain.usecase.InsertCartItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainDishBanchanViewModel @Inject constructor(
-    private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase
+    private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase,
+    private val insertCartItemUseCase: InsertCartItemUseCase
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -90,8 +93,23 @@ class MainDishBanchanViewModel @Inject constructor(
             _eventFlow.emit(UIEvent.ShowCartBottomSheet(dialog))
         }
     }
-    private fun insertItemsToCart(banchanModel: BanchanModel, count: Int){
 
+    private fun insertItemsToCart(banchanModel: BanchanModel, count: Int){
+        viewModelScope.launch {
+            _dataLoading.emit(true)
+            insertCartItemUseCase.invoke(banchanModel, count)
+                .onSuccess {
+                    defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel)
+                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel)
+                }.onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UIEvent.ShowSnackBar(message))
+                    }
+                }.also {
+                    _dataLoading.emit(false)
+                }
+        }
     }
 
 
