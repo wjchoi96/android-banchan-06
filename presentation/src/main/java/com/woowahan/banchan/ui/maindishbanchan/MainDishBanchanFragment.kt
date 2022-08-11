@@ -3,11 +3,8 @@ package com.woowahan.banchan.ui.maindishbanchan
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +13,7 @@ import com.woowahan.banchan.databinding.FragmentMainDishBanchanBinding
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.dp
+import com.woowahan.banchan.util.repeatOnStarted
 import com.woowahan.banchan.util.showToast
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -75,21 +73,27 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     }
 
     private fun observeData() {
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            showToast(context, it)
-        }
-
-        viewModel.banchans.observe(viewLifecycleOwner) {
-            adapter.updateList(it)
-        }
-
-        viewModel.gridViewMode.observe(viewLifecycleOwner){
-            if (it) {
-                setUpGridRecyclerView()
-            } else {
-                setUpLinearRecyclerView()
+        repeatOnStarted {
+            viewModel.errorMessage.collect {
+                showToast(context, it)
             }
-            binding.rvMainDish.refresh()
+        }
+
+        repeatOnStarted {
+            viewModel.banchans.collect {
+                adapter.updateList(it)
+            }
+        }
+
+        repeatOnStarted {
+            viewModel.gridViewMode.collect() {
+                if (it) {
+                    setUpGridRecyclerView()
+                } else {
+                    setUpLinearRecyclerView()
+                }
+                binding.rvMainDish.refresh()
+            }
         }
     }
 
