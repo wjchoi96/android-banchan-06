@@ -28,6 +28,9 @@ class MainDishBanchanViewModel @Inject constructor(
     private lateinit var defaultBanchans: List<BanchanModel>
     private val _banchans: MutableLiveData<List<BanchanModel>> = MutableLiveData()
 
+    private val _gridViewMode: MutableLiveData<Boolean> = MutableLiveData()
+    val gridViewMode: LiveData<Boolean> = _gridViewMode
+
     val banchans: LiveData<List<BanchanModel>> = _banchans
 
     fun fetchMainDishBanchans() {
@@ -52,7 +55,7 @@ class MainDishBanchanViewModel @Inject constructor(
         }
     }
 
-    fun filterBanchan(filterType: BanchanModel.FilterType) {
+    private fun filterBanchan(filterType: BanchanModel.FilterType) {
         if (filterType ==
             BanchanModel.FilterType.Default
         ) {
@@ -66,6 +69,27 @@ class MainDishBanchanViewModel @Inject constructor(
                     it.printStackTrace()
                     _errorMessage.value = it.message
                 }
+        }
+    }
+
+    val viewModeToggleEvent: (Boolean)->(Unit) = {
+        _gridViewMode.value = it
+    }
+
+    fun filterItemSelect(position: Int){
+        when (position) {
+            BanchanModel.FilterType.Default.value -> {
+                filterBanchan(BanchanModel.FilterType.Default)
+            }
+            BanchanModel.FilterType.PriceHigher.value -> {
+                filterBanchan(BanchanModel.FilterType.PriceHigher)
+            }
+            BanchanModel.FilterType.PriceLower.value -> {
+                filterBanchan(BanchanModel.FilterType.PriceLower)
+            }
+            else -> {
+                filterBanchan(BanchanModel.FilterType.SalePercentHigher)
+            }
         }
     }
 

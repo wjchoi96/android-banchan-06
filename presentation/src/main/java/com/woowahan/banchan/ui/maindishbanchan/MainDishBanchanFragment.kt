@@ -28,19 +28,10 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     private val adapter: MainDishBanchanAdapter by lazy {
         MainDishBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
-            resources.getStringArray(R.array.banchan_filter).toList(),
-            onFilterSelectedListener
-        ) { checkedId ->
-            when (checkedId) {
-                R.id.rb_grid -> {
-                    setUpGridRecyclerView()
-                }
-                R.id.rb_linear -> {
-                    setUpLinearRecyclerView()
-                }
-            }
-            binding.rvMainDish.refresh()
-        }
+            BanchanModel.getFilterList(),
+            filterSelectedListener,
+            viewModel.viewModeToggleEvent,
+        ){}
     }
 
     private val spanCount = 2
@@ -88,6 +79,15 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         viewModel.banchans.observe(viewLifecycleOwner) {
             adapter.updateList(it)
         }
+
+        viewModel.gridViewMode.observe(viewLifecycleOwner){
+            if (it) {
+                setUpGridRecyclerView()
+            } else {
+                setUpLinearRecyclerView()
+            }
+            binding.rvMainDish.refresh()
+        }
     }
 
     private val gridItemDecoration = object : RecyclerView.ItemDecoration() {
@@ -129,22 +129,9 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         this.adapter = adapterRef
     }
 
-    private val onFilterSelectedListener = object : AdapterView.OnItemSelectedListener {
+    private val filterSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            when (position) {
-                BanchanModel.FilterType.Default.value -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.Default)
-                }
-                BanchanModel.FilterType.PriceHigher.value -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.PriceHigher)
-                }
-                BanchanModel.FilterType.PriceLower.value -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.PriceLower)
-                }
-                else -> {
-                    viewModel.filterBanchan(BanchanModel.FilterType.SalePercentHigher)
-                }
-            }
+            viewModel.filterItemSelect(position)
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) {

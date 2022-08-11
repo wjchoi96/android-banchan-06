@@ -1,7 +1,6 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -22,8 +21,8 @@ import kotlinx.coroutines.withContext
 class MainDishBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
-    private val onItemSelectedListener: AdapterView.OnItemSelectedListener,
-    private val toggleListener: (Int) -> Unit,
+    private val filterSelectedListener: AdapterView.OnItemSelectedListener,
+    private val viewTypeListener: (Boolean) -> Unit,
     private val banchanInsertCartListener: (BanchanModel) -> (Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
@@ -48,8 +47,8 @@ class MainDishBanchanAdapter(
                 parent,
                 isGridView
             ) {
-                toggleListener(it)
-                isGridView = (it == R.id.rb_grid)
+                viewTypeListener(it)
+                isGridView = it
             }
             else -> {
                 if (isGridView) {
@@ -70,7 +69,7 @@ class MainDishBanchanAdapter(
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
             is ViewModelToggleHeaderViewHolder -> holder.bind(
                 filterTypeList,
-                onItemSelectedListener
+                filterSelectedListener
             )
             is MainDishBanchanVerticalViewHolder -> holder.bind(banchanList[position])
             is MainDishBanchanHorizontalViewHolder -> holder.bind(banchanList[position])
@@ -101,13 +100,13 @@ class MainDishBanchanAdapter(
     class ViewModelToggleHeaderViewHolder(
         private val binding: ItemViewModeToggleHeaderBinding,
         private val isGridView: Boolean,
-        private val toggleListener: (Int) -> Unit
+        private val toggleListener: (Boolean) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
                 isGridView: Boolean,
-                toggleListener: (Int) -> Unit
+                toggleListener: (Boolean) -> Unit
             ): ViewModelToggleHeaderViewHolder =
                 ViewModelToggleHeaderViewHolder(
                     ItemViewModeToggleHeaderBinding.inflate(
@@ -141,7 +140,7 @@ class MainDishBanchanAdapter(
             binding.spinnerFilterType.adapter = adapter
 
             binding.rgViewGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
-                toggleListener(checkedId)
+                toggleListener(checkedId == R.id.rb_grid)
             }
         }
     }

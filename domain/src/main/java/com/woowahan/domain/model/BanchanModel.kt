@@ -11,6 +11,9 @@ data class BanchanModel(
 ) {
     companion object {
         fun empty(): BanchanModel = BanchanModel("", "", "", "", "", null)
+        fun getFilterList(): List<String> {
+            return FilterType.values().map { it.title }
+        }
     }
 
     enum class ViewType(val value: Int) {
@@ -19,12 +22,11 @@ data class BanchanModel(
         Item(2)
     }
 
-    enum class FilterType(val value: Int) {
-        Default(0),
-        PriceHigher(1),
-        PriceLower(2),
-        SalePercentHigher(3),
-        SalePercentLower(4)
+    enum class FilterType(val value: Int, val title: String) {
+        Default(0, "기본 정렬순"),
+        PriceHigher(1, "금액 높은순"),
+        PriceLower(2, "금액 낮은순"),
+        SalePercentHigher(3, "할인율순")
     }
 
     val priceRaw: Long = priceStrToLong(price)
