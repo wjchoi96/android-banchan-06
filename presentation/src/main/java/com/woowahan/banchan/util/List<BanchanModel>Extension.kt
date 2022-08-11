@@ -1,0 +1,52 @@
+package com.woowahan.banchan.util
+
+import com.woowahan.domain.model.BanchanModel
+import timber.log.Timber
+
+fun List<BanchanModel>.getNewListApplyCartState(banchanModel: BanchanModel): List<BanchanModel>{
+    this.indices.find { this[it].hash == banchanModel.hash }?.let { position ->
+        val newList = this.toMutableList().apply {
+            this[position] = this[position].copy(isCartItem = !this[position].isCartItem)
+        }
+        Timber.d("getNewListApplyCartState[$position] => ${newList[position].isCartItem}")
+        return newList
+    }
+    return this.toList()
+}
+
+fun List<BanchanModel>.filterType(filterType: BanchanModel.FilterType): List<BanchanModel> {
+    return listOf(
+        BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
+        BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),
+    ) + this
+        .filter { it.viewType == BanchanModel.ViewType.Item }
+        .sortedBy {
+            when (filterType) {
+                BanchanModel.FilterType.PriceHigher -> -it.priceRaw
+                BanchanModel.FilterType.PriceLower -> it.priceRaw
+                BanchanModel.FilterType.SalePercentHigher -> -it.salePercent.toLong()
+                else -> throw Throwable("Unknown filter item")
+            }
+        }
+}
+
+//object FilterBanchanListUtil {
+//    fun filter(
+//        list: List<BanchanModel>,
+//        filterType: BanchanModel.FilterType
+//    ): List<BanchanModel> {
+//        return listOf(
+//            BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
+//            BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),
+//        ) + list
+//            .filter { it.viewType == BanchanModel.ViewType.Item }
+//            .sortedBy {
+//                when (filterType) {
+//                    BanchanModel.FilterType.PriceHigher -> -it.priceRaw
+//                    BanchanModel.FilterType.PriceLower -> it.priceRaw
+//                    BanchanModel.FilterType.SalePercentHigher -> -it.salePercent.toLong()
+//                    else -> throw Throwable("Unknown filter item")
+//                }
+//            }
+//    }
+//}
