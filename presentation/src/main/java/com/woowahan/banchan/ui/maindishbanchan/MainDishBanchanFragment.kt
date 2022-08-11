@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentMainDishBanchanBinding
 import com.woowahan.banchan.ui.base.BaseFragment
+import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.dp
 import com.woowahan.banchan.util.showToast
@@ -31,7 +32,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             BanchanModel.getFilterList(),
             filterSelectedListener,
             viewModel.viewModeToggleEvent,
-        ){}
+            viewModel.clickInsertCartButton
+        )
     }
 
     private val spanCount = 2
@@ -87,6 +89,10 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                 setUpLinearRecyclerView()
             }
             binding.rvMainDish.refresh()
+        }
+
+        viewModel.showCartBottomSheet.observe(viewLifecycleOwner){
+            it.show(childFragmentManager, "cart_bottom_sheet")
         }
     }
 

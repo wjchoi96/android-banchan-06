@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchMainDishBanchanUseCase
 import com.woowahan.domain.usecase.FilterBanchanUseCase
@@ -30,6 +31,9 @@ class MainDishBanchanViewModel @Inject constructor(
 
     private val _gridViewMode: MutableLiveData<Boolean> = MutableLiveData()
     val gridViewMode: LiveData<Boolean> = _gridViewMode
+
+    private val _showCartBottomSheet: MutableLiveData<CartItemInsertBottomSheet> = MutableLiveData()
+    val showCartBottomSheet: LiveData<CartItemInsertBottomSheet> = _showCartBottomSheet
 
     val banchans: LiveData<List<BanchanModel>> = _banchans
 
@@ -74,6 +78,16 @@ class MainDishBanchanViewModel @Inject constructor(
 
     val viewModeToggleEvent: (Boolean)->(Unit) = {
         _gridViewMode.value = it
+    }
+
+    val clickInsertCartButton: (BanchanModel)->(Unit) = {
+        val dialog = CartItemInsertBottomSheet(it){ item, count ->
+            insertItemsToCart(item, count)
+        }
+        _showCartBottomSheet.value = dialog
+    }
+    private fun insertItemsToCart(banchanModel: BanchanModel, count: Int){
+
     }
 
     fun filterItemSelect(position: Int){
