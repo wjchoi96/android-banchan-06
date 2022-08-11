@@ -30,14 +30,11 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             getString(R.string.main_dish_banchan_banner_title),
             resources.getStringArray(R.array.banchan_filter).toList(),
             onFilterSelectedListener
-        ) { checkedId ->
-            when (checkedId) {
-                R.id.rb_grid -> {
-                    setUpGridRecyclerView()
-                }
-                R.id.rb_linear -> {
-                    setUpLinearRecyclerView()
-                }
+        ) { isGridView ->
+            if (isGridView) {
+                setUpGridRecyclerView()
+            } else {
+                setUpLinearRecyclerView()
             }
             binding.rvMainDish.refresh()
         }

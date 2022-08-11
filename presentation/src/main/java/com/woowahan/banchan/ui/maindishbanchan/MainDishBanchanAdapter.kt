@@ -23,7 +23,7 @@ class MainDishBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
     private val onItemSelectedListener: AdapterView.OnItemSelectedListener,
-    private val toggleListener: (Int) -> Unit,
+    private val toggleListener: (Boolean) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
     private val banchanList = mutableListOf<BanchanModel>()
@@ -48,7 +48,7 @@ class MainDishBanchanAdapter(
                 isGridView
             ) {
                 toggleListener(it)
-                isGridView = (it == R.id.rb_grid)
+                isGridView = it
             }
             else -> {
                 if (isGridView) {
@@ -100,13 +100,13 @@ class MainDishBanchanAdapter(
     class ViewModelToggleHeaderViewHolder(
         private val binding: ItemViewModeToggleHeaderBinding,
         private val isGridView: Boolean,
-        private val toggleListener: (Int) -> Unit
+        private val toggleListener: (Boolean) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
                 isGridView: Boolean,
-                toggleListener: (Int) -> Unit
+                toggleListener: (Boolean) -> Unit
             ): ViewModelToggleHeaderViewHolder =
                 ViewModelToggleHeaderViewHolder(
                     ItemViewModeToggleHeaderBinding.inflate(
@@ -140,7 +140,7 @@ class MainDishBanchanAdapter(
             binding.spinnerFilterType.adapter = adapter
 
             binding.rgViewGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
-                toggleListener(checkedId)
+                toggleListener(checkedId == R.id.rb_grid)
             }
         }
     }
