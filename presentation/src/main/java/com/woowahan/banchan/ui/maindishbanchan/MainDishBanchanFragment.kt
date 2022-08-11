@@ -29,7 +29,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         MainDishBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
             resources.getStringArray(R.array.banchan_filter).toList(),
-            onFilterSelectedListener
+            filterSelectedListener
         ) { isGridView ->
             if (isGridView) {
                 setUpGridRecyclerView()
@@ -126,7 +126,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         this.adapter = adapterRef
     }
 
-    private val onFilterSelectedListener = object : AdapterView.OnItemSelectedListener {
+    private val filterSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
             when (position) {
                 BanchanModel.FilterType.Default.value -> {
