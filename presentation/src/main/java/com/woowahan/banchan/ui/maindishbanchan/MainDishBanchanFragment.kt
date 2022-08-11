@@ -123,7 +123,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         }
     }
 
-    fun RecyclerView.refresh() {
+    private fun RecyclerView.refresh() {
         val adapterRef = this.adapter
         this.adapter = null
         this.adapter = adapterRef
