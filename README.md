@@ -15,7 +15,7 @@
 1. ScreenFlowChart(화면 흐름도) 작성하며 요구조건 분석  
 2. 멀티 모듈 적용
 3. DataLayer 작업시 테스트 코드 작성을 함께 진행  
-4. Flow 
+4. Flow 사용
  
  
  ### Package
