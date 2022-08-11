@@ -12,34 +12,37 @@ data class BanchanModel(
     companion object {
         fun empty(): BanchanModel = BanchanModel("", "", "", "", "", null)
     }
-    enum class ViewType(val value: Int){
+
+    enum class ViewType(val value: Int) {
         Banner(0),
         Header(1),
         Item(2)
     }
-    enum class FilterType {
-        PriceHigher,
-        PriceLower,
-        SalePercentHigher,
-        SalePercentLower
+
+    enum class FilterType(val value: Int) {
+        Default(0),
+        PriceHigher(1),
+        PriceLower(2),
+        SalePercentHigher(3),
+        SalePercentLower(4)
     }
 
     val priceRaw: Long = priceStrToLong(price)
 
     val salePriceRaw: Long =
-        if(salePrice.isNullOrBlank()) 0 else priceStrToLong(salePrice)
+        if (salePrice.isNullOrBlank()) 0 else priceStrToLong(salePrice)
 
     val salePercent: Int
         get() {
-            return if(salePriceRaw != 0L){
+            return if (salePriceRaw != 0L) {
                 val saleValue = (priceRaw - salePriceRaw).toFloat()
-                (saleValue/priceRaw * 100).toInt()
-            }else
+                (saleValue / priceRaw * 100).toInt()
+            } else
                 0
         }
 
     private fun priceStrToLong(priceStr: String): Long {
-        val temp = priceStr.filter{ it.isDigit() }
-        return if(temp.isBlank()) 0L else temp.toLong()
+        val temp = priceStr.filter { it.isDigit() }
+        return if (temp.isBlank()) 0L else temp.toLong()
     }
 }

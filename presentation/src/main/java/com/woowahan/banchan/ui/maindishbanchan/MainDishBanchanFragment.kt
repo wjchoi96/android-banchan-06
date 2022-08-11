@@ -14,6 +14,7 @@ import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.dp
 import com.woowahan.banchan.util.showToast
+import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -130,42 +131,19 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
 
     private val onFilterSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            val headers = viewModel.banchans.value?.subList(0, 2)?.toMutableList()
-            var body = viewModel.banchans.value?.subList(2, viewModel.banchans.value?.lastIndex!!)!!
-
-            body = when (position) {
-                0 -> {
-                    viewModel.banchans.value!!.subList(2, viewModel.banchans.value!!.lastIndex)
+            when (position) {
+                BanchanModel.FilterType.Default.value -> {
+                    viewModel.filterBanchan(BanchanModel.FilterType.Default)
                 }
-                1 -> {
-                    body.sortedBy {
-                        if (it.salePrice != null) {
-                            -it.salePriceRaw
-                        } else {
-                            -it.priceRaw
-                        }
-                    }
+                BanchanModel.FilterType.PriceHigher.value -> {
+                    viewModel.filterBanchan(BanchanModel.FilterType.PriceHigher)
                 }
-                2 -> {
-                    body.sortedBy {
-                        if (it.salePrice != null) {
-                            it.salePriceRaw
-                        } else {
-                            it.priceRaw
-                        }
-                    }
-                }
-                3 -> {
-                    body.sortedBy { -it.salePercent }
+                BanchanModel.FilterType.PriceLower.value -> {
+                    viewModel.filterBanchan(BanchanModel.FilterType.PriceLower)
                 }
                 else -> {
-                    body
+                    viewModel.filterBanchan(BanchanModel.FilterType.SalePercentHigher)
                 }
-            }
-
-            headers?.addAll(body)
-            headers?.let {
-                adapter.updateList(headers)
             }
         }
 
