@@ -1,9 +1,13 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
+import android.graphics.Typeface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
@@ -21,11 +25,12 @@ import kotlinx.coroutines.withContext
 class MainDishBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
-    private val filterSelectedListener: AdapterView.OnItemSelectedListener,
+    private val filterSelectedListener: (Int) -> Unit,
     private val viewTypeListener: (Boolean) -> Unit,
     private val banchanInsertCartListener: (BanchanModel) -> (Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
+    private var selectedItemPosition: Int = 0
     private val banchanList = mutableListOf<BanchanModel>()
 
     fun updateList(newList: List<BanchanModel>) {
@@ -44,17 +49,21 @@ class MainDishBanchanAdapter(
         return when (viewType) {
             BanchanModel.ViewType.Banner.value -> BanchanListBannerViewHolder.from(parent)
             BanchanModel.ViewType.Header.value -> ViewModelToggleHeaderViewHolder.from(
-                parent,
-                isGridView
-            ) {
-                viewTypeListener(it)
-                isGridView = it
-            }
+                parent= parent,
+                isGridView= isGridView,
+                filterTypeList= filterTypeList,
+                filterSelectedListener= {
+                    selectedItemPosition = it
+                    filterSelectedListener(it)
+                },
+                viewTypeListener= {
+                    viewTypeListener(it)
+                    isGridView = it
+                })
             else -> {
-                if (isGridView) {
-                    MainDishBanchanVerticalViewHolder.from(parent, banchanInsertCartListener)
-                } else {
-                    MainDishBanchanHorizontalViewHolder.from(parent)
+                when(isGridView){
+                    true -> MainDishBanchanVerticalViewHolder.from(parent, banchanInsertCartListener)
+                    false -> MainDishBanchanHorizontalViewHolder.from(parent)
                 }
             }
         }
@@ -67,10 +76,7 @@ class MainDishBanchanAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
-            is ViewModelToggleHeaderViewHolder -> holder.bind(
-                filterTypeList,
-                filterSelectedListener
-            )
+            is ViewModelToggleHeaderViewHolder -> holder.bind(selectedItemPosition)
             is MainDishBanchanVerticalViewHolder -> holder.bind(banchanList[position])
             is MainDishBanchanHorizontalViewHolder -> holder.bind(banchanList[position])
         }
@@ -100,48 +106,71 @@ class MainDishBanchanAdapter(
     class ViewModelToggleHeaderViewHolder(
         private val binding: ItemViewModeToggleHeaderBinding,
         private val isGridView: Boolean,
-        private val toggleListener: (Boolean) -> Unit
+        private val filterTypeList: List<String>,
+        private val filterSelectedListener: (Int) -> Unit,
+        private val viewTypeListener: (Boolean) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
                 isGridView: Boolean,
-                toggleListener: (Boolean) -> Unit
+                filterTypeList: List<String>,
+                filterSelectedListener: (Int) -> Unit,
+                viewTypeListener: (Boolean) -> Unit,
             ): ViewModelToggleHeaderViewHolder =
                 ViewModelToggleHeaderViewHolder(
-                    ItemViewModeToggleHeaderBinding.inflate(
+                    binding= ItemViewModeToggleHeaderBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
                     ),
-                    isGridView,
-                    toggleListener
+                    isGridView= isGridView,
+                    filterTypeList= filterTypeList,
+                    filterSelectedListener= filterSelectedListener,
+                    viewTypeListener= viewTypeListener
                 )
         }
 
-        fun bind(
-            filterTypeList: List<String>,
-            onItemSelectedListener: AdapterView.OnItemSelectedListener
-        ) {
-            if (isGridView) {
-                binding.rbGrid.isChecked = true
-            } else {
-                binding.rbLinear.isChecked = true
-            }
+        fun bind(selectedItemPosition: Int) {
+            binding.holder = this
+            binding.isGridView = isGridView
+            binding.defaultSpinnerSelectPosition = selectedItemPosition
+        }
 
-            val adapter = ArrayAdapter(
+        val spinnerAdapter: ArrayAdapter<String> by lazy {
+            object : ArrayAdapter<String>(
                 binding.root.context,
-                android.R.layout.simple_spinner_dropdown_item,
+                R.layout.item_filter_spinner,
+                R.id.tv_filter_name,
                 filterTypeList
-            )
+            ) {
+                override fun getDropDownView(
+                    position: Int,
+                    convertView: View?,
+                    parent: ViewGroup
+                ): View {
+                    val view = super.getDropDownView(position, convertView, parent)
+                    if (position == binding.spinnerFilterType.selectedItemPosition) {
+                        val textView = (view as ViewGroup).getChildAt(0) as TextView
+                        val imageView = view.getChildAt(1)
 
-            binding.spinnerFilterType.onItemSelectedListener = onItemSelectedListener
-
-            binding.spinnerFilterType.adapter = adapter
-
-            binding.rgViewGroup.setOnCheckedChangeListener { radioGroup, checkedId ->
-                toggleListener(checkedId == R.id.rb_grid)
+                        textView.setTypeface(textView.typeface, Typeface.BOLD)
+                        imageView.visibility = View.VISIBLE
+                    }
+                    return view
+                }
             }
+        }
+
+        val rgViewGroupCheckChangedListener = RadioGroup.OnCheckedChangeListener { p0, p1 ->
+                viewTypeListener(p1 == R.id.rb_grid)
+            }
+
+        val filterSpinnerItemSelectListener = object: AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                filterSelectedListener(p2)
+            }
+            override fun onNothingSelected(p0: AdapterView<*>?) {}
         }
     }
 

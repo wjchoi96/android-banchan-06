@@ -3,7 +3,10 @@ package com.woowahan.banchan.ui.maindishbanchan
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,7 +33,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         MainDishBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
-            filterSelectedListener,
+            viewModel.filterItemSelect,
             viewModel.viewModeToggleEvent,
             viewModel.clickInsertCartButton
         )
@@ -135,14 +138,4 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         this.adapter = adapterRef
     }
 
-    private val filterSelectedListener = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-            viewModel.filterItemSelect(position)
-        }
-
-        override fun onNothingSelected(p0: AdapterView<*>?) {
-            TODO("Not yet implemented")
-        }
-
-    }
 }
