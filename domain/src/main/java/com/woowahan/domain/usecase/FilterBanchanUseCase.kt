@@ -3,7 +3,10 @@ package com.woowahan.domain.usecase
 import com.woowahan.domain.model.BanchanModel
 
 class FilterBanchanUseCase {
-    operator fun invoke(list: List<BanchanModel>, filterType: BanchanModel.FilterType): Result<List<BanchanModel>>{
+    operator fun invoke(
+        list: List<BanchanModel>,
+        filterType: BanchanModel.FilterType
+    ): Result<List<BanchanModel>> {
         return kotlin.runCatching {
             listOf(
                 BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
@@ -11,11 +14,11 @@ class FilterBanchanUseCase {
             ) + list
                 .filter { it.viewType == BanchanModel.ViewType.Item }
                 .sortedBy {
-                    when(filterType){
+                    when (filterType) {
                         BanchanModel.FilterType.PriceHigher -> -it.priceRaw
                         BanchanModel.FilterType.PriceLower -> it.priceRaw
                         BanchanModel.FilterType.SalePercentHigher -> -it.salePercent.toLong()
-                        BanchanModel.FilterType.SalePercentLower -> it.salePercent.toLong()
+                        else -> it.salePercent.toLong()
                     }
                 }
         }
