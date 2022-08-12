@@ -10,6 +10,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.banchan.databinding.DialogCartAddBinding
 import com.woowahan.banchan.util.toCashString
 import com.woowahan.domain.model.BanchanModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 
 class CartItemInsertBottomSheet constructor(
@@ -19,11 +22,11 @@ class CartItemInsertBottomSheet constructor(
     private var _binding: DialogCartAddBinding? = null
     private val binding get() = _binding ?: error("Binding not Initialized")
 
-    private var _itemCount: MutableLiveData<Int> = MutableLiveData(1)
-    val itemCount: LiveData<Int> = _itemCount
+    private var _itemCount: MutableStateFlow<Int> = MutableStateFlow(1)
+    val itemCount = _itemCount.asStateFlow()
 
-    private var _cartCost: MutableLiveData<String> = MutableLiveData(banchan.salePrice ?: banchan.price)
-    var cartCost: LiveData<String> = _cartCost
+    private var _cartCost: MutableStateFlow<String> = MutableStateFlow(banchan.salePrice ?: banchan.price)
+    var cartCost = _cartCost.asStateFlow()
 
     val countUpListener: (Int) -> (Unit) = {
         Timber.d("count up event[$it]")
