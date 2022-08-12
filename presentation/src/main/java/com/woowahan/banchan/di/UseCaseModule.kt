@@ -37,6 +37,10 @@ object UseCaseModule {
     ) = FetchSideDishBanchanUseCase(repo, fetchCartItemsUseCase)
 
     @Provides
+    fun provideGetCartSizeUseCase(repo: CartRepository) =
+        GetCartItemsSizeFlowUseCase(repo)
+
+    @Provides
     fun provideFetchCartItemsUseCase(repo: CartRepository) =
         FetchCartItemsUseCase(repo)
 
