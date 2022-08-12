@@ -21,24 +21,27 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class MainDishBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
     private val filterSelectedListener: (Int) -> Unit,
     private val viewTypeListener: (Boolean) -> Unit,
+    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = true
     private var selectedItemPosition: Int = 0
-    private val banchanList = mutableListOf<BanchanModel>()
+    private var banchanList = listOf<BanchanModel>()
+
+    private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<BanchanModel>) {
         CoroutineScope(Dispatchers.Default).launch {
-            val diffCallback = BanchanModelDiffUtilCallback(banchanList, newList)
+            val diffCallback = BanchanModelDiffUtilCallback(banchanList, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
-                banchanList.clear()
-                banchanList.addAll(newList)
+                banchanList = newList.toList()
                 diffRes.dispatchUpdatesTo(this@MainDishBanchanAdapter)
             }
         }
@@ -61,8 +64,8 @@ class MainDishBanchanAdapter(
                 })
             else -> {
                 when(isGridView){
-                    true -> MainDishBanchanVerticalViewHolder.from(parent)
-                    false -> MainDishBanchanHorizontalViewHolder.from(parent)
+                    true -> MainDishBanchanVerticalViewHolder.from(parent, banchanInsertCartListener)
+                    false -> MainDishBanchanHorizontalViewHolder.from(parent, banchanInsertCartListener)
                 }
             }
         }
@@ -73,12 +76,40 @@ class MainDishBanchanAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Timber.d("onBindViewHolder[$position]")
         when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
             is ViewModelToggleHeaderViewHolder -> holder.bind(selectedItemPosition)
             is MainDishBanchanVerticalViewHolder -> holder.bind(banchanList[position])
             is MainDishBanchanHorizontalViewHolder -> holder.bind(banchanList[position])
         }
+    }
+
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if(payloads.isEmpty()){
+            super.onBindViewHolder(holder, position, payloads)
+            return
+        }
+        payloads.firstOrNull()?.let {
+            Timber.d("onBindViewHolder payloads[$position][$it]")
+            when(it){
+                cartStateChangePayload -> {
+                    when(holder){
+                        is MainDishBanchanVerticalViewHolder -> {
+                            holder.bindCartStateChangePayload(banchanList[position])
+                        }
+                        is MainDishBanchanHorizontalViewHolder -> {
+                            holder.bindCartStateChangePayload(banchanList[position])
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     override fun getItemCount(): Int = banchanList.size
@@ -174,41 +205,67 @@ class MainDishBanchanAdapter(
     }
 
     class MainDishBanchanVerticalViewHolder(
-        private val binding: ItemMenuVerticalBinding
+        private val binding: ItemMenuVerticalBinding,
+        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun from(parent: ViewGroup): MainDishBanchanVerticalViewHolder =
+            fun from(
+                parent: ViewGroup,
+                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+            ): MainDishBanchanVerticalViewHolder =
                 MainDishBanchanVerticalViewHolder(
                     ItemMenuVerticalBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
-                    )
+                    ),
+                    banchanInsertCartListener
                 )
         }
 
         fun bind(item: BanchanModel) {
+            Timber.d("bind called")
             binding.banchan = item
+            binding.isCartItem = item.isCartItem
+            binding.holder = this
+        }
+
+        fun bindCartStateChangePayload(item: BanchanModel){
+            Timber.d("bindPayload bindCartStateChangePayload")
+            binding.isCartItem = item.isCartItem
         }
     }
 
 
     class MainDishBanchanHorizontalViewHolder(
-        private val binding: ItemMenuHorizontalBinding
+        private val binding: ItemMenuHorizontalBinding,
+        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
-            fun from(parent: ViewGroup): MainDishBanchanHorizontalViewHolder =
+            fun from(
+                parent: ViewGroup,
+                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+            ): MainDishBanchanHorizontalViewHolder =
                 MainDishBanchanHorizontalViewHolder(
                     ItemMenuHorizontalBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
-                    )
+                    ),
+                    banchanInsertCartListener
                 )
         }
 
         fun bind(item: BanchanModel) {
+            Timber.d("bind called")
             binding.banchan = item
+            binding.isCartItem = item.isCartItem
+            binding.holder = this
+        }
+
+        fun bindCartStateChangePayload(item: BanchanModel){
+            Timber.d("bindPayload bindCartStateChangePayload")
+            binding.isCartItem = item.isCartItem
         }
     }
 }

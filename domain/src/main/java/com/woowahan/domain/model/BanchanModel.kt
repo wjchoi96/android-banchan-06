@@ -7,7 +7,8 @@ data class BanchanModel(
     val imageUrl: String,
     val price: String,
     val salePrice: String?,
-    val viewType: ViewType = ViewType.Item
+    val viewType: ViewType = ViewType.Item,
+    val isCartItem: Boolean = false
 ) {
     companion object {
         fun empty(): BanchanModel = BanchanModel("", "", "", "", "", null)

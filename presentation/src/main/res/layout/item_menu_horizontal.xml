@@ -6,8 +6,16 @@
         <import type="android.view.View" />
 
         <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanAdapter.MainDishBanchanHorizontalViewHolder" />
+
+        <variable
             name="banchan"
             type="com.woowahan.domain.model.BanchanModel" />
+
+        <variable
+            name="isCartItem"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -38,11 +46,13 @@
             app:layout_constraintEnd_toEndOf="@id/iv_menu_image">
 
             <ImageView
+                android:onClickListener="@{()-> holder.banchanInsertCartListener.invoke(banchan, isCartItem)}"
                 android:id="@+id/iv_add_cart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp"
-                android:src="@drawable/sel_btn_add_cart" />
+                android:src="@{isCartItem ? @drawable/ic_arrow_left : @drawable/ic_cart}"
+                />
         </androidx.cardview.widget.CardView>
 
 

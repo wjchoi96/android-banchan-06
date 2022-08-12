@@ -1,7 +1,7 @@
 package com.woowahan.banchan.di
 
-import com.woowahan.data.repository.CartRepositoryImpl
 import com.woowahan.domain.repository.BanchanRepository
+import com.woowahan.domain.repository.CartRepository
 import com.woowahan.domain.usecase.*
 import dagger.Module
 import dagger.Provides
@@ -13,35 +13,47 @@ import dagger.hilt.android.components.ViewModelComponent
 object UseCaseModule {
 
     @Provides
-    fun provideFetchBestDishBanchanUseCase(impl: BanchanRepository) =
-        FetchBestBanchanUseCase(impl)
+    fun provideFetchBestDishBanchanUseCase(
+        repo: BanchanRepository,
+        fetchCartItemsUseCase: FetchCartItemsUseCase
+    ) = FetchBestBanchanUseCase(repo, fetchCartItemsUseCase)
 
     @Provides
-    fun provideFetchMainDishBanchanUseCase(impl: BanchanRepository) =
-        FetchMainDishBanchanUseCase(impl)
+    fun provideFetchMainDishBanchanUseCase(
+        repo: BanchanRepository,
+        fetchCartItemsUseCase: FetchCartItemsUseCase
+    ) = FetchMainDishBanchanUseCase(repo, fetchCartItemsUseCase)
 
     @Provides
-    fun provideFetchSoupDishBanchanUseCase(impl: BanchanRepository) =
-        FetchSoupDishBanchanUseCase(impl)
+    fun provideFetchSoupDishBanchanUseCase(
+        repo: BanchanRepository,
+        fetchCartItemsUseCase: FetchCartItemsUseCase
+    ) = FetchSoupDishBanchanUseCase(repo, fetchCartItemsUseCase)
 
     @Provides
-    fun provideFetchSideDishBanchanUseCase(impl: BanchanRepository) =
-        FetchSideDishBanchanUseCase(impl)
+    fun provideFetchSideDishBanchanUseCase(
+        repo: BanchanRepository,
+        fetchCartItemsUseCase: FetchCartItemsUseCase
+    ) = FetchSideDishBanchanUseCase(repo, fetchCartItemsUseCase)
 
     @Provides
-    fun provideFetchCartItemsUseCase(impl: CartRepositoryImpl) =
-        FetchCartItemsUseCase(impl)
+    fun provideFetchCartItemsUseCase(repo: CartRepository) =
+        FetchCartItemsUseCase(repo)
 
     @Provides
-    fun provideRemoveCartItemUseCase(impl: CartRepositoryImpl) =
-        RemoveCartItemUseCase(impl)
+    fun provideInsertCartItemsUseCase(repo: CartRepository) =
+        InsertCartItemUseCase(repo)
 
     @Provides
-    fun provideRemoveCartItemsUseCase(impl: CartRepositoryImpl) =
-        RemoveCartItemsUseCase(impl)
+    fun provideRemoveCartItemUseCase(repo: CartRepository) =
+        RemoveCartItemUseCase(repo)
 
     @Provides
-    fun provideUpdateCartItemUseCase(impl: CartRepositoryImpl) =
-        UpdateCartItemUseCase(impl)
+    fun provideRemoveCartItemsUseCase(repo: CartRepository) =
+        RemoveCartItemsUseCase(repo)
+
+    @Provides
+    fun provideUpdateCartItemUseCase(repo: CartRepository) =
+        UpdateCartItemUseCase(repo)
 
 }
