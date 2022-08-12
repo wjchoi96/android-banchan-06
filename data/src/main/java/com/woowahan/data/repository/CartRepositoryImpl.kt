@@ -4,6 +4,7 @@ import com.woowahan.data.datasource.CartDataSource
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -11,6 +12,10 @@ class CartRepositoryImpl @Inject constructor(
     private val cartDataSource: CartDataSource,
     private val coroutineDispatcher: CoroutineDispatcher
 ): CartRepository {
+
+    override fun getCartSizeFlow(): Flow<Int> {
+        return cartDataSource.getCartSizeFlow()
+    }
 
     override suspend fun insertCartItem(
         banchan: BanchanModel,
