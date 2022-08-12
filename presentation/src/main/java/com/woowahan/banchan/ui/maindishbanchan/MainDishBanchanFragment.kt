@@ -31,7 +31,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             getString(R.string.main_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
-            viewModel.viewModeToggleEvent
+            viewModel.viewModeToggleEvent,
+            viewModel.clickInsertCartButton
         )
     }
 
@@ -78,6 +79,9 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                 when(it){
                     is MainDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
                     is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                    is MainDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
+                        it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                    }
                 }
             }
         }
@@ -98,6 +102,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                 binding.rvMainDish.refresh()
             }
         }
+
     }
 
     private val gridItemDecoration = object : RecyclerView.ItemDecoration() {
