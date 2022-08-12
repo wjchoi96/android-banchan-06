@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ItemCountHeaderBinding
+import com.woowahan.banchan.ui.adapter.FilterSpinnerAdapter
 
 class CountHeaderViewHolder(
     private val binding: ItemCountHeaderBinding,
@@ -42,34 +43,17 @@ class CountHeaderViewHolder(
         binding.defaultSpinnerSelectPosition = selectedItemPosition
     }
 
-    val spinnerAdapter: ArrayAdapter<String> by lazy {
-        object : ArrayAdapter<String>(
-            binding.root.context,
-            R.layout.item_filter_spinner,
-            R.id.tv_filter_name,
-            filterTypeList
-        ) {
-            override fun getDropDownView(
-                position: Int,
-                convertView: View?,
-                parent: ViewGroup
-            ): View {
-                val view = super.getDropDownView(position, convertView, parent)
-                if (position == binding.spinnerFilterType.selectedItemPosition) {
-                    val textView = (view as ViewGroup).getChildAt(0) as TextView
-                    val imageView = view.getChildAt(1)
-
-                    textView.setTypeface(textView.typeface, Typeface.BOLD)
-                    imageView.visibility = View.VISIBLE
-                }
-                return view
-            }
-        }
-    }
+    val spinnerAdapter = FilterSpinnerAdapter(
+        binding.root.context,
+        R.layout.item_filter_spinner,
+        R.id.tv_filter_name,
+        filterTypeList
+    )
 
     val filterSpinnerItemSelectListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
             filterSelectedListener(p2)
+            spinnerAdapter.setSelection(p2)
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) {}
