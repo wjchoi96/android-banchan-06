@@ -1,4 +1,4 @@
-package com.woowahan.banchan.ui.maindishbanchan
+package com.woowahan.banchan.ui.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
 import com.woowahan.banchan.R
-import com.woowahan.banchan.databinding.ItemBachanListBannerBinding
-import com.woowahan.banchan.databinding.ItemMenuHorizontalBinding
-import com.woowahan.banchan.databinding.ItemMenuVerticalBinding
 import com.woowahan.banchan.databinding.ItemViewModeToggleHeaderBinding
+import com.woowahan.banchan.ui.adapter.viewHolder.BanchanListBannerViewHolder
+import com.woowahan.banchan.ui.adapter.viewHolder.MenuHorizontalViewHolder
+import com.woowahan.banchan.ui.adapter.viewHolder.MenuVerticalViewHolder
 import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class MainDishBanchanAdapter(
+class ViewModeToggleBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
     private val filterSelectedListener: (Int) -> Unit,
@@ -42,7 +42,7 @@ class MainDishBanchanAdapter(
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
                 banchanList = newList.toList()
-                diffRes.dispatchUpdatesTo(this@MainDishBanchanAdapter)
+                diffRes.dispatchUpdatesTo(this@ViewModeToggleBanchanAdapter)
             }
         }
     }
@@ -51,21 +51,27 @@ class MainDishBanchanAdapter(
         return when (viewType) {
             BanchanModel.ViewType.Banner.value -> BanchanListBannerViewHolder.from(parent)
             BanchanModel.ViewType.Header.value -> ViewModelToggleHeaderViewHolder.from(
-                parent= parent,
-                isGridView= isGridView,
-                filterTypeList= filterTypeList,
-                filterSelectedListener= {
+                parent = parent,
+                isGridView = isGridView,
+                filterTypeList = filterTypeList,
+                filterSelectedListener = {
                     selectedItemPosition = it
                     filterSelectedListener(it)
                 },
-                viewTypeListener= {
+                viewTypeListener = {
                     viewTypeListener(it)
                     isGridView = it
                 })
             else -> {
                 when(isGridView){
-                    true -> MainDishBanchanVerticalViewHolder.from(parent, banchanInsertCartListener)
-                    false -> MainDishBanchanHorizontalViewHolder.from(parent, banchanInsertCartListener)
+                    true -> MenuVerticalViewHolder.from(
+                        parent,
+                        banchanInsertCartListener
+                    )
+                    false -> MenuHorizontalViewHolder.from(
+                        parent,
+                        banchanInsertCartListener
+                    )
                 }
             }
         }
@@ -80,8 +86,8 @@ class MainDishBanchanAdapter(
         when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
             is ViewModelToggleHeaderViewHolder -> holder.bind(selectedItemPosition)
-            is MainDishBanchanVerticalViewHolder -> holder.bind(banchanList[position])
-            is MainDishBanchanHorizontalViewHolder -> holder.bind(banchanList[position])
+            is MenuVerticalViewHolder -> holder.bind(banchanList[position])
+            is MenuHorizontalViewHolder -> holder.bind(banchanList[position])
         }
     }
 
@@ -99,10 +105,10 @@ class MainDishBanchanAdapter(
             when(it){
                 cartStateChangePayload -> {
                     when(holder){
-                        is MainDishBanchanVerticalViewHolder -> {
+                        is MenuVerticalViewHolder -> {
                             holder.bindCartStateChangePayload(banchanList[position])
                         }
-                        is MainDishBanchanHorizontalViewHolder -> {
+                        is MenuHorizontalViewHolder -> {
                             holder.bindCartStateChangePayload(banchanList[position])
                         }
                     }
@@ -113,25 +119,6 @@ class MainDishBanchanAdapter(
     }
 
     override fun getItemCount(): Int = banchanList.size
-
-    class BanchanListBannerViewHolder(
-        private val binding: ItemBachanListBannerBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-        companion object {
-            fun from(parent: ViewGroup): BanchanListBannerViewHolder = BanchanListBannerViewHolder(
-                ItemBachanListBannerBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            )
-        }
-
-        fun bind(title: String) {
-            binding.bannerTitle = title
-            binding.showBestLabel = false
-        }
-    }
 
     class ViewModelToggleHeaderViewHolder(
         private val binding: ItemViewModeToggleHeaderBinding,
@@ -201,71 +188,6 @@ class MainDishBanchanAdapter(
                 filterSelectedListener(p2)
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {}
-        }
-    }
-
-    class MainDishBanchanVerticalViewHolder(
-        private val binding: ItemMenuVerticalBinding,
-        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
-    ) : RecyclerView.ViewHolder(binding.root) {
-        companion object {
-            fun from(
-                parent: ViewGroup,
-                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
-            ): MainDishBanchanVerticalViewHolder =
-                MainDishBanchanVerticalViewHolder(
-                    ItemMenuVerticalBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    ),
-                    banchanInsertCartListener
-                )
-        }
-
-        fun bind(item: BanchanModel) {
-            Timber.d("bind called")
-            binding.banchan = item
-            binding.isCartItem = item.isCartItem
-            binding.holder = this
-        }
-
-        fun bindCartStateChangePayload(item: BanchanModel){
-            Timber.d("bindPayload bindCartStateChangePayload")
-            binding.isCartItem = item.isCartItem
-        }
-    }
-
-
-    class MainDishBanchanHorizontalViewHolder(
-        private val binding: ItemMenuHorizontalBinding,
-        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
-    ) : RecyclerView.ViewHolder(binding.root) {
-        companion object {
-            fun from(
-                parent: ViewGroup,
-                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
-            ): MainDishBanchanHorizontalViewHolder =
-                MainDishBanchanHorizontalViewHolder(
-                    ItemMenuHorizontalBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    ),
-                    banchanInsertCartListener
-                )
-        }
-
-        fun bind(item: BanchanModel) {
-            Timber.d("bind called")
-            binding.banchan = item
-            binding.isCartItem = item.isCartItem
-            binding.holder = this
-        }
-
-        fun bindCartStateChangePayload(item: BanchanModel){
-            Timber.d("bindPayload bindCartStateChangePayload")
-            binding.isCartItem = item.isCartItem
         }
     }
 }

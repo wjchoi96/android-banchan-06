@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentSideDishBanchanBinding
+import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.SideDishBanchanViewModel
 import com.woowahan.banchan.util.dp
@@ -19,18 +20,19 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class SideDishBanchanFragment: BaseFragment<FragmentSideDishBanchanBinding>() {
+class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
 
     override val layoutResId: Int
         get() = R.layout.fragment_side_dish_banchan
 
 
     private val viewModel: SideDishBanchanViewModel by viewModels()
-    private val adapter: SideDishBanchanAdapter by lazy {
-        SideDishBanchanAdapter(
+    private val adapter: DefaultBanchanAdapter by lazy {
+        DefaultBanchanAdapter(
             getString(R.string.side_dish_banchan_title),
             BanchanModel.getFilterList(),
-            viewModel.filterItemSelect
+            viewModel.filterItemSelect,
+            viewModel.clickInsertCartButton
         )
     }
 
@@ -74,6 +76,9 @@ class SideDishBanchanFragment: BaseFragment<FragmentSideDishBanchanBinding>() {
                         it.message,
                         binding.layoutBackground
                     )
+                    is SideDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
+                        it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                    }
                 }
             }
         }

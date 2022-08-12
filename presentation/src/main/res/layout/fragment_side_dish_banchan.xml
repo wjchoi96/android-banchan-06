@@ -11,7 +11,7 @@
 
         <variable
             name="adapter"
-            type="com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanAdapter" />
+            type="com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"

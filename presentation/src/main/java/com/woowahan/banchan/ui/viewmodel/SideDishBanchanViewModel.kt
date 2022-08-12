@@ -2,10 +2,13 @@ package com.woowahan.banchan.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.banchan.util.FilterBanchanListUtil
+import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
+import com.woowahan.banchan.util.filterType
+import com.woowahan.banchan.util.getNewListApplyCartState
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchSideDishBanchanUseCase
-import com.woowahan.domain.usecase.FetchSoupDishBanchanUseCase
+import com.woowahan.domain.usecase.InsertCartItemUseCase
+import com.woowahan.domain.usecase.RemoveCartItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +19,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SideDishBanchanViewModel @Inject constructor(
-    private val fetchSideBanchanUseCase: FetchSideDishBanchanUseCase
+    private val fetchSideBanchanUseCase: FetchSideDishBanchanUseCase,
+    private val insertCartItemUseCase: InsertCartItemUseCase,
+    private val removeCartItemUseCase: RemoveCartItemUseCase
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -32,6 +37,20 @@ class SideDishBanchanViewModel @Inject constructor(
 
 
     private lateinit var defaultBanchans: List<BanchanModel>
+
+    val clickInsertCartButton: (BanchanModel, Boolean) -> (Unit) = { banchan, isCartItem ->
+        viewModelScope.launch {
+            when (isCartItem) {
+                true -> removeItemFromCart(banchan)
+                else -> {
+                    val dialog = CartItemInsertBottomSheet(banchan) { item, count ->
+                        insertItemsToCart(item, count)
+                    }
+                    _eventFlow.emit(UiEvent.ShowCartBottomSheet(dialog))
+                }
+            }
+        }
+    }
 
     fun fetchSoupDishBanchans() {
         if (_dataLoading.value) {
@@ -57,6 +76,42 @@ class SideDishBanchanViewModel @Inject constructor(
         }
     }
 
+    private fun removeItemFromCart(banchanModel: BanchanModel) {
+        viewModelScope.launch {
+            _dataLoading.emit(true)
+            removeCartItemUseCase.invoke(banchanModel.hash)
+                .onSuccess {
+                    defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, false)
+                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
+                }.onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.emit(false)
+                }
+        }
+    }
+
+    private fun insertItemsToCart(banchanModel: BanchanModel, count: Int) {
+        viewModelScope.launch {
+            _dataLoading.emit(true)
+            insertCartItemUseCase.invoke(banchanModel, count)
+                .onSuccess {
+                    defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, true)
+                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
+                }.onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowSnackBar(message))
+                    }
+                }.also {
+                    _dataLoading.emit(false)
+                }
+        }
+    }
+
     private fun filterBanchan(filterType: BanchanModel.FilterType) {
         viewModelScope.launch {
             if (filterType ==
@@ -65,7 +120,7 @@ class SideDishBanchanViewModel @Inject constructor(
                 _banchans.value = defaultBanchans
             } else {
                 kotlin.runCatching {
-                    _banchans.value = FilterBanchanListUtil.filter(defaultBanchans, filterType)
+                    _banchans.value = defaultBanchans.filterType(filterType)
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -101,5 +156,6 @@ class SideDishBanchanViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
+        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
     }
 }

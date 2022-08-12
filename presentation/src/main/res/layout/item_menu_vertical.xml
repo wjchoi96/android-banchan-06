@@ -9,7 +9,7 @@
 
         <variable
             name="holder"
-            type="com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanAdapter.MainDishBanchanVerticalViewHolder" />
+            type="com.woowahan.banchan.ui.adapter.viewHolder.MenuVerticalViewHolder" />
 
         <variable
             name="isCartItem"

@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentSoupDishBanchanBinding
+import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.base.BaseFragment
+import com.woowahan.banchan.ui.viewmodel.SideDishBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.SoupDishBanchanViewModel
 import com.woowahan.banchan.util.dp
 import com.woowahan.banchan.util.repeatOnStarted
@@ -25,11 +27,12 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
         get() = R.layout.fragment_soup_dish_banchan
 
     private val viewModel: SoupDishBanchanViewModel by viewModels()
-    private val adapter: SoupDishBanchanAdapter by lazy {
-        SoupDishBanchanAdapter(
+    private val adapter: DefaultBanchanAdapter by lazy {
+        DefaultBanchanAdapter(
             getString(R.string.soup_dish_banchan_title),
             BanchanModel.getFilterList(),
-            viewModel.filterItemSelect
+            viewModel.filterItemSelect,
+            viewModel.clickInsertCartButton
         )
     }
 
@@ -73,6 +76,9 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
                         it.message,
                         binding.layoutBackground
                     )
+                    is SoupDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
+                        it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                    }
                 }
             }
         }

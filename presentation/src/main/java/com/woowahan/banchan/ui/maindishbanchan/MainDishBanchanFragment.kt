@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentMainDishBanchanBinding
+import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.dp
@@ -26,8 +27,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         get() = R.layout.fragment_main_dish_banchan
 
     private val viewModel: MainDishBanchanViewModel by viewModels()
-    private val adapter: MainDishBanchanAdapter by lazy {
-        MainDishBanchanAdapter(
+    private val adapter: ViewModeToggleBanchanAdapter by lazy {
+        ViewModeToggleBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,

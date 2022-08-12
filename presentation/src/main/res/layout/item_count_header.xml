@@ -5,7 +5,7 @@
 
         <variable
             name="holder"
-            type="com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanAdapter.CountHeaderViewHolder" />
+            type="com.woowahan.banchan.ui.adapter.viewHolder.CountHeaderViewHolder" />
 
         <variable
             name="defaultSpinnerSelectPosition"
