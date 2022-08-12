@@ -20,7 +20,7 @@ class DefaultBanchanAdapter(
     private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var selectedFilterPosition: Int = 0
-    private val banchanList = mutableListOf<BanchanModel>()
+    private var banchanList = listOf<BanchanModel>()
     private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<BanchanModel>) {
@@ -29,8 +29,7 @@ class DefaultBanchanAdapter(
                 BanchanModelDiffUtilCallback(banchanList, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
-                banchanList.clear()
-                banchanList.addAll(newList)
+                banchanList = newList.toList()
                 diffRes.dispatchUpdatesTo(this@DefaultBanchanAdapter)
             }
         }
