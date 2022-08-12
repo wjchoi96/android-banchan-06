@@ -28,6 +28,8 @@ class MenuVerticalViewHolder(
 
     fun bind(item: BanchanModel) {
         binding.banchan = item
+        binding.isCartItem = item.isCartItem
+        binding.holder = this
     }
 
     fun bindCartStateChangePayload(item: BanchanModel) {
