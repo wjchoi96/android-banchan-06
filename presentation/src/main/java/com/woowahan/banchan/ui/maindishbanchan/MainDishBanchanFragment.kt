@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentMainDishBanchanBinding
 import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
+import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.dp
@@ -77,9 +78,12 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     private fun observeData() {
         repeatOnStarted {
             viewModel.eventFlow.collect {
-                when(it){
+                when (it) {
                     is MainDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
-                    is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                    is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                        it.message,
+                        binding.layoutBackground
+                    )
                     is MainDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
                         it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
                     }
@@ -106,37 +110,11 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
 
     }
 
-    private val gridItemDecoration = object : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            super.getItemOffsets(outRect, view, parent, state)
-
-            val idx = parent.getChildAdapterPosition(view) - 2
-            if (idx < 0) return
-            val column = idx % spanCount
-            val margin = 16.dp(context)
-            val spacing = 8.dp(context)
-            outRect.left =
-                spacing - column * spacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
-            outRect.right =
-                (column + 1) * spacing / spanCount // (column + 1) * ((1f / spanCount) * spacing)
-
-            when (column) {
-                0 -> {
-                    outRect.left = margin
-                }
-                spanCount - 1 -> {
-                    outRect.right = margin
-                }
-            }
-
-            outRect.bottom = 32.dp(context)
-            Timber.d("idx[$idx] => left[${outRect.left}], right[${outRect.right}]")
-        }
+    private val gridItemDecoration by lazy {
+        GridItemDecoration(
+            requireContext(),
+            spanCount
+        ).decoration
     }
 
     private fun RecyclerView.refresh() {
