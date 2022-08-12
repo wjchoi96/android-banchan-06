@@ -4,7 +4,7 @@
     <data>
         <variable
             name="holder"
-            type="com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanAdapter.ViewModelToggleHeaderViewHolder" />
+            type="com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter.ViewModelToggleHeaderViewHolder" />
 
         <variable
             name="defaultSpinnerSelectPosition"

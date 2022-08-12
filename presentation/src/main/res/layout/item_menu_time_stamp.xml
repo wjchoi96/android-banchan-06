@@ -29,8 +29,7 @@
             android:id="@+id/iv_add_cart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
-            android:src="@drawable/sel_btn_add_cart" />
+            android:src="@drawable/bg_cart_padding" />
     </androidx.cardview.widget.CardView>
 
     <TextView

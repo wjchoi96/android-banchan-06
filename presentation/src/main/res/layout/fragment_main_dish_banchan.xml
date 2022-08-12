@@ -7,7 +7,7 @@
             type="com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel" />
         <variable
             name="adapter"
-            type="com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanAdapter" />
+            type="com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
