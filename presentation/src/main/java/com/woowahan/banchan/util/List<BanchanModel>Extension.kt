@@ -22,8 +22,8 @@ fun List<BanchanModel>.filterType(filterType: BanchanModel.FilterType): List<Ban
         .filter { it.viewType == BanchanModel.ViewType.Item }
         .sortedBy {
             when (filterType) {
-                BanchanModel.FilterType.PriceHigher -> -it.priceRaw
-                BanchanModel.FilterType.PriceLower -> it.priceRaw
+                BanchanModel.FilterType.PriceHigher -> if (it.salePercent == 0) -it.priceRaw else -it.salePriceRaw
+                BanchanModel.FilterType.PriceLower -> if (it.salePercent == 0) it.priceRaw else it.salePriceRaw
                 BanchanModel.FilterType.SalePercentHigher -> -it.salePercent.toLong()
                 else -> throw Throwable("Unknown filter item")
             }
