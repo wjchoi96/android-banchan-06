@@ -39,7 +39,7 @@ class CountHeaderViewHolder(
 
     fun bind(selectedItemPosition: Int) {
         binding.holder = this
-        binding.menuCnt = menuCnt
+        binding.menuCnt = menuCnt - 2
         binding.defaultSpinnerSelectPosition = selectedItemPosition
     }
 
