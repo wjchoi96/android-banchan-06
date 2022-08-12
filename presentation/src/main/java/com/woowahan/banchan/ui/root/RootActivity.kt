@@ -38,6 +38,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
 
     private fun setUpViewPager(){
         binding.vpContent.adapter = pagerAdapter
+        binding.vpContent.offscreenPageLimit = 1
         TabLayoutMediator(binding.layoutTab, binding.vpContent) { tab, position ->
             tab.text = fragmentList[position].first
         }.attach()
