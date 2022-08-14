@@ -92,4 +92,13 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         }
     }
 
+    private fun setOrderBadge(on: Boolean){
+        val iconRes = when(on){
+            true -> R.drawable.ic_mypage_badge
+            else -> R.drawable.ic_mypage
+        }
+        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_order).setIcon(iconRes)
+    }
+
+
 }
