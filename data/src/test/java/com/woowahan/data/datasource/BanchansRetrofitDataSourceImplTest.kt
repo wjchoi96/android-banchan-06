@@ -59,33 +59,54 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchBestBanchans_realServerRequest_isNotNull() = runTest{
-        val service = retrofit.create(BestBanchanApiService::class.java)
+    @Test
+    fun fetchBestBanchans_realServerRequest_isNotNull() = runTest {
+        //Given
+        val service = realRetrofit.create(BestBanchanApiService::class.java)
+
+        //When
         val res = service.fetchBestBanchans()
+
+        //Then
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
 
     @Test
-    fun fetchMainDishBanchans_realServerRequest_isNotNull() = runTest{
-        val service = retrofit.create(MainDishBanchanApiService::class.java)
+    fun fetchMainDishBanchans_realServerRequest_isNotNull() = runTest {
+        //Given
+        val service = realRetrofit.create(MainDishBanchanApiService::class.java)
+
+        //WHen
         val res = service.fetchMainDishBanchans()
+
+        //Then
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
 
     @Test
-    fun fetchSoupDishBanchans_realServerRequest_isNotNull() = runTest{
-        val service = retrofit.create(SoupDishBanchanApiService::class.java)
+    fun fetchSoupDishBanchans_realServerRequest_isNotNull() = runTest {
+        //Given
+        val service = realRetrofit.create(SoupDishBanchanApiService::class.java)
+
+        //When
         val res = service.fetchSoupDishBanchans()
+
+        //Then
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
 
     @Test
-    fun fetchSideDishBanchans_realServerRequest_isNotNull() = runTest{
-        val service = retrofit.create(SideDishBanchanApiService::class.java)
+    fun fetchSideDishBanchans_realServerRequest_isNotNull() = runTest {
+        //Given
+        val service = realRetrofit.create(SideDishBanchanApiService::class.java)
+
+        //When
         val res = service.fetchSideDishBanchans()
+
+        //Then
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
