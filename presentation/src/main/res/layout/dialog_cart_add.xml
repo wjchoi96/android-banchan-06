@@ -188,21 +188,22 @@
             app:layout_constraintTop_toTopOf="@id/btn_plus"
             tools:text="12,950원" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_plus"
             android:onClickListener="@{()->dialog.insertButtonClick.invoke(banchan, dialog.itemCount)}"
             android:text="@{Integer.toString(dialog.itemCount) + `개 담기`}"
             android:id="@+id/btn_add_to_cart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:minHeight="56dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/sel_main_btn"
             android:textSize="18sp"
             android:textColor="@color/white_ffffff"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btn_plus"
+            android:backgroundTint="@color/yellow_f9ba70"
             tools:text="n개 담기" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
