@@ -47,6 +47,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
     }
 
     private fun setListener(){
+        // use at main tool bar
         binding.layoutIncludeToolBar.toolBar.setOnMenuItemClickListener {
             return@setOnMenuItemClickListener when(it.itemId){
                 R.id.menu_main_action_bar_cart -> {
@@ -59,6 +60,11 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
                 }
                 else -> false
             }
+        }
+
+        // use at sub tool bar
+        binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener {
+            showToast("back")
         }
     }
 
