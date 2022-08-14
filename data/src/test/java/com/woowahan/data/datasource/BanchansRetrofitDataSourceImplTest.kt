@@ -4,27 +4,30 @@ import com.woowahan.data.apiservice.BestBanchanApiService
 import com.woowahan.data.apiservice.MainDishBanchanApiService
 import com.woowahan.data.apiservice.SideDishBanchanApiService
 import com.woowahan.data.apiservice.SoupDishBanchanApiService
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
+@OptIn(ExperimentalCoroutinesApi::class)
 class BanchansRetrofitDataSourceImplTest{
 
-//    private val context = ApplicationProvider.getApplicationContext<Context>()
-//    private lateinit var server: MockWebServer
+    private lateinit var server: MockWebServer
 //    val successResponse by lazy {
 //        MockResponse().apply {
 //            setResponseCode(HttpURLConnection.HTTP_OK)
-//            val jsonText = readSuccessJson(context)
-//            setBody(jsonText)
+////            val jsonText = readSuccessJson(context)
+////            setBody(jsonText)
 //        }
 //    }
-
+//
 //    private fun readSuccessJson(context:Context):String{
 //        return fileReader(context,"bestBanchanResponse.json")
 //    }
@@ -56,41 +59,33 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchBestBanchans_realServerRequest_isNotNull(){
-        val res = runBlocking{
-            val service = retrofit.create(BestBanchanApiService::class.java)
-            service.fetchBestBanchans()
-        }
+    fun fetchBestBanchans_realServerRequest_isNotNull() = runTest{
+        val service = retrofit.create(BestBanchanApiService::class.java)
+        val res = service.fetchBestBanchans()
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
 
     @Test
-    fun fetchMainDishBanchans_realServerRequest_isNotNull(){
-        val res = runBlocking{
-            val service = retrofit.create(MainDishBanchanApiService::class.java)
-            service.fetchMainDishBanchans()
-        }
+    fun fetchMainDishBanchans_realServerRequest_isNotNull() = runTest{
+        val service = retrofit.create(MainDishBanchanApiService::class.java)
+        val res = service.fetchMainDishBanchans()
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
 
     @Test
-    fun fetchSoupDishBanchans_realServerRequest_isNotNull(){
-        val res = runBlocking {
-            val service = retrofit.create(SoupDishBanchanApiService::class.java)
-            service.fetchSoupDishBanchans()
-        }
+    fun fetchSoupDishBanchans_realServerRequest_isNotNull() = runTest{
+        val service = retrofit.create(SoupDishBanchanApiService::class.java)
+        val res = service.fetchSoupDishBanchans()
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
 
     @Test
-    fun fetchSideDishBanchans_realServerRequest_isNotNull(){
-        val res = runBlocking {
-            val service = retrofit.create(SideDishBanchanApiService::class.java)
-            service.fetchSideDishBanchans()
-        }
+    fun fetchSideDishBanchans_realServerRequest_isNotNull() = runTest{
+        val service = retrofit.create(SideDishBanchanApiService::class.java)
+        val res = service.fetchSideDishBanchans()
         println(res.body()?.toString())
         assertThat(res.body()?.body).isNotNull
     }
