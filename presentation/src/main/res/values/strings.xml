@@ -11,4 +11,7 @@
 
     <!-- use at main dish -->
     <string name="main_dish_banchan_banner_title">모두가 좋아하는\n든든한 메인 요리</string>
+    <string name="cart_unselect">선택 해제₩</string>
+    <string name="cart_select_all">전체 선택</string>
+    <string name="cart_remove_selected">선택 삭제</string>
 </resources>
