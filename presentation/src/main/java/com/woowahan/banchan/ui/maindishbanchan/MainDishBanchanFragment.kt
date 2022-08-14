@@ -45,7 +45,6 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         binding.viewModel = viewModel
         binding.adapter = adapter
 
-        setUpGridRecyclerView()
         observeData()
     }
 
@@ -92,19 +91,19 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         }
 
         repeatOnStarted {
-            viewModel.banchans.collect {
-                adapter.updateList(it)
-            }
-        }
-
-        repeatOnStarted {
-            viewModel.gridViewMode.collect() {
+            viewModel.gridViewMode.collect {
                 if (it) {
                     setUpGridRecyclerView()
                 } else {
                     setUpLinearRecyclerView()
                 }
                 binding.rvMainDish.refresh()
+            }
+        }
+
+        repeatOnStarted {
+            viewModel.banchans.collect {
+                adapter.updateList(it)
             }
         }
 
