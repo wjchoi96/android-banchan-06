@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_main_dialog"
+        android:padding="24dp"
+        android:minWidth="@dimen/main_tab_min_width"
+        >
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:minWidth="@dimen/main_dialog_title_min_width"
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            tools:text = "선택한 항목이 장바구니에 담겼습니다"
+            />
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintEnd_toStartOf="@id/btn_color"
+
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:textColor="@color/black_000000"
+            android:textStyle="bold"
+            android:id="@+id/btn_black"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="장바구니 확인"
+            />
+        <TextView
+            app:layout_constraintTop_toTopOf="@id/btn_black"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:textColor="@color/orange_f46700"
+            android:textStyle="bold"
+            android:id="@+id/btn_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="계속 쇼핑하기"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
