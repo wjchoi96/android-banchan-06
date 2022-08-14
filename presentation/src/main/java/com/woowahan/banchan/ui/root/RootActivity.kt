@@ -13,6 +13,7 @@ import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
 import com.woowahan.banchan.ui.viewmodel.RootViewModel
 import com.woowahan.banchan.util.repeatOnStarted
+import com.woowahan.banchan.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
@@ -41,7 +42,24 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         super.onCreate(savedInstanceState)
 
         setUpViewPager()
+        setListener()
         observeData()
+    }
+
+    private fun setListener(){
+        binding.layoutIncludeToolBar.toolBar.setOnMenuItemClickListener {
+            return@setOnMenuItemClickListener when(it.itemId){
+                R.id.menu_main_action_bar_cart -> {
+                    showToast("cart")
+                    true
+                }
+                R.id.menu_main_action_bar_order -> {
+                    showToast("order")
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     private fun setUpViewPager(){
