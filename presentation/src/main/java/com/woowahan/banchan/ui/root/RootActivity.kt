@@ -1,7 +1,9 @@
 package com.woowahan.banchan.ui.root
 
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
@@ -15,8 +17,6 @@ import com.woowahan.banchan.ui.viewmodel.RootViewModel
 import com.woowahan.banchan.util.repeatOnStarted
 import com.woowahan.banchan.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 
 @AndroidEntryPoint
 class RootActivity: BaseActivity<ActivityMainBinding>() {
@@ -78,10 +78,18 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
     private fun observeData(){
         repeatOnStarted {
             viewModel.cartItemSize.collect {
-                Timber.d("collect cart item size at root => $it")
+                setupBadge(it)
             }
         }
     }
 
+    private fun setupBadge(count: Int) {
+        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_cart).actionView.let {
+            (it.findViewById(R.id.cart_badge) as TextView).let { tv ->
+                tv.isVisible = count != 0
+                tv.text = if(count <= 10) count.toString() else "10+"
+            }
+        }
+    }
 
 }
