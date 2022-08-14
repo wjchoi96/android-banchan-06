@@ -1,9 +1,5 @@
-package com.woowahan.data
+package com.woowahan.data.apiservice
 
-import com.woowahan.data.apiservice.BestBanchanApiService
-import com.woowahan.data.apiservice.MainDishBanchanApiService
-import com.woowahan.data.apiservice.SideDishBanchanApiService
-import com.woowahan.data.apiservice.SoupDishBanchanApiService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
@@ -14,8 +10,12 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * 본래 service 들 마다 각각 test 파일을 생성해야 하지만, 일단 하나로 통합하여 생성
+ */
+
 @OptIn(ExperimentalCoroutinesApi::class)
-class BanchanRetrofitTest {
+class BanchansRetrofitApiServiceTest {
 
     private lateinit var realRetrofit: Retrofit
     private val baseUrl = "https://api.codesquad.kr/onban/"
