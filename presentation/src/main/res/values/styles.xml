@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MainTabLayoutTextStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SpinnerTheme" parent="Widget.AppCompat.Spinner.Underlined">
+        <item name="android:popupBackground">@drawable/bg_spinner</item>
+        <item name="android:layout_width">140dp</item>
+    </style>
+
+</resources>
