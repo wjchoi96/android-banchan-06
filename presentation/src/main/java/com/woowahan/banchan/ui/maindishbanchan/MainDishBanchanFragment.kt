@@ -13,10 +13,10 @@ import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
-import com.woowahan.banchan.util.dp
-import com.woowahan.banchan.util.repeatOnStarted
-import com.woowahan.banchan.util.showSnackBar
-import com.woowahan.banchan.util.showToast
+import com.woowahan.banchan.extension.dp
+import com.woowahan.banchan.extension.repeatOnStarted
+import com.woowahan.banchan.extension.showSnackBar
+import com.woowahan.banchan.extension.showToast
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
