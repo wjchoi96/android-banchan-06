@@ -1,25 +1,20 @@
 package com.woowahan.banchan.ui.soupdishbanchan
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentSoupDishBanchanBinding
+import com.woowahan.banchan.extension.repeatOnStarted
+import com.woowahan.banchan.extension.showSnackBar
+import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
-import com.woowahan.banchan.ui.viewmodel.SideDishBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.SoupDishBanchanViewModel
-import com.woowahan.banchan.util.dp
-import com.woowahan.banchan.util.repeatOnStarted
-import com.woowahan.banchan.util.showSnackBar
-import com.woowahan.banchan.util.showToast
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
