@@ -3,8 +3,8 @@ package com.woowahan.banchan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
-import com.woowahan.banchan.util.filterType
-import com.woowahan.banchan.util.getNewListApplyCartState
+import com.woowahan.banchan.extension.filterType
+import com.woowahan.banchan.extension.getNewListApplyCartState
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchMainDishBanchanUseCase
 import com.woowahan.domain.usecase.InsertCartItemUseCase
