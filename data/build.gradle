@@ -55,7 +55,7 @@ dependencies {
     testImplementation "org.assertj:assertj-core:3.20.2"
 
     // Dependencies for run Blocking Test
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1"
 
     // Dependencies for 아키텍처 구성 요소 핵심 테스트 라이브러리
     testImplementation "androidx.arch.core:core-testing:2.1.0"
