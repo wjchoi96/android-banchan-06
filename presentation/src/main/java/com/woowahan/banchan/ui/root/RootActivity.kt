@@ -1,6 +1,7 @@
 package com.woowahan.banchan.ui.root
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
@@ -10,10 +11,16 @@ import com.woowahan.banchan.ui.bestbanchan.BestBanchanFragment
 import com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanFragment
 import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
+import com.woowahan.banchan.ui.viewmodel.RootViewModel
+import com.woowahan.banchan.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 @AndroidEntryPoint
 class RootActivity: BaseActivity<ActivityMainBinding>() {
+
+    private val viewModel: RootViewModel by viewModels()
 
     private val fragmentList: List<Pair<String, Fragment>> by lazy {
         listOf(
@@ -34,6 +41,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         super.onCreate(savedInstanceState)
 
         setUpViewPager()
+        observeData()
     }
 
     private fun setUpViewPager(){
@@ -41,6 +49,14 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         TabLayoutMediator(binding.layoutTab, binding.vpContent) { tab, position ->
             tab.text = fragmentList[position].first
         }.attach()
+    }
+
+    private fun observeData(){
+        repeatOnStarted {
+            viewModel.cartItemSize.collect {
+                Timber.d("collect cart item size at root => $it")
+            }
+        }
     }
 
 

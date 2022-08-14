@@ -1,8 +1,11 @@
 package com.woowahan.data.datasource
 
 import com.woowahan.domain.model.BanchanModel
+import kotlinx.coroutines.flow.Flow
 
 interface CartDataSource {
+    fun getCartSizeFlow(): Flow<Int>
+
     suspend fun insertCartItem(banchan: BanchanModel, count: Int): Pair<BanchanModel, Int>?
 
     suspend fun removeCartItem(hash: String): BanchanModel?
