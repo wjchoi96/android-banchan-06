@@ -14,4 +14,9 @@
     <string name="cart_unselect">선택 해제₩</string>
     <string name="cart_select_all">전체 선택</string>
     <string name="cart_remove_selected">선택 삭제</string>
+    <string name="cart_menus_price">상품 주문 금액</string>
+    <string name="cart_delivery_fee">배송료</string>
+    <string name="cart_total_price">총 주문 금액</string>
+    <string name="cart_recent_viewed">최근 본 상품</string>
+    <string name="cart_view_all">전체보기</string>
 </resources>
