@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class DefaultBanchanAdapter(
     private val bannerTitle: String,
@@ -62,6 +63,29 @@ class DefaultBanchanAdapter(
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
             is CountHeaderViewHolder -> holder.bind(selectedFilterPosition)
             is MenuVerticalViewHolder -> holder.bind(banchanList[position])
+        }
+    }
+
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+            return
+        }
+        payloads.firstOrNull()?.let {
+            Timber.d("onBindViewHolder payloads[$position][$it]")
+            when (it) {
+                cartStateChangePayload -> {
+                    when (holder) {
+                        is MenuVerticalViewHolder -> {
+                            holder.bindCartStateChangePayload(banchanList[position])
+                        }
+                    }
+                }
+            }
         }
     }
 
