@@ -14,7 +14,7 @@ class FetchSideDishBanchanUseCase(
                 BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
                 BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),
             ) + banchanRepository.fetchSideDishBanchan().getOrThrow().map {
-                if(cart[it.hash] != null)
+                if(cart.contains(it.hash))
                     it.copy(isCartItem = true)
                 else
                     it

@@ -14,7 +14,7 @@ class FetchBestBanchanUseCase(
                 BestBanchanModel.empty().copy(viewType = BestBanchanModel.ViewType.Banner)
             ) + banchanRepository.fetchBestBanchan().getOrThrow().map {
                 it.banchans.map { banchan ->
-                    if(cart[banchan.hash] != null)
+                    if(cart.contains(banchan.hash))
                         banchan.copy(isCartItem = true)
                     else
                         banchan
