@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.extension.filterType
 import com.woowahan.banchan.extension.getNewListApplyCartState
+import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.FetchMainDishBanchanUseCase
 import com.woowahan.domain.usecase.InsertCartItemUseCase
@@ -108,6 +109,9 @@ class MainDishBanchanViewModel @Inject constructor(
                 .onSuccess {
                     defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, false)
                     _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
+                    _eventFlow.emit(UiEvent.ShowDialog(
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
+                    ))
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -126,6 +130,9 @@ class MainDishBanchanViewModel @Inject constructor(
                 .onSuccess {
                     defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, true)
                     _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
+                    _eventFlow.emit(UiEvent.ShowDialog(
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
+                    ))
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -137,6 +144,17 @@ class MainDishBanchanViewModel @Inject constructor(
         }
     }
 
+    private fun getCartItemUpdateDialog(content: String): DialogUtil.DialogCustomBuilder{
+        return DialogUtil.DialogCustomBuilder(
+            content,
+            "계속 쇼핑하기" to {},
+            "장바구니 확인" to {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.ShowCartView)
+                }
+            }
+        )
+    }
 
     val filterItemSelect: (Int) -> Unit = {
         when (it) {
@@ -163,6 +181,8 @@ class MainDishBanchanViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
+        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
         data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
+        object ShowCartView: UiEvent()
     }
 }
