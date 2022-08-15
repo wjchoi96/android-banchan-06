@@ -9,6 +9,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityMainBinding
 import com.woowahan.banchan.extension.repeatOnStarted
+import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.bestbanchan.BestBanchanFragment
 import com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanFragment
@@ -16,7 +17,6 @@ import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
 import com.woowahan.banchan.ui.viewmodel.RootViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class RootActivity: BaseActivity<ActivityMainBinding>() {
