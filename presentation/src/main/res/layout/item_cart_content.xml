@@ -2,6 +2,13 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="cartItem"
+            type="com.woowahan.domain.model.CartModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layout_constraint"
         android:layout_width="match_parent"
@@ -23,6 +30,7 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_marginStart="10dp"
+            android:loadImageUseCoil="@{cartItem.banchan.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintLeft_toRightOf="@id/cbx_select"
             app:layout_constraintTop_toTopOf="parent"
@@ -36,6 +44,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="2dp"
+            android:text="@{cartItem.banchan.title}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintLeft_toRightOf="@id/iv_menu_image"
@@ -51,6 +60,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="2dp"
+            android:text="@{cartItem.banchan.salePrice != null ? cartItem.banchan.salePrice : cartItem.banchan.price}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintLeft_toRightOf="@id/iv_menu_image"
@@ -92,6 +102,7 @@
             android:gravity="center"
             android:minWidth="44dp"
             android:paddingHorizontal="3dp"
+            android:text="@{cartItem.count}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"
