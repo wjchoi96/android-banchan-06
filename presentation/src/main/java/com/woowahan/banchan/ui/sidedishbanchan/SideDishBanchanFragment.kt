@@ -12,7 +12,9 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
+import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.SideDishBanchanViewModel
+import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -73,8 +75,16 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
                         it.message,
                         binding.layoutBackground
                     )
+                    is SideDishBanchanViewModel.UiEvent.ShowDialog -> {
+                        DialogUtil.show(requireContext(), it.dialogBuilder)
+                    }
+
                     is SideDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
                         it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                    }
+
+                    is SideDishBanchanViewModel.UiEvent.ShowCartView -> {
+                        //TODO: startActivity(CartActivity.get(requireContext())
                     }
                 }
             }
