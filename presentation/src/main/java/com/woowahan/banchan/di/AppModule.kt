@@ -1,6 +1,7 @@
 package com.woowahan.banchan.di
 
 import android.app.Application
+import com.woowahan.data.database.BanchanRoomDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +45,11 @@ object AppModule {
     @Provides
     @Singleton
     fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+    @Provides
+    @Singleton
+    fun provideBanchanBoomRoomDataBase(@ApplicationContext application: Application): BanchanRoomDatabase =
+        BanchanRoomDatabase.getDatabase(application)
 }
 
 @Qualifier
