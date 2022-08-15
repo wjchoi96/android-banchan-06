@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout style="?attr/actionButtonStyle"
+<FrameLayout
+    style="?attr/actionButtonStyle"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:focusable="true"
+    android:focusable="false"
+    android:clickable="false"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
+        android:id="@+id/iv_cart_image"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
