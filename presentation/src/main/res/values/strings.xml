@@ -2,4 +2,13 @@
     <string name="app_name">Banchan</string>
     <string name="cart_add_title">장바구니 담기</string>
     <string name="cart_add_cancel">취소</string>
+
+    <!-- use at main tab, title -->
+    <string name="best_banchan_title">기획전</string>
+    <string name="main_dish_banchan_title">든든한 메인요리</string>
+    <string name="soup_dish_banchan_title">뜨근한 국물요리</string>
+    <string name="side_dish_banchan_title">정갈한 밑반찬</string>
+
+    <!-- use at main dish -->
+    <string name="main_dish_banchan_banner_title">모두가 좋아하는\n든든한 메인 요리</string>
 </resources>

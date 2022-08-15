@@ -2,6 +2,7 @@ package com.woowahan.data.entity
 
 
 import com.google.gson.annotations.SerializedName
+import com.woowahan.domain.model.BestBanchanModel
 
 data class BestBanchanEntity(
     @SerializedName("body")
@@ -16,5 +17,10 @@ data class BestBanchanEntity(
         val items: List<BanchanEntity>,
         @SerializedName("name")
         val name: String
-    )
+    ) {
+        fun toDomain(): BestBanchanModel = BestBanchanModel(
+            title = this.name,
+            banchans = this.items.map { it.toDomain() }
+        )
+    }
 }
