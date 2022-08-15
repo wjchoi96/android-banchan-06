@@ -13,7 +13,7 @@
             android:layout_height="?attr/actionBarSize"
             app:title="TITLE"
             app:titleTextAppearance="@style/ToolBarTitleTextStyle"
-            app:navigationIcon="@drawable/ic_leading"
+            app:navigationIcon="@drawable/ic_arrow_left"
             />
 
     </com.google.android.material.appbar.AppBarLayout>
