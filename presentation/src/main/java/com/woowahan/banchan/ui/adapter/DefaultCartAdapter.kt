@@ -150,13 +150,7 @@ class DefaultCartAdapter(
             )
             else -> CartFooterViewHolder.from(
                 parent,
-                cartList.sumOf {
-                    if (it.banchan.salePrice != null) {
-                        it.banchan.salePriceRaw
-                    } else {
-                        it.banchan.priceRaw
-                    }
-                }.toCashString(),
+                menusPrice = cartList.sumOf { it.price }.toCashString(),
                 "2,500",
                 orderClicked
             )

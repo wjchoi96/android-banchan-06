@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.DialogCartAddBinding
 import com.woowahan.banchan.extension.toCashString
 import com.woowahan.domain.model.BanchanModel
@@ -64,6 +65,10 @@ class CartItemInsertBottomSheet constructor(
         binding.banchan = banchan
         binding.dialog = this
         return binding.root
+    }
+
+    override fun getTheme(): Int {
+        return R.style.CustomBottomSheetDialog
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

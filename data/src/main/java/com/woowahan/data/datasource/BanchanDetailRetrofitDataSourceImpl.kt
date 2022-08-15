@@ -5,7 +5,7 @@ import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.data.util.RetrofitResponseConvertUtil
 import javax.inject.Inject
 
-class BanchanDetailDataSourceImpl @Inject constructor(
+class BanchanDetailRetrofitDataSourceImpl @Inject constructor(
     private val banchanDetailApiService: BanchanDetailApiService
 ): BanchanDetailDataSource {
 

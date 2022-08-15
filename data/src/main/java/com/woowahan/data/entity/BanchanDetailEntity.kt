@@ -2,6 +2,7 @@ package com.woowahan.data.entity
 
 
 import com.google.gson.annotations.SerializedName
+import com.woowahan.domain.model.BanchanDetailModel
 
 data class BanchanDetailEntity(
     @SerializedName("data")
@@ -27,4 +28,17 @@ data class BanchanDetailEntity(
         @SerializedName("top_image")
         val topImage: String
     )
+
+    fun toDomain(title: String): BanchanDetailModel = BanchanDetailModel(
+        hash = hash,
+        title = title,
+        imageUrl = data.thumbImages.first(),
+        price = priceStrToLong(data.prices.last()),
+        2500L //deliveryFee
+    )
+
+    private fun priceStrToLong(priceStr: String): Long {
+        val temp = priceStr.filter { it.isDigit() }
+        return if (temp.isBlank()) 0L else temp.toLong()
+    }
 }

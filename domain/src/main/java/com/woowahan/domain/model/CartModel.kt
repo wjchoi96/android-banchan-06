@@ -1,13 +1,16 @@
 package com.woowahan.domain.model
 
 data class CartModel(
-    val id: Int,
-    val banchan: BanchanModel,
+    val hash: String,
     val count: Int,
-    val viewType: ViewType = ViewType.Items
+    val viewType: ViewType = ViewType.Items,
+    val title: String,
+    val imageUrl: String,
+    val price: Long,
+    val deliveryFee: Long
 ) {
     companion object {
-        fun empty(): CartModel = CartModel(0, BanchanModel.empty(), 0, ViewType.Items)
+        fun empty(): CartModel = CartModel("", 0, ViewType.Items, "", "", 0L, 0L)
     }
 
     enum class ViewType(val value: Int) {
