@@ -1,4 +1,4 @@
-package com.woowahan.banchan.util
+package com.woowahan.banchan.extension
 
 import java.text.DecimalFormat
 

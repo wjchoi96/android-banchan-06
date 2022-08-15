@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.banchan.util.dp
+import com.woowahan.banchan.extension.dp
 import timber.log.Timber
 
 class GridItemDecoration(

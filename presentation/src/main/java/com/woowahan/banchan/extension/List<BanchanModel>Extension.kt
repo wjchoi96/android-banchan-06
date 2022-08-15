@@ -1,4 +1,4 @@
-package com.woowahan.banchan.util
+package com.woowahan.banchan.extension
 
 import com.woowahan.domain.model.BanchanModel
 import timber.log.Timber
