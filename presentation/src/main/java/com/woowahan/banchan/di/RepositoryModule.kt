@@ -1,9 +1,12 @@
 package com.woowahan.banchan.di
 
+import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.BanchansDataSource
 import com.woowahan.data.datasource.CartDataSource
+import com.woowahan.data.repository.BanchanDetailRepositoryImpl
 import com.woowahan.data.repository.BanchanRepositoryImpl
 import com.woowahan.data.repository.CartRepositoryImpl
+import com.woowahan.domain.repository.BanchanDetailRepository
 import com.woowahan.domain.repository.BanchanRepository
 import com.woowahan.domain.repository.CartRepository
 import dagger.Module
@@ -31,7 +34,8 @@ object RepositoryModule {
     @Provides
     fun provideCartRepository(
         cartDataSource: CartDataSource,
+        banchanDetailDataSource: BanchanDetailDataSource,
         @DefaultDispatcher dispatcher: CoroutineDispatcher
-    ): CartRepository = CartRepositoryImpl(cartDataSource, dispatcher)
+    ): CartRepository = CartRepositoryImpl(cartDataSource, banchanDetailDataSource, dispatcher)
 
 }
