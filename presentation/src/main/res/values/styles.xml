@@ -10,6 +10,12 @@
         <item name="android:layout_width">140dp</item>
     </style>
 
+    <style name="ToolBarTitleTextStyle">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/black_000000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
     <!-- Bottom Sheet Radius -->
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
