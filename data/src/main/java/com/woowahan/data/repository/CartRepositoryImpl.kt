@@ -1,15 +1,20 @@
 package com.woowahan.data.repository
 
+import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.CartDataSource
+import com.woowahan.domain.extension.priceStrToLong
 import com.woowahan.domain.model.BanchanModel
+import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.repository.CartRepository
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
     private val cartDataSource: CartDataSource,
+    private val banchanDetailDataSource: BanchanDetailDataSource,
     private val coroutineDispatcher: CoroutineDispatcher
 ): CartRepository {
 
@@ -23,7 +28,8 @@ class CartRepositoryImpl @Inject constructor(
     ): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.insertCartItem(banchan, count) != null
+                cartDataSource.insertCartItem(banchan, count)
+                true
             }
         }
     }
@@ -31,7 +37,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun removeCartItem(hash: String): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.removeCartItem(hash) != null
+                cartDataSource.removeCartItem(hash) != 0
             }
         }
     }
@@ -39,11 +45,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun removeCartItems(hashes: List<String>): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                var res = true
-                cartDataSource.removeCartItems(hashes).forEach {
-                    if(it == null) res = false
-                }
-                res
+                cartDataSource.removeCartItems(hashes) != 0
             }
         }
     }
@@ -51,16 +53,49 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun updateCartItem(hash: String, count: Int): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.updateCartItem(hash, count) != null
+                cartDataSource.updateCartItem(hash, count) != 0
             }
         }
     }
 
-    override suspend fun fetchCartItems(): Result<Map<String, Pair<BanchanModel, Int>>> {
+    override suspend fun fetchCartItemsKey(): Result<Set<String>> {
         return withContext(coroutineDispatcher){
             kotlin.runCatching {
-                cartDataSource.fetchCartItems()
+                cartDataSource.fetchCartItems().groupBy { it.hash }.keys
             }
         }
     }
+
+    override suspend fun fetchCartItems(): Flow<Result<List<CartModel>>> {
+        return cartDataSource.fetchCartItemsFlow()
+            .flowOn(coroutineDispatcher)
+            .map{ list ->
+                kotlin.runCatching {
+                    coroutineScope {
+                        val detailMap = list.map {
+                            async {
+                                println("fetchCartItems async run => ${it.hash}")
+                                banchanDetailDataSource.fetchBanchanDetail(it.hash)
+                            }
+                        }.awaitAll().associateBy { item -> item.hash }
+                        println("fetchCartItems async list finish")
+
+                        val res = list.map {
+                            val detail = detailMap[it.hash]!!
+                            CartModel(
+                                it.hash,
+                                it.count,
+                                it.title,
+                                detail.data.thumbImages.first(),
+                                detail.data.prices.last().priceStrToLong(),
+                                2500L //detail.data.deliveryFee
+                            )
+                        }
+                        println("fetchCartItems res => $res")
+                        res
+                    }
+                }
+            }
+    }
+
 }

@@ -5,16 +5,16 @@ import com.woowahan.domain.repository.BanchanRepository
 
 class FetchSideDishBanchanUseCase(
     private val banchanRepository: BanchanRepository,
-    private val fetchCartItemsUseCase: FetchCartItemsUseCase
+    private val fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
 ) {
     suspend operator fun invoke(): Result<List<BanchanModel>>{
         return kotlin.runCatching {
-            val cart = fetchCartItemsUseCase().getOrThrow()
+            val cart = fetchCartItemsKeyUseCase().getOrThrow()
             listOf(
                 BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
                 BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),
             ) + banchanRepository.fetchSideDishBanchan().getOrThrow().map {
-                if(cart[it.hash] != null)
+                if(cart.contains(it.hash))
                     it.copy(isCartItem = true)
                 else
                     it

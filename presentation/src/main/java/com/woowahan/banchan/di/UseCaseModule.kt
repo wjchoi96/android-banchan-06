@@ -15,26 +15,26 @@ object UseCaseModule {
     @Provides
     fun provideFetchBestDishBanchanUseCase(
         repo: BanchanRepository,
-        fetchCartItemsUseCase: FetchCartItemsUseCase
-    ) = FetchBestBanchanUseCase(repo, fetchCartItemsUseCase)
+        fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
+    ) = FetchBestBanchanUseCase(repo, fetchCartItemsKeyUseCase)
 
     @Provides
     fun provideFetchMainDishBanchanUseCase(
         repo: BanchanRepository,
-        fetchCartItemsUseCase: FetchCartItemsUseCase
-    ) = FetchMainDishBanchanUseCase(repo, fetchCartItemsUseCase)
+        fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
+    ) = FetchMainDishBanchanUseCase(repo, fetchCartItemsKeyUseCase)
 
     @Provides
     fun provideFetchSoupDishBanchanUseCase(
         repo: BanchanRepository,
-        fetchCartItemsUseCase: FetchCartItemsUseCase
-    ) = FetchSoupDishBanchanUseCase(repo, fetchCartItemsUseCase)
+        fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
+    ) = FetchSoupDishBanchanUseCase(repo, fetchCartItemsKeyUseCase)
 
     @Provides
     fun provideFetchSideDishBanchanUseCase(
         repo: BanchanRepository,
-        fetchCartItemsUseCase: FetchCartItemsUseCase
-    ) = FetchSideDishBanchanUseCase(repo, fetchCartItemsUseCase)
+        fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
+    ) = FetchSideDishBanchanUseCase(repo, fetchCartItemsKeyUseCase)
 
     @Provides
     fun provideGetCartSizeUseCase(repo: CartRepository) =
@@ -43,6 +43,10 @@ object UseCaseModule {
     @Provides
     fun provideFetchCartItemsUseCase(repo: CartRepository) =
         FetchCartItemsUseCase(repo)
+
+    @Provides
+    fun provideFetchCartItemsKeyUseCase(repo: CartRepository) =
+        FetchCartItemsKeyUseCase(repo)
 
     @Provides
     fun provideInsertCartItemsUseCase(repo: CartRepository) =
