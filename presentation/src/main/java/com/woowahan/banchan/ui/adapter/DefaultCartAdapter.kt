@@ -1,7 +1,6 @@
 package com.woowahan.banchan.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import androidx.recyclerview.widget.DiffUtil
@@ -10,8 +9,8 @@ import com.woowahan.banchan.CartModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemCartContentBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
-import com.woowahan.banchan.extension.priceStrToLong
 import com.woowahan.banchan.extension.toCashString
+import com.woowahan.domain.extension.priceStrToLong
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -110,6 +109,7 @@ class DefaultCartAdapter(
         val orderClicked: (List<CartModel>) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         val totalPrice = (menusPrice.priceStrToLong() + deliveryFee.priceStrToLong()).toCashString()
+        val lessThanMinPrice = (totalPrice.priceStrToLong() < 100000)
 
         companion object {
             fun from(
