@@ -23,6 +23,12 @@ object RepositoryModule {
     ): BanchanRepository = BanchanRepositoryImpl(banchansDataSource, dispatcher)
 
     @Provides
+    fun provideBanchanDetailRepository(
+        banchansDetailDataSource: BanchanDetailDataSource,
+        @DefaultDispatcher dispatcher: CoroutineDispatcher
+    ): BanchanDetailRepository = BanchanDetailRepositoryImpl(banchansDetailDataSource, dispatcher)
+
+    @Provides
     fun provideCartRepository(
         cartDataSource: CartDataSource,
         @DefaultDispatcher dispatcher: CoroutineDispatcher

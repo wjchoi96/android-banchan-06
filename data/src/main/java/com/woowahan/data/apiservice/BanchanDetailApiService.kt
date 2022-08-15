@@ -6,8 +6,8 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface BanchanDetailApiService {
-    @GET("/detail/{hash}")
-    fun fetchBanchanDetail(
+    @GET("/onban/detail/{hash}")
+    suspend fun fetchBanchanDetail(
         @Path("hash")banchanHash: String
     ): Response<BanchanDetailEntity>
 }
