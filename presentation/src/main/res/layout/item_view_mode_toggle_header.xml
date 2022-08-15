@@ -39,7 +39,8 @@
                 android:id="@+id/rb_grid"
                 android:layout_width="@dimen/banchan_view_mode_toggle_radio_button_size"
                 android:layout_height="@dimen/banchan_view_mode_toggle_radio_button_size"
-                android:background="@drawable/sel_btn_grid"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:foreground="@drawable/sel_btn_grid"
                 android:button="@null" />
 
             <RadioButton
@@ -47,7 +48,8 @@
                 android:id="@+id/rb_linear"
                 android:layout_width="@dimen/banchan_view_mode_toggle_radio_button_size"
                 android:layout_height="@dimen/banchan_view_mode_toggle_radio_button_size"
-                android:background="@drawable/sel_btn_linear"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:foreground="@drawable/sel_btn_linear"
                 android:button="@null" />
         </RadioGroup>
 
