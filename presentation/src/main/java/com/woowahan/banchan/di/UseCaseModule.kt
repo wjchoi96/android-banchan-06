@@ -42,6 +42,10 @@ object UseCaseModule {
 
     @Provides
     fun provideFetchCartItemsUseCase(repo: CartRepository) =
+        FetchCartItemsUseCase(repo)
+
+    @Provides
+    fun provideFetchCartItemsKeyUseCase(repo: CartRepository) =
         FetchCartItemsKeyUseCase(repo)
 
     @Provides
