@@ -26,7 +26,7 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
     private val viewModel: SideDishBanchanViewModel by viewModels()
     private val adapter: DefaultBanchanAdapter by lazy {
         DefaultBanchanAdapter(
-            getString(R.string.side_dish_banchan_title),
+            getString(R.string.side_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.clickInsertCartButton

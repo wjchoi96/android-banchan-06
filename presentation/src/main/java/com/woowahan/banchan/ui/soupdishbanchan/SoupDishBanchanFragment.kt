@@ -25,7 +25,7 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
     private val viewModel: SoupDishBanchanViewModel by viewModels()
     private val adapter: DefaultBanchanAdapter by lazy {
         DefaultBanchanAdapter(
-            getString(R.string.soup_dish_banchan_title),
+            getString(R.string.soup_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.clickInsertCartButton
