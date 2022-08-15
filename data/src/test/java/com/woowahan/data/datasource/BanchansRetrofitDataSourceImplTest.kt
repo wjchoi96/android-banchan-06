@@ -10,10 +10,12 @@ import com.woowahan.data.entity.MainDishBanchanEntity
 import com.woowahan.data.entity.SideDishBanchanEntity
 import com.woowahan.data.entity.SoupDishBanchanEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -75,7 +77,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchBestBanchans_mockServerFailRequest_isEquals() = runTest {
+    fun fetchBestBanchans_mockServerFailRequest_throwApiResponseMessage() {
         //Given
         val responseJson = readResponse("best_fail.json")
         val response = MockResponse().apply {
@@ -83,14 +85,14 @@ class BanchansRetrofitDataSourceImplTest{
             setBody(responseJson)
         }
         mockServer.enqueue(response)
-        val service = mockRetrofit.create(BestBanchanApiService::class.java)
 
         //When
-        val actualResult = service.fetchBestBanchans().body()
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchBestBanchans() }
+        }
 
         //Then
-        val expected = Gson().fromJson(responseJson, BestBanchanEntity::class.java)
-        assertThat(actualResult).isEqualTo(expected)
+        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
     }
 
     @Test
@@ -112,7 +114,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchMainDishBanchans_mockServerFailRequest_isEquals() = runTest {
+    fun fetchMainDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
         //Given
         val responseJson = readResponse("main_dish_fail.json")
         val response = MockResponse().apply {
@@ -122,11 +124,12 @@ class BanchansRetrofitDataSourceImplTest{
         mockServer.enqueue(response)
 
         //When
-        val actualResult = banchansDataSource.fetchMainDishBanchans()
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchMainDishBanchans() }
+        }
 
         //Then
-        val expected = Gson().fromJson(responseJson, MainDishBanchanEntity::class.java)
-        assertThat(actualResult).isEqualTo(expected)
+        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
     }
 
 
@@ -149,7 +152,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchSoupDishBanchans_mockServerFailRequest_isEquals() = runTest {
+    fun fetchSoupDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
         //Given
         val responseJson = readResponse("soup_dish_fail.json")
         val response = MockResponse().apply {
@@ -159,11 +162,12 @@ class BanchansRetrofitDataSourceImplTest{
         mockServer.enqueue(response)
 
         //When
-        val actualResult = banchansDataSource.fetchSoupDishBanchans()
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSoupDishBanchans() }
+        }
 
         //Then
-        val expected = Gson().fromJson(responseJson, SoupDishBanchanEntity::class.java)
-        assertThat(actualResult).isEqualTo(expected)
+        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
     }
 
     @Test
@@ -185,7 +189,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchSideDishBanchans_mockServerFailRequest_isEquals() = runTest {
+    fun fetchSideDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
         //Given
         val responseJson = readResponse("side_dish_fail.json")
         val response = MockResponse().apply {
@@ -195,11 +199,12 @@ class BanchansRetrofitDataSourceImplTest{
         mockServer.enqueue(response)
 
         //When
-        val actualResult = banchansDataSource.fetchSideDishBanchans()
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSideDishBanchans() }
+        }
 
         //Then
-        val expected = Gson().fromJson(responseJson, SideDishBanchanEntity::class.java)
-        assertThat(actualResult).isEqualTo(expected)
+        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
     }
 
 
