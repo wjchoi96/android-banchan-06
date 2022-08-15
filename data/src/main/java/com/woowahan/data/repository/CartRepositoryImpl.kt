@@ -23,7 +23,8 @@ class CartRepositoryImpl @Inject constructor(
     ): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.insertCartItem(banchan, count) != null
+                cartDataSource.insertCartItem(banchan, count)
+                true
             }
         }
     }
@@ -31,7 +32,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun removeCartItem(hash: String): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.removeCartItem(hash) != null
+                cartDataSource.removeCartItem(hash) != 0
             }
         }
     }
@@ -39,11 +40,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun removeCartItems(hashes: List<String>): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                var res = true
-                cartDataSource.removeCartItems(hashes).forEach {
-                    if(it == null) res = false
-                }
-                res
+                cartDataSource.removeCartItems(hashes) != 0
             }
         }
     }
@@ -51,15 +48,15 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun updateCartItem(hash: String, count: Int): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.updateCartItem(hash, count) != null
+                cartDataSource.updateCartItem(hash, count) != 0
             }
         }
     }
 
-    override suspend fun fetchCartItems(): Result<Map<String, Pair<BanchanModel, Int>>> {
+    override suspend fun fetchCartItems(): Result<Set<String>> {
         return withContext(coroutineDispatcher){
             kotlin.runCatching {
-                cartDataSource.fetchCartItems()
+                cartDataSource.fetchCartItems().groupBy { it.hash }.keys
             }
         }
     }
