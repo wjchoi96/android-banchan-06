@@ -5,11 +5,11 @@ import com.woowahan.domain.repository.BanchanRepository
 
 class FetchMainDishBanchanUseCase(
     private val banchanRepository: BanchanRepository,
-    private val fetchCartItemsUseCase: FetchCartItemsUseCase
+    private val fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
 ) {
     suspend operator fun invoke(): Result<List<BanchanModel>>{
         return kotlin.runCatching {
-            val cart = fetchCartItemsUseCase().getOrThrow()
+            val cart = fetchCartItemsKeyUseCase().getOrThrow()
             listOf(
                 BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
                 BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),

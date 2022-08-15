@@ -14,5 +14,5 @@ interface CartRepository {
 
     suspend fun updateCartItem(hash: String, count: Int): Result<Boolean>
 
-    suspend fun fetchCartItems(): Result<Set<String>>
+    suspend fun fetchCartItemsKey(): Result<Set<String>>
 }

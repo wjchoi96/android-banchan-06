@@ -53,7 +53,7 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchCartItems(): Result<Set<String>> {
+    override suspend fun fetchCartItemsKey(): Result<Set<String>> {
         return withContext(coroutineDispatcher){
             kotlin.runCatching {
                 cartDataSource.fetchCartItems().groupBy { it.hash }.keys
