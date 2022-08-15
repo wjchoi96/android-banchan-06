@@ -102,7 +102,7 @@
             android:gravity="center"
             android:minWidth="44dp"
             android:paddingHorizontal="3dp"
-            android:text="@{cartItem.count}"
+            android:text="@{Integer.toString(cartItem.count)}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"

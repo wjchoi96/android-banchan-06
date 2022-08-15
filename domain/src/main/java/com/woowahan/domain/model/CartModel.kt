@@ -10,7 +10,9 @@ data class CartModel(
     val deliveryFee: Long
 ) {
     companion object {
+        fun header(): CartModel = CartModel.empty().copy(viewType = ViewType.Header)
         fun empty(): CartModel = CartModel("", 0, ViewType.Items, "", "", 0L, 0L)
+        fun footer(): CartModel = CartModel.empty().copy(viewType = ViewType.Footer)
     }
 
     enum class ViewType(val value: Int) {
