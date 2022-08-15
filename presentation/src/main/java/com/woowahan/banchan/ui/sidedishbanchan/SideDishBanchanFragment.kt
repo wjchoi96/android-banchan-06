@@ -71,10 +71,12 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
             viewModel.eventFlow.collect {
                 when (it) {
                     is SideDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+
                     is SideDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
                         it.message,
                         binding.layoutBackground
                     )
+
                     is SideDishBanchanViewModel.UiEvent.ShowDialog -> {
                         DialogUtil.show(requireContext(), it.dialogBuilder)
                     }
