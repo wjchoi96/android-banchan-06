@@ -14,8 +14,8 @@ import javax.inject.Singleton
 
 /**
  * App
- * Retrofit
- * ApiService, Room
+ * Retrofit, DataBase
+ * ApiService(retrofit service), Room(Dao)
  * DataSource
  * Repository
  * UseCase
