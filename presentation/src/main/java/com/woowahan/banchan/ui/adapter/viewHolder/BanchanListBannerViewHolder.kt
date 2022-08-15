@@ -18,8 +18,8 @@ class BanchanListBannerViewHolder(
         )
     }
 
-    fun bind(title: String) {
+    fun bind(title: String, showBestLabel: Boolean = false) {
         binding.bannerTitle = title
-        binding.showBestLabel = false
+        binding.showBestLabel = showBestLabel
     }
 }
