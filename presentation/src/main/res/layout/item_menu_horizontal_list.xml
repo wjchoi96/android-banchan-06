@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="adapter"
+            type="com.woowahan.banchan.ui.adapter.HorizontalBanchanListAdapter" />
+
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:paddingStart="16dp"
+        android:paddingEnd="0dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp"
+        >
+
+        <TextView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/tv_title"
+            android:text="@{title}"
+            tools:text="풍성한 고기반찬"
+            android:textColor="@color/black_000000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:adapter="@{adapter}"
+            android:id="@+id/rvHorizontal"
+            android:layout_marginTop="16dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
