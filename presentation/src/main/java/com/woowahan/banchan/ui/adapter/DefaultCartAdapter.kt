@@ -3,6 +3,7 @@ package com.woowahan.banchan.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.CartModelDiffUtilCallback
@@ -18,8 +19,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class DefaultCartAdapter(
+    private val selectAll: (Boolean) -> Unit,
+    private val deleteAllSelected: (List<CartModel>) -> Unit,
+    private val selectItem: (CartModel, Boolean) -> Unit,
+    private val deleteItem: (CartModel) -> Unit,
+    private val minusClicked: (CartModel) -> Unit,
+    private val plusClicked: (CartModel) -> Unit,
+    private val orderClicked: (List<CartModel>) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartModel>()
+    private val selectedMenu = ArrayList<CartModel>()
     private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<CartModel>) {
@@ -36,14 +45,14 @@ class DefaultCartAdapter(
 
     class CartHeaderViewHolder(
         private val binding: ItemCartHeaderBinding,
-        private val checkBoxListener: View.OnClickListener,
-        private val deleteListener: View.OnClickListener
+        val selectAll: (Boolean) -> Unit,
+        val deleteAllSelected: (List<CartModel>) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                checkBoxListener: View.OnClickListener,
-                deleteListener: View.OnClickListener
+                selectAll: (Boolean) -> Unit,
+                deleteAllSelected: (List<CartModel>) -> Unit
             ): CartHeaderViewHolder =
                 CartHeaderViewHolder(
                     binding = ItemCartHeaderBinding.inflate(
@@ -51,31 +60,33 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
-                    checkBoxListener,
-                    deleteListener
+                    selectAll = selectAll,
+                    deleteAllSelected = deleteAllSelected
                 )
         }
 
-        fun bind() {
-            binding.cbxSelectAll.setOnClickListener(checkBoxListener)
-            binding.tvRemoveAll.setOnClickListener(deleteListener)
+        fun bind(selectedMenu: List<CartModel>) {
+            binding.cbxSelectAll.setOnClickListener {
+                selectAll((it as CheckBox).isChecked)
+            }
+            binding.tvRemoveAll.setOnClickListener { deleteAllSelected(selectedMenu) }
         }
     }
 
     class CartItemViewHolder(
         private val binding: ItemCartContentBinding,
-        val checkBoxListener: View.OnClickListener,
-        val deleteListener: View.OnClickListener,
-        val minusListener: View.OnClickListener,
-        val plusListener: View.OnClickListener
+        val selectItem: (CartModel, Boolean) -> Unit,
+        val deleteItem: (CartModel) -> Unit,
+        val minusClicked: (CartModel) -> Unit,
+        val plusClicked: (CartModel) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                checkBoxListener: View.OnClickListener,
-                deleteListener: View.OnClickListener,
-                minusListener: View.OnClickListener,
-                plusListener: View.OnClickListener
+                selectItem: (CartModel, Boolean) -> Unit,
+                deleteItem: (CartModel) -> Unit,
+                minusClicked: (CartModel) -> Unit,
+                plusClicked: (CartModel) -> Unit,
             ): CartItemViewHolder =
                 CartItemViewHolder(
                     binding = ItemCartContentBinding.inflate(
@@ -83,10 +94,7 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
-                    checkBoxListener,
-                    deleteListener,
-                    minusListener,
-                    plusListener
+                    selectItem, deleteItem, minusClicked, plusClicked
                 )
         }
 
@@ -99,7 +107,7 @@ class DefaultCartAdapter(
         private val binding: ItemCartFooterBinding,
         val menusPrice: String,
         val deliveryFee: String,
-        val orderListener: View.OnClickListener
+        val orderClicked: (List<CartModel>) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         val totalPrice = (menusPrice.priceStrToLong() + deliveryFee.priceStrToLong()).toCashString()
 
@@ -108,7 +116,7 @@ class DefaultCartAdapter(
                 parent: ViewGroup,
                 menusPrice: String,
                 deliveryFee: String,
-                orderListener: View.OnClickListener
+                orderClicked: (List<CartModel>) -> Unit
             ): CartFooterViewHolder =
                 CartFooterViewHolder(
                     binding = ItemCartFooterBinding.inflate(
@@ -116,7 +124,7 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
-                    menusPrice, deliveryFee, orderListener
+                    menusPrice, deliveryFee, orderClicked
                 )
         }
 
@@ -127,14 +135,45 @@ class DefaultCartAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        TODO("Not yet implemented")
+        return when (viewType) {
+            CartModel.ViewType.Header.value -> CartHeaderViewHolder.from(
+                parent,
+                selectAll,
+                deleteAllSelected
+            )
+            CartModel.ViewType.Items.value -> CartItemViewHolder.from(
+                parent,
+                selectItem,
+                deleteItem,
+                minusClicked,
+                plusClicked
+            )
+            else -> CartFooterViewHolder.from(
+                parent,
+                cartList.sumOf {
+                    if (it.banchan.salePrice != null) {
+                        it.banchan.salePriceRaw
+                    } else {
+                        it.banchan.priceRaw
+                    }
+                }.toCashString(),
+                "2,500",
+                orderClicked
+            )
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return cartList[position].viewType.value
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        when (holder) {
+            is CartHeaderViewHolder -> holder.bind(selectedMenu)
+            is CartItemViewHolder -> holder.bind(cartList[position])
+            is CartFooterViewHolder -> holder.bind()
+        }
     }
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    override fun getItemCount(): Int = cartList.size
 }
