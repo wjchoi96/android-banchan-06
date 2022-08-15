@@ -1,5 +1,7 @@
 package com.woowahan.domain.model
 
+import com.woowahan.domain.extension.priceStrToLong
+
 data class BanchanModel(
     val hash: String,
     val title: String,
@@ -30,10 +32,10 @@ data class BanchanModel(
         SalePercentHigher(3, "할인율순")
     }
 
-    val priceRaw: Long = priceStrToLong(price)
+    val priceRaw: Long = price.priceStrToLong()
 
     val salePriceRaw: Long =
-        if (salePrice.isNullOrBlank()) 0 else priceStrToLong(salePrice)
+        if (salePrice.isNullOrBlank()) 0 else salePrice.priceStrToLong()
 
     val salePercent: Int
         get() {
@@ -44,8 +46,5 @@ data class BanchanModel(
                 0
         }
 
-    private fun priceStrToLong(priceStr: String): Long {
-        val temp = priceStr.filter { it.isDigit() }
-        return if (temp.isBlank()) 0L else temp.toLong()
-    }
+
 }
