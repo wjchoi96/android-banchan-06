@@ -1,6 +1,8 @@
 package com.woowahan.banchan.ui.root
 
 import android.os.Bundle
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -17,6 +19,7 @@ import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
 import com.woowahan.banchan.ui.viewmodel.RootViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class RootActivity: BaseActivity<ActivityMainBinding>() {
@@ -49,6 +52,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
     private fun setListener(){
         // use at main tool bar
         binding.layoutIncludeToolBar.toolBar.setOnMenuItemClickListener {
+            Timber.d("menu item click => ${it.title}")
             return@setOnMenuItemClickListener when(it.itemId){
                 R.id.menu_main_action_bar_cart -> {
                     showToast("cart")
@@ -59,6 +63,12 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
                     true
                 }
                 else -> false
+            }
+        }
+
+        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_cart).actionView.let {
+            (it.findViewById(R.id.iv_cart_image) as ImageView).setOnClickListener {
+                showToast("cart action layout")
             }
         }
 
