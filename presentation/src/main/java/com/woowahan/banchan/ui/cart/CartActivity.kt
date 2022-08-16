@@ -60,6 +60,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                         it.message,
                         binding.layoutBackground
                     )
+                    is CartViewModel.UiEvent.GoToOrderList-> showToast("주문 완료!")
                 }
             }
         }

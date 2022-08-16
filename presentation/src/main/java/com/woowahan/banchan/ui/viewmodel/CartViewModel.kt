@@ -88,6 +88,31 @@ class CartViewModel @Inject constructor(
         }
     }
 
+    fun clearCart(items: List<CartModel>) {
+        viewModelScope.launch {
+            _dataLoading.value = true
+            removeCartItemsUseCase(items.map { it.hash })
+                .onSuccess { isSuccess ->
+                    if (isSuccess) {
+                        selectedItems.clear()
+                        _eventFlow.emit(UiEvent.GoToOrderList("go"))
+                    } else {
+                        _eventFlow.emit(UiEvent.ShowToast("Can't order"))
+                    }
+                }
+                .onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.value = false
+                    if (_refreshDataLoading.value)
+                        _refreshDataLoading.value = false
+                }
+        }
+    }
+
     fun removeCartItem(hash: String) {
         viewModelScope.launch {
             _dataLoading.value = true
@@ -172,8 +197,8 @@ class CartViewModel @Inject constructor(
         updateCartItem(plusItem.hash, plusItem.count + 1)
     }
 
-    val orderItems: (List<CartModel>) -> Unit = { orderItems ->
-
+    val orderItems: () -> Unit = {
+        clearCart(_cartItems.value.filterIsInstance<CartListModel.Content>().map { it.cart })
     }
 
     fun onRefresh() {
@@ -186,5 +211,6 @@ class CartViewModel @Inject constructor(
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
         data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
+        data class GoToOrderList(val message: String) : UiEvent()
     }
 }
