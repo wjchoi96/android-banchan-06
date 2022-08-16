@@ -17,6 +17,7 @@ import com.woowahan.banchan.extension.dp
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
+import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -79,12 +80,22 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             viewModel.eventFlow.collect {
                 when (it) {
                     is MainDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+
                     is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
                         it.message,
                         binding.layoutBackground
                     )
+
+                    is MainDishBanchanViewModel.UiEvent.ShowDialog -> {
+                        DialogUtil.show(requireContext(), it.dialogBuilder)
+                    }
+
                     is MainDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
                         it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                    }
+
+                    is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
+                        //TODO: startActivity(CartActivity.get(requireContext())
                     }
                 }
             }
