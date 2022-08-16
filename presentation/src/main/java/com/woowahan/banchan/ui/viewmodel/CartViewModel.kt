@@ -128,7 +128,7 @@ class CartViewModel @Inject constructor(
 
     val selectItem: (CartModel) -> Unit = { cartModel ->
         _cartItems.value.filterIsInstance<CartListModel.Content>().map {
-            if (it.cart == cartModel) {
+            if (it.cart.isSameHash(cartModel)) {
                 Timber.d("${cartModel.hash} ${cartModel.isSelected}")
                 CartListModel.Content(it.cart.copy(isSelected = cartModel.isSelected))
             } else {

@@ -28,6 +28,7 @@ class DefaultCartAdapter(
     private val orderClicked: (List<CartModel>) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListModel>()
+    private val selectedItemSet = mutableSetOf<String>()
     private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<CartListModel>) {
@@ -36,6 +37,14 @@ class DefaultCartAdapter(
                 CartListModelDiffUtilCallback(cartList, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
+                // 기존에 선택한 아이템 불러오기
+                newList.map {
+                    if (it is CartListModel.Content) {
+                        CartListModel.Content(it.cart.copy(isSelected = selectedItemSet.contains(it.cart.hash)))
+                    } else {
+                        it
+                    }
+                }
                 cartList = newList.toList()
                 diffRes.dispatchUpdatesTo(this@DefaultCartAdapter)
             }
@@ -140,7 +149,10 @@ class DefaultCartAdapter(
             CartModel.ViewType.Header.value -> CartHeaderViewHolder.from(
                 parent,
                 selectAll = { isSelected ->
+                    // Room 연동
                     selectAll(isSelected)
+
+                    // 로컬 연동
                     val test = cartList.map {
                         if (it is CartListModel.Content) {
                             CartListModel.Content(it.cart.copy(isSelected = isSelected))
@@ -149,22 +161,44 @@ class DefaultCartAdapter(
                         }
                     }
                     updateList(test)
+                    if (isSelected) {
+                        selectedItemSet.addAll(
+                            cartList.filterIsInstance<CartListModel.Content>().map { it.cart.hash })
+                    } else {
+                        selectedItemSet.clear()
+                    }
                 },
-                deleteAllSelected
+                deleteAllSelected = {
+                    deleteAllSelected()
+                    selectedItemSet.clear()
+                }
             )
             CartModel.ViewType.Content.value -> CartItemViewHolder.from(
                 parent,
-                selectItem,
-                deleteItem,
+                selectItem = { cartModel ->
+                    selectItem(cartModel)
+                    if (cartModel.isSelected) {
+                        selectedItemSet.add(cartModel.hash)
+                    } else {
+                        selectedItemSet.remove(cartModel.hash)
+                    }
+                },
+                deleteItem = { cartModel ->
+                    deleteItem(cartModel)
+                    selectedItemSet.remove(cartModel.hash)
+                },
                 minusClicked,
                 plusClicked
             )
             else -> CartFooterViewHolder.from(
                 parent,
                 menusPrice = cartList.filterIsInstance<CartListModel.Content>()
-                    .sumOf { it.cart.price }.toCashString(),
+                    .sumOf { it.cart.price * it.cart.count }.toCashString(),
                 "2,500",
-                orderClicked
+                orderClicked = { cartList ->
+                    orderClicked(cartList)
+                    selectedItemSet.clear()
+                }
             )
         }
     }
