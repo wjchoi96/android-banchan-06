@@ -82,10 +82,10 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun clearCart(items: List<CartModel>) {
+    fun clearCart(items: List<CartListModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
-            removeCartItemsUseCase(items.map { it.hash })
+            removeCartItemsUseCase(items.map { it.cart.hash })
                 .onSuccess { isSuccess ->
                     if (isSuccess) {
                         _eventFlow.emit(UiEvent.GoToOrderList("go"))
@@ -223,7 +223,9 @@ class CartViewModel @Inject constructor(
     }
 
     val orderItems: () -> Unit = {
-        clearCart(_cartItems.value.filterIsInstance<CartListModel.Content>().map { it.cart })
+        clearCart(
+            _cartItems.value.filterIsInstance<CartListModel.Content>()
+                .filter { it.cart.isSelected })
     }
 
     fun onRefresh() {

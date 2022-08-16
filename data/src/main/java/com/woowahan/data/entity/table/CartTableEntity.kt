@@ -23,7 +23,7 @@ data class CartTableEntity(
     @PrimaryKey
     @ColumnInfo(name = COLUMN_HASH) val hash: String,
     @ColumnInfo(name = COLUMN_COUNT) val count: Int,
-    @ColumnInfo(name = COLUMN_SELECT) val isSelect: Boolean = false
+    @ColumnInfo(name = COLUMN_SELECT) val isSelect: Boolean = true
 ) {
     companion object {
         const val TABLE_NAME = "cart"

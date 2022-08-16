@@ -25,6 +25,10 @@
         <variable
             name="btnEnabled"
             type="Boolean" />
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartFooterViewHolder" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -125,6 +129,7 @@
             android:backgroundTint="@{btnEnabled ? @color/yellow_f9ba70 : @color/yellow_fcdcb7}"
             android:elevation="10dp"
             android:enabled="@{btnEnabled}"
+            android:onClick="@{()->holder.orderClicked.invoke()}"
             android:text="@{btnText}"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp"

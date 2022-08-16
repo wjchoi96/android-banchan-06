@@ -125,6 +125,7 @@ class DefaultCartAdapter(
         }
 
         fun bind(item: CartListModel.Footer) {
+            binding.holder = this
             binding.footerItem = item
             binding.freeDelivery = (40000L - item.price).toCashString()
             binding.isFreeDelivery = (40000L <= item.price)
