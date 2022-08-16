@@ -47,6 +47,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
 
         binding.viewModel = viewModel
         binding.adapter = adapter
+        binding.title = "Cart"
+        binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         observeData()
     }
@@ -60,7 +62,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                         it.message,
                         binding.layoutBackground
                     )
-                    is CartViewModel.UiEvent.GoToOrderList-> showToast("주문 완료!")
+                    is CartViewModel.UiEvent.GoToOrderList -> showToast("주문 완료!")
                 }
             }
         }

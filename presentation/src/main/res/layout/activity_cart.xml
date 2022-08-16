@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <variable
+            name="title"
+            type="String" />
 
         <variable
             name="viewModel"
@@ -25,6 +28,7 @@
         <include
             android:id="@+id/layout_include_tool_bar"
             layout="@layout/item_toolbar_sub"
+            bind:title="@{title}"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
