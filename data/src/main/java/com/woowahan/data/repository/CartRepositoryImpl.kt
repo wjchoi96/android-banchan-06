@@ -92,12 +92,13 @@ class CartRepositoryImpl @Inject constructor(
                             val detail = detailMap[it.hash]!!
 
                             CartModel(
-                                it.hash,
-                                it.count,
-                                CartModel.ViewType.Content,
-                                it.title,
-                                detail.data.thumbImages.first(),
-                                detail.data.prices.last().priceStrToLong()
+                                hash = it.hash,
+                                count = it.count,
+                                viewType = CartModel.ViewType.Content,
+                                title = it.title,
+                                imageUrl = detail.data.thumbImages.first(),
+                                price = detail.data.prices.last().priceStrToLong(),
+                                isSelected = it.select
                             )
                         }
                         println("fetchCartItems res => $res")
