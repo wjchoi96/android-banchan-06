@@ -61,7 +61,7 @@ object UseCaseModule {
         RemoveCartItemsUseCase(repo)
 
     @Provides
-    fun provideUpdateCartItemUseCase(repo: CartRepository) =
-        UpdateCartItemUseCase(repo)
+    fun provideUpdateCartItemCountUseCase(repo: CartRepository) =
+        UpdateCartItemCountUseCase(repo)
 
 }

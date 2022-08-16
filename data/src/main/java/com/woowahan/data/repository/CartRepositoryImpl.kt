@@ -50,10 +50,10 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateCartItem(hash: String, count: Int): Result<Boolean> {
+    override suspend fun updateCartItemCount(hash: String, count: Int): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.updateCartItem(hash, count) != 0
+                cartDataSource.updateCartItemCount(hash, count) != 0
             }
         }
     }

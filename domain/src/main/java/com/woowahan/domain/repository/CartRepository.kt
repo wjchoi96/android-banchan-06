@@ -13,7 +13,7 @@ interface CartRepository {
 
     suspend fun removeCartItems(hashes: List<String>): Result<Boolean>
 
-    suspend fun updateCartItem(hash: String, count: Int): Result<Boolean>
+    suspend fun updateCartItemCount(hash: String, count: Int): Result<Boolean>
 
     suspend fun fetchCartItemsKey(): Result<Set<String>>
 

@@ -43,7 +43,7 @@ class CartDataSourceImpl @Inject constructor(
     }
 
     // 항목 개수 업데이트 -> 이때 기존에 없는 항목을 업데이트 시도한다면 null 을 리턴받을것
-    override suspend fun updateCartItem(hash: String, count: Int): Int {
+    override suspend fun updateCartItemCount(hash: String, count: Int): Int {
         return cartDao.updateCartItem(hash, count)
     }
 
