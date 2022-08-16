@@ -3,7 +3,6 @@ package com.woowahan.banchan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.CartListModel
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.usecase.FetchCartItemsUseCase
@@ -63,8 +62,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun removeCartItem(items: List<CartModel>) {
-
+    fun removeCartItems(items: List<CartModel>) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemsUseCase(items.map { it.hash })
@@ -73,6 +71,30 @@ class CartViewModel @Inject constructor(
                         selectedItems.clear()
                     } else {
                         _eventFlow.emit(UiEvent.ShowToast("Can't delete items"))
+                    }
+                }
+                .onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.value = false
+                    if (_refreshDataLoading.value)
+                        _refreshDataLoading.value = false
+                }
+        }
+    }
+
+    fun removeCartItem(hash:String) {
+        viewModelScope.launch {
+            _dataLoading.value = true
+            removeCartItemUseCase(hash)
+                .onSuccess { isSuccess ->
+                    if (isSuccess) {
+                        selectedItems.remove(hash)
+                    } else {
+                        _eventFlow.emit(UiEvent.ShowToast("Can't delete item"))
                     }
                 }
                 .onFailure {
@@ -101,7 +123,7 @@ class CartViewModel @Inject constructor(
     }
 
     val deleteAllSelectedItems: () -> Unit = {
-        removeCartItem(selectedItems.values.toList())
+        removeCartItems(selectedItems.values.toList())
     }
 
     val selectItem: (CartModel) -> Unit = { cartModel ->
@@ -116,7 +138,7 @@ class CartViewModel @Inject constructor(
     }
 
     val deleteItem: (CartModel) -> Unit = { deleteItem ->
-
+        removeCartItem(deleteItem.hash)
     }
 
     val minusClicked: (CartModel) -> Unit = { minusItem ->

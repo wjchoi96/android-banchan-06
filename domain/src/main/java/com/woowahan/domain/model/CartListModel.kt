@@ -5,6 +5,18 @@ sealed class CartListModel {
     data class Content(val cart: CartModel) : CartListModel()
     data class Footer(val price: Long, val deliveryFee: Long, val totalPrice: Long) :
         CartListModel()
+
+    override fun equals(other: Any?): Boolean {
+        return if (this is Header && other is Header) {
+            true
+        } else if (this is Content && other is Content) {
+            this.cart.hash == other.cart.hash
+        } else if (this is Footer && other is Footer) {
+            this.price == other.price
+        } else {
+            false
+        }
+    }
 }
 
 data class CartModel(
