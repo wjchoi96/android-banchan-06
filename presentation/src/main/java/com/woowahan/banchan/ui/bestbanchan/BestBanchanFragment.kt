@@ -10,10 +10,8 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.BestBanchanAdapter
-import com.woowahan.banchan.ui.adapter.HorizontalBanchanListAdapter
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
-import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -81,6 +79,5 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
                 adapter.updateList(it)
             }
         }
-
     }
 }
