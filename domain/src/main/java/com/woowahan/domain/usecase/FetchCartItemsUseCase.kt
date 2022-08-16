@@ -21,7 +21,7 @@ class FetchCartItemsUseCase(
 
                     listOf(
                         CartListModel.Header(
-                            isAllSelected = list.none { !(it.isSelected) }
+                            isAllSelected = (list.none { !(it.isSelected) } && list.isNotEmpty())
                         )
                     ) + list.map { CartListModel.Content(it) } + listOf(
                         CartListModel.Footer(
