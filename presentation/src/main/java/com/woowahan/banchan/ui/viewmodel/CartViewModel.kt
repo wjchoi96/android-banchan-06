@@ -40,7 +40,7 @@ class CartViewModel @Inject constructor(
             _dataLoading.value = true
             fetchCartItemsUseCase().collect {
                 it.onSuccess {
-                    _cartItems.value = listOf(CartModel.header()) + it + listOf(CartModel.footer())
+                    _cartItems.value = it
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
