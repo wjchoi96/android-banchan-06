@@ -37,6 +37,8 @@ class MainDishBanchanViewModel @Inject constructor(
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    var filter = BanchanModel.FilterType.Default
+        private set
     private lateinit var defaultBanchans: List<BanchanModel>
 
     fun fetchMainDishBanchans() {
@@ -51,7 +53,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 .collect { res ->
                     res.onSuccess {
                         defaultBanchans = it
-                        _banchans.value = defaultBanchans
+                        filterBanchan(defaultBanchans, filter)
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
@@ -66,19 +68,18 @@ class MainDishBanchanViewModel @Inject constructor(
         }
     }
 
-    private fun filterBanchan(filterType: BanchanModel.FilterType) {
+    private fun filterBanchan(banchans: List<BanchanModel>, filterType: BanchanModel.FilterType) {
         viewModelScope.launch {
-            if (filterType ==
-                BanchanModel.FilterType.Default
-            ) {
-                _banchans.value = defaultBanchans
-            } else {
-                kotlin.runCatching {
-                    _banchans.value = _banchans.value.filterType(filterType)
-                }.onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
+            when(filterType){
+                BanchanModel.FilterType.Default ->  _banchans.value = defaultBanchans
+                else -> {
+                    kotlin.runCatching {
+                        _banchans.value = banchans.filterType(filterType)
+                    }.onFailure {
+                        it.printStackTrace()
+                        it.message?.let { message ->
+                            _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
                     }
                 }
             }
@@ -158,18 +159,22 @@ class MainDishBanchanViewModel @Inject constructor(
     }
 
     val filterItemSelect: (Int) -> Unit = {
-        when (it) {
+        filter = when (it) {
             BanchanModel.FilterType.Default.value -> {
-                filterBanchan(BanchanModel.FilterType.Default)
+                filterBanchan(_banchans.value, BanchanModel.FilterType.Default)
+                BanchanModel.FilterType.Default
             }
             BanchanModel.FilterType.PriceHigher.value -> {
-                filterBanchan(BanchanModel.FilterType.PriceHigher)
+                filterBanchan(_banchans.value, BanchanModel.FilterType.PriceHigher)
+                BanchanModel.FilterType.PriceHigher
             }
             BanchanModel.FilterType.PriceLower.value -> {
-                filterBanchan(BanchanModel.FilterType.PriceLower)
+                filterBanchan(_banchans.value, BanchanModel.FilterType.PriceLower)
+                BanchanModel.FilterType.PriceLower
             }
             else -> {
-                filterBanchan(BanchanModel.FilterType.SalePercentHigher)
+                filterBanchan(_banchans.value, BanchanModel.FilterType.SalePercentHigher)
+                BanchanModel.FilterType.SalePercentHigher
             }
         }
     }

@@ -1,13 +1,10 @@
 package com.woowahan.banchan.ui.adapter
 
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.RadioGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
@@ -25,13 +22,15 @@ import timber.log.Timber
 
 class ViewModeToggleBanchanAdapter(
     private val bannerTitle: String,
+    defaultFilter: BanchanModel.FilterType,
+    defaultViewMode: Boolean,
     private val filterTypeList: List<String>,
     private val filterSelectedListener: (Int) -> Unit,
     private val viewTypeListener: (Boolean) -> Unit,
     private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var isGridView: Boolean = true
-    private var selectedItemPosition: Int = 0
+    private var isGridView: Boolean = defaultViewMode
+    private var selectedItemPosition: Int = defaultFilter.value
     private var banchanList = listOf<BanchanModel>()
 
     private val cartStateChangePayload: String = "changePayload"
@@ -175,8 +174,8 @@ class ViewModeToggleBanchanAdapter(
 
         val filterSpinnerItemSelectListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                filterSelectedListener(p2)
                 spinnerAdapter.setSelection(p2)
+                filterSelectedListener(p2)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {}

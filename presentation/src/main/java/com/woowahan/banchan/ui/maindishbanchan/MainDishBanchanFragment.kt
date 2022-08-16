@@ -1,22 +1,18 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentMainDishBanchanBinding
+import com.woowahan.banchan.extension.repeatOnStarted
+import com.woowahan.banchan.extension.showSnackBar
+import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
-import com.woowahan.banchan.extension.dp
-import com.woowahan.banchan.extension.repeatOnStarted
-import com.woowahan.banchan.extension.showSnackBar
-import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +28,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     private val adapter: ViewModeToggleBanchanAdapter by lazy {
         ViewModeToggleBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
+            viewModel.filter,
+            viewModel.gridViewMode.value,
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.viewModeToggleEvent,
