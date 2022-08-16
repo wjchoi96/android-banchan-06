@@ -6,7 +6,7 @@ sealed class CartListModel {
     data class Footer(val price: Long, val deliveryFee: Long, val totalPrice: Long) :
         CartListModel()
 
-    override fun equals(other: Any?): Boolean {
+    fun isSameHash(other: Any?): Boolean {
         return if (this is Header && other is Header) {
             true
         } else if (this is Content && other is Content) {
@@ -33,7 +33,7 @@ data class CartModel(
         fun empty(): CartModel = CartModel("", 0, ViewType.Content, "", "", 0L, 0L)
     }
 
-    override fun equals(other: Any?): Boolean {
+    fun isSameHash(other: Any?): Boolean {
         return if (other is CartModel) {
             this.hash == other.hash
         } else {
