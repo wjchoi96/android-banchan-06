@@ -109,7 +109,7 @@ class DefaultCartAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         val totalPrice = (menusPrice.priceStrToLong() + deliveryFee.priceStrToLong()).toCashString()
         val lessThanMinPrice = (menusPrice.priceStrToLong() < 10000L)
-        val moreThanFreePrice = (menusPrice.priceStrToLong() >= 40000L )
+        val moreThanFreePrice = (menusPrice.priceStrToLong() >= 40000L)
 
         companion object {
             fun from(
@@ -138,7 +138,17 @@ class DefaultCartAdapter(
         return when (viewType) {
             CartModel.ViewType.Header.value -> CartHeaderViewHolder.from(
                 parent,
-                selectAll,
+                selectAll = { isSelected ->
+                    selectAll(isSelected)
+                    val test = cartList.map {
+                        if (it is CartListModel.Content) {
+                            CartListModel.Content(it.cart.copy(isSelected = isSelected))
+                        } else {
+                            it
+                        }
+                    }
+                    updateList(test)
+                },
                 deleteAllSelected
             )
             CartModel.ViewType.Content.value -> CartItemViewHolder.from(
