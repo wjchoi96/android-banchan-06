@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemMenuHorizontalListBinding
@@ -12,6 +13,10 @@ import com.woowahan.banchan.extension.dp
 import com.woowahan.banchan.ui.adapter.viewHolder.BanchanListBannerViewHolder
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BestBanchanModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class BestBanchanAdapter(
@@ -23,9 +28,15 @@ class BestBanchanAdapter(
     private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<BestBanchanModel>){
-        bestBanchans = newList.toList()
         //TODO: DiffUtil 생성하여 적용, payload 호출 되는지 확인
-        notifyDataSetChanged()
+        CoroutineScope(Dispatchers.Default).launch {
+            val callback = BestBanchanModelDiffUtilCallback(bestBanchans, newList, cartStateChangePayload)
+            val res = DiffUtil.calculateDiff(callback)
+            withContext(Dispatchers.Main){
+                bestBanchans = newList.toList()
+                res.dispatchUpdatesTo(this@BestBanchanAdapter)
+            }
+        }
     }
 
 
@@ -149,5 +160,32 @@ class BestBanchanAdapter(
             childAdapter.updateList(item.banchans.toList())
         }
 
+    }
+
+    class BestBanchanModelDiffUtilCallback(
+        private val oldList: List<BestBanchanModel>,
+        private val newList: List<BestBanchanModel>,
+        private val cartStateChangePayload: Any?
+    ): DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].title == newList[newItemPosition].title
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            // 여기까지 왔으면 각 childList 의 길이는 똑같은것
+            oldList[oldItemPosition].banchans.forEachIndexed { i, it ->
+                if(it.isCartItem != newList[newItemPosition].banchans[i].isCartItem)
+                    return cartStateChangePayload
+            }
+            return super.getChangePayload(oldItemPosition, newItemPosition)
+        }
     }
 }

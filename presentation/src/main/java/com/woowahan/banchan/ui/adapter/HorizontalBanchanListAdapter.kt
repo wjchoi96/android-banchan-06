@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemMenuBestHorizontalChildBinding
+import com.woowahan.banchan.ui.adapter.viewHolder.MenuHorizontalViewHolder
+import com.woowahan.banchan.ui.adapter.viewHolder.MenuVerticalViewHolder
 import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,9 +45,26 @@ class HorizontalBanchanListAdapter(
         holder.bind(banchanList[position])
     }
 
-    override fun getItemCount(): Int {
-        return banchanList.size
+    override fun onBindViewHolder(
+        holder: BestMenuHorizontalChildViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+            return
+        }
+        payloads.firstOrNull()?.let {
+            Timber.d("onBindViewHolder payloads[$position][$it]")
+            when (it) {
+                cartStateChangePayload -> {
+                    holder.bindCartStateChangePayload(banchanList[position])
+                }
+            }
+        }
     }
+
+    override fun getItemCount(): Int = banchanList.size
 
     class BestMenuHorizontalChildViewHolder(
         private val binding: ItemMenuBestHorizontalChildBinding,
