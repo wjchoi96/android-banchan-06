@@ -113,19 +113,12 @@ class DefaultCartAdapter(
 
     class CartFooterViewHolder(
         private val binding: ItemCartFooterBinding,
-        val menusPrice: String,
-        val deliveryFee: String,
         val orderClicked: (List<CartModel>) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        val totalPrice = (menusPrice.priceStrToLong() + deliveryFee.priceStrToLong()).toCashString()
-        val lessThanMinPrice = (menusPrice.priceStrToLong() < 10000L)
-        val moreThanFreePrice = (menusPrice.priceStrToLong() >= 40000L)
 
         companion object {
             fun from(
                 parent: ViewGroup,
-                menusPrice: String,
-                deliveryFee: String,
                 orderClicked: (List<CartModel>) -> Unit
             ): CartFooterViewHolder =
                 CartFooterViewHolder(
@@ -134,13 +127,20 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
-                    menusPrice, deliveryFee, orderClicked
+                    orderClicked
                 )
         }
 
-        fun bind() {
-            binding.holder = this
-            binding.freeDelivery = (40000L - menusPrice.priceStrToLong()).toCashString()
+        fun bind(item: CartListModel.Footer) {
+            binding.footerItem = item
+            binding.freeDelivery = (40000L - item.price).toCashString()
+            binding.isFreeDelivery = (40000L <= item.price)
+            binding.btnEnabled = (10000L >= item.price)
+            binding.btnText = if(10000L >= item.price){
+                "${item.totalPrice}원 주문하기"
+            }else{
+                "최소주문금액을 확인해주세요"
+            }
         }
     }
 
@@ -192,9 +192,6 @@ class DefaultCartAdapter(
             )
             else -> CartFooterViewHolder.from(
                 parent,
-                menusPrice = cartList.filterIsInstance<CartListModel.Content>()
-                    .sumOf { it.cart.price * it.cart.count }.toCashString(),
-                "2,500",
                 orderClicked = { cartList ->
                     orderClicked(cartList)
                     selectedItemSet.clear()
@@ -215,7 +212,7 @@ class DefaultCartAdapter(
         when (holder) {
             is CartHeaderViewHolder -> holder.bind()
             is CartItemViewHolder -> holder.bind((cartList[position] as CartListModel.Content).cart)
-            is CartFooterViewHolder -> holder.bind()
+            is CartFooterViewHolder -> holder.bind(cartList[position] as CartListModel.Footer)
         }
     }
 

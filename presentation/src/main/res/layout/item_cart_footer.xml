@@ -7,6 +7,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="footerItem"
+            type="com.woowahan.domain.model.CartListModel.Footer" />
+
+        <variable
             name="freeDelivery"
             type="String" />
 
@@ -15,8 +19,12 @@
             type="Boolean" />
 
         <variable
-            name="holder"
-            type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartFooterViewHolder" />
+            name="btnText"
+            type="String" />
+
+        <variable
+            name="btnEnabled"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,7 +38,7 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:minWidth="140dp"
-            android:text="@{holder.menusPrice + `원`}"
+            android:priceLongToStr="@{footerItem.price}"
             android:textColor="@color/grey_828282"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,7 +62,7 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:minWidth="140dp"
-            android:text="@{holder.deliveryFee + `원`}"
+            android:priceLongToStr="@{footerItem.deliveryFee}"
             android:textColor="@color/grey_828282"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +97,7 @@
             android:layout_marginTop="8dp"
             android:gravity="end"
             android:minWidth="140dp"
-            android:text="@{holder.totalPrice}"
+            android:priceLongToStr="@{footerItem.totalPrice + footerItem.deliveryFee}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -116,8 +124,8 @@
             android:layout_marginEnd="16dp"
             android:backgroundTint="@color/yellow_f9ba70"
             android:elevation="10dp"
-            android:enabled="@{holder.lessThanMinPrice ? false : true}"
-            android:text="@{holder.lessThanMinPrice ? `최소주문금액을 확인해주세요` : holder.totalPrice + `원 주문하기`}"
+            android:enabled="@{btnEnabled}"
+            android:text="@{btnText}"
             android:textColor="@color/white_ffffff"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"

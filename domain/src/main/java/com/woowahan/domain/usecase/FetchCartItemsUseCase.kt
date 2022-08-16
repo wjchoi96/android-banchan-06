@@ -16,7 +16,7 @@ class FetchCartItemsUseCase(
             .map {
                 kotlin.runCatching {
                     val list = it.getOrThrow()
-                    val price = list.sumOf { it.price }
+                    val price = list.sumOf { it.price * it.count }
                     val deliveryFee = 2500L
 
                     listOf(CartListModel.Header) + list.map { CartListModel.Content(it) } + listOf(

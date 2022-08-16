@@ -8,6 +8,7 @@ import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.usecase.FetchCartItemsUseCase
 import com.woowahan.domain.usecase.RemoveCartItemUseCase
 import com.woowahan.domain.usecase.RemoveCartItemsUseCase
+import com.woowahan.domain.usecase.UpdateCartItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,7 @@ class CartViewModel @Inject constructor(
     private val fetchCartItemsUseCase: FetchCartItemsUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase,
     private val removeCartItemsUseCase: RemoveCartItemsUseCase,
+    private val updateCartItemUseCase: UpdateCartItemUseCase,
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -86,7 +88,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun removeCartItem(hash:String) {
+    fun removeCartItem(hash: String) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemUseCase(hash)
@@ -96,6 +98,25 @@ class CartViewModel @Inject constructor(
                     } else {
                         _eventFlow.emit(UiEvent.ShowToast("Can't delete item"))
                     }
+                }
+                .onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.value = false
+                    if (_refreshDataLoading.value)
+                        _refreshDataLoading.value = false
+                }
+        }
+    }
+
+    fun updateCartItem(hash: String, count: Int) {
+        viewModelScope.launch {
+            _dataLoading.value = true
+            updateCartItemUseCase(hash, count)
+                .onSuccess { isSuccess ->
                 }
                 .onFailure {
                     it.printStackTrace()
@@ -142,11 +163,13 @@ class CartViewModel @Inject constructor(
     }
 
     val minusClicked: (CartModel) -> Unit = { minusItem ->
-
+        if (minusItem.count != 1) {
+            updateCartItem(minusItem.hash, minusItem.count - 1)
+        }
     }
 
     val plusClicked: (CartModel) -> Unit = { plusItem ->
-
+        updateCartItem(plusItem.hash, plusItem.count + 1)
     }
 
     val orderItems: (List<CartModel>) -> Unit = { orderItems ->
