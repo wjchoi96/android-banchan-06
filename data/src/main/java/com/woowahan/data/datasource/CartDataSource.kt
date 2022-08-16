@@ -13,7 +13,9 @@ interface CartDataSource {
 
     suspend fun removeCartItems(hashes: List<String>): Int
 
-    suspend fun updateCartItem(hash: String, count: Int): Int
+    suspend fun updateCartItemCount(hash: String, count: Int): Int
+
+    suspend fun updateCartItemSelect(hash: String, isSelect: Boolean): Int
 
     suspend fun fetchCartItems(): List<CartEntity>
 

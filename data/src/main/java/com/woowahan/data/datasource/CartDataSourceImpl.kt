@@ -12,7 +12,7 @@ import javax.inject.Singleton
 @Singleton
 class CartDataSourceImpl @Inject constructor(
     private val cartDao: CartDao
-): CartDataSource {
+) : CartDataSource {
     // key => banchan hash
     // value => BanchanModel[품목], Int[개수]
 //    private val cart = mutableMapOf<String, Pair<BanchanModel, Int>>()
@@ -30,17 +30,25 @@ class CartDataSourceImpl @Inject constructor(
 
     // 단순 제거 -> 제거된 Item 리턴
     override suspend fun removeCartItem(hash: String): Int {
-        return cartDao.removeCartItem(hash)
+        val res = cartDao.removeCartItem(hash)
+        cartDao.removeCartItemInfo(hash)
+        return res
     }
 
     // 목록 제거 -> 제거된 Items 리턴
     override suspend fun removeCartItems(hashes: List<String>): Int {
-        return cartDao.removeCartItem(*hashes.toTypedArray())
+        val res = cartDao.removeCartItem(*hashes.toTypedArray())
+        cartDao.removeCartItemInfo(*hashes.toTypedArray())
+        return res
     }
 
     // 항목 개수 업데이트 -> 이때 기존에 없는 항목을 업데이트 시도한다면 null 을 리턴받을것
-    override suspend fun updateCartItem(hash: String, count: Int): Int {
-        return cartDao.updateCartItem(hash, count)
+    override suspend fun updateCartItemCount(hash: String, count: Int): Int {
+        return cartDao.updateCartItemCount(hash, count)
+    }
+
+    override suspend fun updateCartItemSelect(hash: String, isSelect: Boolean): Int {
+        return cartDao.updateCartItemSelect(hash, isSelect)
     }
 
     override suspend fun fetchCartItems(): List<CartEntity> {
