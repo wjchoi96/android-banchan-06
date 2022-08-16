@@ -5,17 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.domain.model.CartListModel
 import com.woowahan.domain.model.CartModel
-import com.woowahan.domain.usecase.FetchCartItemsUseCase
-import com.woowahan.domain.usecase.RemoveCartItemUseCase
-import com.woowahan.domain.usecase.RemoveCartItemsUseCase
-import com.woowahan.domain.usecase.UpdateCartItemCountUseCase
+import com.woowahan.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +20,8 @@ class CartViewModel @Inject constructor(
     private val removeCartItemUseCase: RemoveCartItemUseCase,
     private val removeCartItemsUseCase: RemoveCartItemsUseCase,
     private val updateCartItemCountUseCase: UpdateCartItemCountUseCase,
+    private val updateCartItemSelectUseCase: UpdateCartItemSelectUseCase,
+    private val updateCartItemsSelectUseCase: UpdateCartItemsSelectUseCase
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -37,8 +35,6 @@ class CartViewModel @Inject constructor(
     private val _eventFlow: MutableSharedFlow<UiEvent> =
         MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
-
-    private val selectedItems = HashMap<String, CartModel>()
 
     fun fetchCartItems() {
         if (_dataLoading.value) {
@@ -64,14 +60,12 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun removeCartItems(items: List<CartModel>) {
+    fun removeCartItems(items: List<CartListModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
-            removeCartItemsUseCase(items.map { it.hash })
+            removeCartItemsUseCase(items.map { it.cart.hash })
                 .onSuccess { isSuccess ->
-                    if (isSuccess) {
-                        selectedItems.clear()
-                    } else {
+                    if (!isSuccess) {
                         _eventFlow.emit(UiEvent.ShowToast("Can't delete items"))
                     }
                 }
@@ -94,7 +88,6 @@ class CartViewModel @Inject constructor(
             removeCartItemsUseCase(items.map { it.hash })
                 .onSuccess { isSuccess ->
                     if (isSuccess) {
-                        selectedItems.clear()
                         _eventFlow.emit(UiEvent.GoToOrderList("go"))
                     } else {
                         _eventFlow.emit(UiEvent.ShowToast("Can't order"))
@@ -118,9 +111,7 @@ class CartViewModel @Inject constructor(
             _dataLoading.value = true
             removeCartItemUseCase(hash)
                 .onSuccess { isSuccess ->
-                    if (isSuccess) {
-                        selectedItems.remove(hash)
-                    } else {
+                    if (!isSuccess) {
                         _eventFlow.emit(UiEvent.ShowToast("Can't delete item"))
                     }
                 }
@@ -137,7 +128,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun updateCartItem(hash: String, count: Int) {
+    fun updateCartItemCount(hash: String, count: Int) {
         viewModelScope.launch {
             _dataLoading.value = true
             updateCartItemCountUseCase(hash, count)
@@ -156,31 +147,65 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    val selectAllItems: (Boolean) -> Unit = { isSelected ->
-        if (isSelected) {
-            Timber.d("All selected")
-            _cartItems.value.filterIsInstance<CartListModel.Content>().forEach { cartContent ->
-                selectedItems[cartContent.cart.hash] = cartContent.cart
-            }
-        } else {
-            Timber.d("All unselected")
-            selectedItems.clear()
+    fun updateCartItemAllSelect(isSelect: Boolean) {
+        viewModelScope.launch {
+            _dataLoading.value = true
+            updateCartItemsSelectUseCase(
+                _cartItems.value.filterIsInstance<CartListModel.Content>().map { it.cart.hash },
+                isSelect
+            )
+                .onSuccess { isSuccess ->
+                    if (!isSuccess) {
+                        _eventFlow.emit(UiEvent.ShowToast("Can't select all"))
+                    }
+                }
+                .onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.value = false
+                    if (_refreshDataLoading.value)
+                        _refreshDataLoading.value = false
+                }
         }
+    }
+
+    fun updateCartItemSelect(cartModel: CartModel, isSelect: Boolean) {
+        viewModelScope.launch {
+            _dataLoading.value = true
+            updateCartItemSelectUseCase(cartModel.hash, isSelect)
+                .onSuccess { isSuccess ->
+                    if (!isSuccess) {
+                        _eventFlow.emit(UiEvent.ShowToast("Can't select all"))
+                    }
+                }
+                .onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.value = false
+                    if (_refreshDataLoading.value)
+                        _refreshDataLoading.value = false
+                }
+        }
+    }
+
+    val selectAllItems: (Boolean) -> Unit = { isSelected ->
+        updateCartItemAllSelect(isSelected)
     }
 
     val deleteAllSelectedItems: () -> Unit = {
-        removeCartItems(selectedItems.values.toList())
+        removeCartItems(
+            _cartItems.value.filterIsInstance<CartListModel.Content>()
+                .filter { it.cart.isSelected })
     }
 
-    val selectItem: (CartModel) -> Unit = { cartModel ->
-        _cartItems.value.filterIsInstance<CartListModel.Content>().map {
-            if (it.cart.isSameHash(cartModel)) {
-                Timber.d("${cartModel.hash} ${cartModel.isSelected}")
-                CartListModel.Content(it.cart.copy(isSelected = cartModel.isSelected))
-            } else {
-                it
-            }
-        }
+    val selectItem: (CartModel, Boolean) -> Unit = { cartModel, isSelected ->
+        updateCartItemSelect(cartModel, isSelected)
     }
 
     val deleteItem: (CartModel) -> Unit = { deleteItem ->
@@ -189,12 +214,12 @@ class CartViewModel @Inject constructor(
 
     val minusClicked: (CartModel) -> Unit = { minusItem ->
         if (minusItem.count != 1) {
-            updateCartItem(minusItem.hash, minusItem.count - 1)
+            updateCartItemCount(minusItem.hash, minusItem.count - 1)
         }
     }
 
     val plusClicked: (CartModel) -> Unit = { plusItem ->
-        updateCartItem(plusItem.hash, plusItem.count + 1)
+        updateCartItemCount(plusItem.hash, plusItem.count + 1)
     }
 
     val orderItems: () -> Unit = {

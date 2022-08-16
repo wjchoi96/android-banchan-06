@@ -28,7 +28,7 @@
             android:checked="@={cartItem.selected}"
             android:minWidth="33dp"
             android:minHeight="33dp"
-            android:onClick="@{()->holder.selectItem.invoke(cartItem)}"
+            android:onClick="@{()->holder.selectItem.invoke(cartItem, cartItem.selected)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

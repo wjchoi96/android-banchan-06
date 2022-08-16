@@ -13,11 +13,6 @@ import javax.inject.Singleton
 class CartDataSourceImpl @Inject constructor(
     private val cartDao: CartDao
 ) : CartDataSource {
-    // key => banchan hash
-    // value => BanchanModel[품목], Int[개수]
-//    private val cart = mutableMapOf<String, Pair<BanchanModel, Int>>()
-//    private val cartItemCountFlow: MutableStateFlow<Int> = MutableStateFlow(0)
-
     override fun getCartSizeFlow(): Flow<Int> = cartDao.fetchCartItemsCount()
 
     // 단순 추가 -> 추가된 항목 리턴
@@ -48,11 +43,7 @@ class CartDataSourceImpl @Inject constructor(
     }
 
     override suspend fun updateCartItemSelect(hash: String, isSelect: Boolean): Int {
-        return cartDao.updateCartItemSelect(isSelect, hash)
-    }
-
-    override suspend fun updateCartItemsSelect(hashes: List<String>, isSelect: Boolean): Int {
-        return cartDao.updateCartItemSelect(isSelect, *hashes.toTypedArray())
+        return cartDao.updateCartItemSelect(hash, isSelect)
     }
 
     override suspend fun fetchCartItems(): List<CartEntity> {

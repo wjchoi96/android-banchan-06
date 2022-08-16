@@ -10,7 +10,6 @@ import com.woowahan.banchan.databinding.ItemCartContentBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
-import com.woowahan.domain.extension.priceStrToLong
 import com.woowahan.domain.model.CartListModel
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.CoroutineScope
@@ -21,14 +20,13 @@ import kotlinx.coroutines.withContext
 class DefaultCartAdapter(
     private val selectAll: (Boolean) -> Unit,
     private val deleteAllSelected: () -> Unit,
-    private val selectItem: (CartModel) -> Unit,
+    private val selectItem: (CartModel, Boolean) -> Unit,
     private val deleteItem: (CartModel) -> Unit,
     private val minusClicked: (CartModel) -> Unit,
     private val plusClicked: (CartModel) -> Unit,
     private val orderClicked: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListModel>()
-    private val selectedItemSet = mutableSetOf<String>()
     private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<CartListModel>) {
@@ -37,14 +35,6 @@ class DefaultCartAdapter(
                 CartListModelDiffUtilCallback(cartList, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
-                // 기존에 선택한 아이템 불러오기
-                newList.map {
-                    if (it is CartListModel.Content) {
-                        CartListModel.Content(it.cart.copy(isSelected = selectedItemSet.contains(it.cart.hash)))
-                    } else {
-                        it
-                    }
-                }
                 cartList = newList.toList()
                 diffRes.dispatchUpdatesTo(this@DefaultCartAdapter)
             }
@@ -75,14 +65,17 @@ class DefaultCartAdapter(
                 )
         }
 
-        fun bind() {
+        fun bind(defaultSelected: Boolean) {
+            var isAllSelected = defaultSelected
+
             binding.holder = this
+            binding.isAllSelected = isAllSelected
         }
     }
 
     class CartItemViewHolder(
         private val binding: ItemCartContentBinding,
-        val selectItem: (CartModel) -> Unit,
+        val selectItem: (CartModel, Boolean) -> Unit,
         val deleteItem: (CartModel) -> Unit,
         val minusClicked: (CartModel) -> Unit,
         val plusClicked: (CartModel) -> Unit,
@@ -90,7 +83,7 @@ class DefaultCartAdapter(
         companion object {
             fun from(
                 parent: ViewGroup,
-                selectItem: (CartModel) -> Unit,
+                selectItem: (CartModel, Boolean) -> Unit,
                 deleteItem: (CartModel) -> Unit,
                 minusClicked: (CartModel) -> Unit,
                 plusClicked: (CartModel) -> Unit,
@@ -136,9 +129,9 @@ class DefaultCartAdapter(
             binding.freeDelivery = (40000L - item.price).toCashString()
             binding.isFreeDelivery = (40000L <= item.price)
             binding.btnEnabled = (10000L <= item.price)
-            binding.btnText = if(10000L <= item.price){
+            binding.btnText = if (10000L <= item.price) {
                 "${item.totalPrice.toCashString()}원 주문하기"
-            }else{
+            } else {
                 "최소주문금액을 확인해주세요"
             }
         }
@@ -149,53 +142,27 @@ class DefaultCartAdapter(
             CartModel.ViewType.Header.value -> CartHeaderViewHolder.from(
                 parent,
                 selectAll = { isSelected ->
-                    // Room 연동
                     selectAll(isSelected)
-
-                    // 로컬 연동
-                    val test = cartList.map {
+                    updateList(cartList.map {
                         if (it is CartListModel.Content) {
                             CartListModel.Content(it.cart.copy(isSelected = isSelected))
                         } else {
                             it
                         }
-                    }
-                    updateList(test)
-                    if (isSelected) {
-                        selectedItemSet.addAll(
-                            cartList.filterIsInstance<CartListModel.Content>().map { it.cart.hash })
-                    } else {
-                        selectedItemSet.clear()
-                    }
+                    })
                 },
-                deleteAllSelected = {
-                    deleteAllSelected()
-                    selectedItemSet.clear()
-                }
+                deleteAllSelected = deleteAllSelected
             )
             CartModel.ViewType.Content.value -> CartItemViewHolder.from(
                 parent,
-                selectItem = { cartModel ->
-                    selectItem(cartModel)
-                    if (cartModel.isSelected) {
-                        selectedItemSet.add(cartModel.hash)
-                    } else {
-                        selectedItemSet.remove(cartModel.hash)
-                    }
-                },
-                deleteItem = { cartModel ->
-                    deleteItem(cartModel)
-                    selectedItemSet.remove(cartModel.hash)
-                },
+                selectItem = selectItem,
+                deleteItem = deleteItem,
                 minusClicked,
                 plusClicked
             )
             else -> CartFooterViewHolder.from(
                 parent,
-                orderClicked = {
-                    orderClicked()
-                    selectedItemSet.clear()
-                }
+                orderClicked = orderClicked
             )
         }
     }
@@ -210,7 +177,7 @@ class DefaultCartAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is CartHeaderViewHolder -> holder.bind()
+            is CartHeaderViewHolder -> holder.bind((cartList[position] as CartListModel.Header).isAllSelected)
             is CartItemViewHolder -> holder.bind((cartList[position] as CartListModel.Content).cart)
             is CartFooterViewHolder -> holder.bind(cartList[position] as CartListModel.Footer)
         }

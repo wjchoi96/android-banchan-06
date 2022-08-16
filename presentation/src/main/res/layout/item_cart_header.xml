@@ -2,6 +2,9 @@
 <layout>
 
     <data>
+        <variable
+            name="isAllSelected"
+            type="Boolean" />
 
         <variable
             name="holder"
@@ -21,15 +24,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/sel_checkbox"
-            android:checked="@={holder.isSelectedAll}"
+            android:checked="@={isAllSelected}"
             android:minWidth="36dp"
             android:buttonTint="@color/black_000000"
             android:minHeight="36dp"
-            android:onClick="@{()->holder.selectAll.invoke(holder.isSelectedAll)}"
+            android:onClick="@{()->holder.selectAll.invoke(isAllSelected)}"
             android:paddingVertical="10dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="@{holder.isSelectedAll ? `전체해제` : `전체선택`}"
+            android:text="@{isAllSelected ? `전체해제` : `전체선택`}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"

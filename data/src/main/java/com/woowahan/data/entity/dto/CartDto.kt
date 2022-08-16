@@ -17,7 +17,7 @@ data class CartDto(
     fun toEntity(): CartEntity = CartEntity(
         cartItemInfo.hash,
         cart.count,
-        cart.select,
+        cart.isSelect,
         cartItemInfo.title
     )
 }
