@@ -47,21 +47,25 @@ class ViewModeToggleBanchanAdapter(
             }
         }
     }
+    fun refreshList(){
+        if(banchanList.size < 3) return
+        notifyItemRangeChanged(2, banchanList.size-2)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        Timber.d("onCreateViewHolder")
         return when (viewType) {
             BanchanModel.ViewType.Banner.value -> BanchanListBannerViewHolder.from(parent)
             BanchanModel.ViewType.Header.value -> ViewModelToggleHeaderViewHolder.from(
                 parent = parent,
-                isGridView = isGridView,
                 filterTypeList = filterTypeList,
                 filterSelectedListener = {
                     selectedItemPosition = it
                     filterSelectedListener(it)
                 },
                 viewTypeListener = {
-                    viewTypeListener(it)
                     isGridView = it
+                    viewTypeListener(it)
                 })
             else -> {
                 when (isGridView) {
@@ -79,14 +83,21 @@ class ViewModeToggleBanchanAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return banchanList[position].viewType.value
+        return when{
+            banchanList[position].viewType.value < 2 -> banchanList[position].viewType.value
+            // isGridView 가 변경되었을때, onCreateViewHolder 가 호출될 수 있도록 viewType 을 다르게 해준다
+            else -> when(isGridView){
+                true -> banchanList[position].viewType.value
+                else -> banchanList[position].viewType.value + 1
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         Timber.d("onBindViewHolder[$position]")
         when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
-            is ViewModelToggleHeaderViewHolder -> holder.bind(selectedItemPosition)
+            is ViewModelToggleHeaderViewHolder -> holder.bind(selectedItemPosition, isGridView)
             is MenuVerticalViewHolder -> holder.bind(banchanList[position])
             is MenuHorizontalViewHolder -> holder.bind(banchanList[position])
         }
@@ -116,14 +127,12 @@ class ViewModeToggleBanchanAdapter(
                 }
             }
         }
-
     }
 
     override fun getItemCount(): Int = banchanList.size
 
     class ViewModelToggleHeaderViewHolder(
         private val binding: ItemViewModeToggleHeaderBinding,
-        private val isGridView: Boolean,
         private val filterTypeList: List<String>,
         private val filterSelectedListener: (Int) -> Unit,
         private val viewTypeListener: (Boolean) -> Unit
@@ -131,7 +140,6 @@ class ViewModeToggleBanchanAdapter(
         companion object {
             fun from(
                 parent: ViewGroup,
-                isGridView: Boolean,
                 filterTypeList: List<String>,
                 filterSelectedListener: (Int) -> Unit,
                 viewTypeListener: (Boolean) -> Unit,
@@ -142,14 +150,13 @@ class ViewModeToggleBanchanAdapter(
                         parent,
                         false
                     ),
-                    isGridView = isGridView,
                     filterTypeList = filterTypeList,
                     filterSelectedListener = filterSelectedListener,
                     viewTypeListener = viewTypeListener
                 )
         }
 
-        fun bind(selectedItemPosition: Int) {
+        fun bind(selectedItemPosition: Int, isGridView: Boolean) {
             binding.holder = this
             binding.isGridView = isGridView
             binding.defaultSpinnerSelectPosition = selectedItemPosition
