@@ -5,8 +5,8 @@
     <data>
 
         <variable
-        name="holder"
-        type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartItemViewHolder" />
+            name="holder"
+            type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartItemViewHolder" />
 
         <variable
             name="cartItem"
@@ -24,11 +24,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:button="@drawable/sel_checkbox"
-            android:minWidth="33dp"
-            android:onClick="@{()->holder.selectItem.invoke(cartItem)}"
-            android:minHeight="33dp"
-            android:checked="@={cartItem.selected}"
             android:buttonTint="@color/black_000000"
+            android:checked="@={cartItem.selected}"
+            android:minWidth="33dp"
+            android:minHeight="33dp"
+            android:onClick="@{()->holder.selectItem.invoke(cartItem)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,9 +80,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
+            android:onClick="@{()->holder.deleteItem.invoke(cartItem)}"
             android:padding="5dp"
             android:src="@drawable/ic_close"
-            android:onClick="@{()->holder.deleteItem.invoke(cartItem)}"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -90,6 +90,7 @@
             android:id="@+id/btn_plus"
             android:layout_width="28dp"
             android:layout_height="28dp"
+            android:onClick="@{()->holder.plusClicked.invoke(cartItem)}"
             app:cardCornerRadius="14dp"
             app:cardElevation="@dimen/round_btn_elevation"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"
@@ -125,6 +126,7 @@
             android:layout_height="28dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:onClick="@{()->holder.minusClicked.invoke(cartItem)}"
             app:cardCornerRadius="14dp"
             app:cardElevation="@dimen/round_btn_elevation"
             app:layout_constraintLeft_toRightOf="@id/iv_menu_image"
@@ -142,6 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:priceLongToStr="@{cartItem.price * cartItem.count}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
