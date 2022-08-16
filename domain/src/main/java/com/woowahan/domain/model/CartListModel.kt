@@ -1,5 +1,10 @@
 package com.woowahan.domain.model
 
+sealed class CartListModel {
+    object Header: CartListModel()
+    data class Content()
+}
+
 data class CartModel(
     val hash: String,
     val count: Int,
@@ -7,7 +12,8 @@ data class CartModel(
     val title: String,
     val imageUrl: String,
     val price: Long,
-    val deliveryFee: Long
+    val deliveryFee: Long,
+    val isSelected: Boolean = false
 ) {
     companion object {
         fun header(): CartModel = CartModel.empty().copy(viewType = ViewType.Header)
