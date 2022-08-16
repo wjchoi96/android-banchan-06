@@ -1,14 +1,14 @@
 package com.woowahan.domain.model
 
 sealed class CartListModel {
-    object Header : CartListModel()
+    data class Header(val isAllSelected: Boolean) : CartListModel()
     data class Content(val cart: CartModel) : CartListModel()
     data class Footer(val price: Long, val deliveryFee: Long, val totalPrice: Long) :
         CartListModel()
 
     fun isSameHash(other: Any?): Boolean {
         return if (this is Header && other is Header) {
-            true
+            this.isAllSelected == other.isAllSelected
         } else if (this is Content && other is Content) {
             this.cart.hash == other.cart.hash
         } else if (this is Footer && other is Footer) {

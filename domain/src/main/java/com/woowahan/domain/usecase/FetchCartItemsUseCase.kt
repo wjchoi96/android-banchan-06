@@ -19,7 +19,11 @@ class FetchCartItemsUseCase(
                     val price = list.sumOf { it.price * it.count }
                     val deliveryFee = 2500L
 
-                    listOf(CartListModel.Header) + list.map { CartListModel.Content(it) } + listOf(
+                    listOf(
+                        CartListModel.Header(
+                            isAllSelected = list.none { !(it.isSelected) }
+                        )
+                    ) + list.map { CartListModel.Content(it) } + listOf(
                         CartListModel.Footer(
                             price = price,
                             deliveryFee = deliveryFee,
