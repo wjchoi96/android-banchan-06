@@ -1,10 +1,14 @@
 package com.woowahan.banchan.ui.adapter
 
+import android.content.Context
+import android.graphics.Rect
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemMenuHorizontalListBinding
+import com.woowahan.banchan.extension.dp
 import com.woowahan.banchan.ui.adapter.viewHolder.BanchanListBannerViewHolder
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BestBanchanModel
@@ -71,6 +75,7 @@ class BestBanchanAdapter(
 
     class HorizontalListViewHolder(
         private val binding: ItemMenuHorizontalListBinding,
+        private val context: Context,
         private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
     ): RecyclerView.ViewHolder(binding.root) {
         companion object {
@@ -83,6 +88,7 @@ class BestBanchanAdapter(
                     parent,
                     false
                 ),
+                parent.context,
                 banchanInsertCartListener
             )
         }
@@ -92,14 +98,50 @@ class BestBanchanAdapter(
                 banchanInsertCartListener
             )
         }
+        private var listSize: Int = 0
+        private val decoration = object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
 
-        fun bind(item: BestBanchanModel){
-            binding.title = item.title
+                val idx = parent.getChildAdapterPosition(view)
+                if (idx < 0) return
+                val margin = 16.dp(context)
+                val spacing = 8.dp(context)
+
+                when (idx) {
+                    0 -> {
+                        outRect.left = margin
+                        outRect.right = spacing
+                    }
+                    listSize - 1 -> {
+                        outRect.right = margin
+                    }
+                    else -> {
+                        outRect.right = spacing
+                    }
+                }
+
+                outRect.bottom = 16.dp(context)
+            }
+        }
+
+        init {
             binding.rvHorizontal.apply {
                 layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                if(this.itemDecorationCount == 0)
+                    addItemDecoration(decoration)
             }
+        }
+
+        fun bind(item: BestBanchanModel){
+            listSize = item.banchans.size
+            binding.title = item.title
             binding.adapter = childAdapter
-//            Timber.d("best[${item.title}] => ${item.banchans}")
             childAdapter.updateList(item.banchans.toList())
         }
 
