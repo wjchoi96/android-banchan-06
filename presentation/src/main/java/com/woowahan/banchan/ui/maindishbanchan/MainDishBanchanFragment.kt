@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
@@ -17,6 +18,7 @@ import com.woowahan.banchan.extension.dp
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
+import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -95,7 +97,9 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                     }
 
                     is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
-                        //TODO: startActivity(CartActivity.get(requireContext())
+                        val cartIntent = Intent(requireActivity(), CartActivity::class.java)
+                        cartIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(cartIntent)
                     }
                 }
             }
