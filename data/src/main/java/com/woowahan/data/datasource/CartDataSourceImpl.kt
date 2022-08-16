@@ -30,16 +30,16 @@ class CartDataSourceImpl @Inject constructor(
 
     // 단순 제거 -> 제거된 Item 리턴
     override suspend fun removeCartItem(hash: String): Int {
-        val remove = cartDao.removeCartItem(hash)
+        val res = cartDao.removeCartItem(hash)
         cartDao.removeCartItemInfo(hash)
-        return remove
+        return res
     }
 
     // 목록 제거 -> 제거된 Items 리턴
     override suspend fun removeCartItems(hashes: List<String>): Int {
-        val remove = cartDao.removeCartItem(*hashes.toTypedArray())
+        val res = cartDao.removeCartItem(*hashes.toTypedArray())
         cartDao.removeCartItemInfo(*hashes.toTypedArray())
-        return remove
+        return res
     }
 
     // 항목 개수 업데이트 -> 이때 기존에 없는 항목을 업데이트 시도한다면 null 을 리턴받을것
