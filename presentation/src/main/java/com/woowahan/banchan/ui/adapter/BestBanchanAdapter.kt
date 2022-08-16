@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemMenuHorizontalListBinding
+import com.woowahan.banchan.extension.addControlHorizontalScrollListener
 import com.woowahan.banchan.extension.dp
 import com.woowahan.banchan.ui.adapter.viewHolder.BanchanListBannerViewHolder
 import com.woowahan.domain.model.BanchanModel
@@ -28,7 +29,6 @@ class BestBanchanAdapter(
     private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<BestBanchanModel>){
-        //TODO: DiffUtil 생성하여 적용, payload 호출 되는지 확인
         CoroutineScope(Dispatchers.Default).launch {
             val callback = BestBanchanModelDiffUtilCallback(bestBanchans, newList, cartStateChangePayload)
             val res = DiffUtil.calculateDiff(callback)
@@ -104,7 +104,6 @@ class BestBanchanAdapter(
             )
         }
         private val childAdapter: HorizontalBanchanListAdapter by lazy {
-            //TODO: ViewHolder 크기 조절 -> 필요하다면 새로 생성
             HorizontalBanchanListAdapter(
                 banchanInsertCartListener
             )
@@ -147,6 +146,7 @@ class BestBanchanAdapter(
                 if(this.itemDecorationCount == 0)
                     addItemDecoration(decoration)
             }
+            binding.rvHorizontal.addControlHorizontalScrollListener()
         }
 
         fun bind(item: BestBanchanModel){
@@ -159,7 +159,6 @@ class BestBanchanAdapter(
         fun bindCartStateChangePayload(item: BestBanchanModel){
             childAdapter.updateList(item.banchans.toList())
         }
-
     }
 
     class BestBanchanModelDiffUtilCallback(
