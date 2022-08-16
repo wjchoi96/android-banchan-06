@@ -11,6 +11,10 @@
             type="String" />
 
         <variable
+            name="isFreeDelivery"
+            type="Boolean" />
+
+        <variable
             name="holder"
             type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartFooterViewHolder" />
     </data>

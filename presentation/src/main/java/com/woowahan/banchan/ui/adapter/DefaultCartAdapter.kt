@@ -2,15 +2,16 @@ package com.woowahan.banchan.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CheckBox
+import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.banchan.CartModelDiffUtilCallback
+import com.woowahan.banchan.CartListModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemCartContentBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
 import com.woowahan.domain.extension.priceStrToLong
+import com.woowahan.domain.model.CartListModel
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,21 +20,20 @@ import kotlinx.coroutines.withContext
 
 class DefaultCartAdapter(
     private val selectAll: (Boolean) -> Unit,
-    private val deleteAllSelected: (List<CartModel>) -> Unit,
+    private val deleteAllSelected: () -> Unit,
     private val selectItem: (CartModel, Boolean) -> Unit,
     private val deleteItem: (CartModel) -> Unit,
     private val minusClicked: (CartModel) -> Unit,
     private val plusClicked: (CartModel) -> Unit,
     private val orderClicked: (List<CartModel>) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var cartList = listOf<CartModel>()
-    private val selectedMenu = ArrayList<CartModel>()
+    private var cartList = listOf<CartListModel>()
     private val cartStateChangePayload: String = "changePayload"
 
-    fun updateList(newList: List<CartModel>) {
+    fun updateList(newList: List<CartListModel>) {
         CoroutineScope(Dispatchers.Default).launch {
             val diffCallback =
-                CartModelDiffUtilCallback(cartList, newList, cartStateChangePayload)
+                CartListModelDiffUtilCallback(cartList, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
                 cartList = newList.toList()
@@ -45,13 +45,15 @@ class DefaultCartAdapter(
     class CartHeaderViewHolder(
         private val binding: ItemCartHeaderBinding,
         val selectAll: (Boolean) -> Unit,
-        val deleteAllSelected: (List<CartModel>) -> Unit
+        val deleteAllSelected: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
+        var isSelectedAll = ObservableField(false)
+
         companion object {
             fun from(
                 parent: ViewGroup,
                 selectAll: (Boolean) -> Unit,
-                deleteAllSelected: (List<CartModel>) -> Unit
+                deleteAllSelected: () -> Unit
             ): CartHeaderViewHolder =
                 CartHeaderViewHolder(
                     binding = ItemCartHeaderBinding.inflate(
@@ -64,11 +66,8 @@ class DefaultCartAdapter(
                 )
         }
 
-        fun bind(selectedMenu: List<CartModel>) {
-            binding.cbxSelectAll.setOnClickListener {
-                selectAll((it as CheckBox).isChecked)
-            }
-            binding.tvRemoveAll.setOnClickListener { deleteAllSelected(selectedMenu) }
+        fun bind() {
+            binding.holder = this
         }
     }
 
@@ -109,7 +108,8 @@ class DefaultCartAdapter(
         val orderClicked: (List<CartModel>) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         val totalPrice = (menusPrice.priceStrToLong() + deliveryFee.priceStrToLong()).toCashString()
-        val lessThanMinPrice = (totalPrice.priceStrToLong() < 100000)
+        val lessThanMinPrice = (menusPrice.priceStrToLong() < 10000L)
+        val moreThanFreePrice = (menusPrice.priceStrToLong() >= 40000L )
 
         companion object {
             fun from(
@@ -130,7 +130,7 @@ class DefaultCartAdapter(
 
         fun bind() {
             binding.holder = this
-            binding.freeDelivery = (40000L - totalPrice.priceStrToLong()).toCashString()
+            binding.freeDelivery = (40000L - menusPrice.priceStrToLong()).toCashString()
         }
     }
 
@@ -141,7 +141,7 @@ class DefaultCartAdapter(
                 selectAll,
                 deleteAllSelected
             )
-            CartModel.ViewType.Items.value -> CartItemViewHolder.from(
+            CartModel.ViewType.Content.value -> CartItemViewHolder.from(
                 parent,
                 selectItem,
                 deleteItem,
@@ -150,7 +150,8 @@ class DefaultCartAdapter(
             )
             else -> CartFooterViewHolder.from(
                 parent,
-                menusPrice = cartList.sumOf { it.price }.toCashString(),
+                menusPrice = cartList.filterIsInstance<CartListModel.Content>()
+                    .sumOf { it.cart.price }.toCashString(),
                 "2,500",
                 orderClicked
             )
@@ -158,13 +159,17 @@ class DefaultCartAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return cartList[position].viewType.value
+        return when (cartList[position]) {
+            is CartListModel.Header -> CartModel.ViewType.Header.value
+            is CartListModel.Content -> CartModel.ViewType.Content.value
+            is CartListModel.Footer -> CartModel.ViewType.Footer.value
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is CartHeaderViewHolder -> holder.bind(selectedMenu)
-            is CartItemViewHolder -> holder.bind(cartList[position])
+            is CartHeaderViewHolder -> holder.bind()
+            is CartItemViewHolder -> holder.bind((cartList[position] as CartListModel.Content).cart)
             is CartFooterViewHolder -> holder.bind()
         }
     }

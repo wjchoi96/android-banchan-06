@@ -26,15 +26,13 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
 
     private val adapter: DefaultCartAdapter by lazy {
         DefaultCartAdapter(
-            selectAll = {},
-            deleteAllSelected = {},
-            selectItem = { cartModel, isChecked ->
-
-            },
-            deleteItem = {},
-            minusClicked = {},
-            plusClicked = {},
-            orderClicked = {}
+            selectAll = viewModel.selectAllItems,
+            deleteAllSelected = viewModel.deleteAllSelectedItems,
+            deleteItem = viewModel.deleteItem,
+            minusClicked = viewModel.minusClicked,
+            plusClicked = viewModel.plusClicked,
+            orderClicked = viewModel.orderItems,
+            selectItem = viewModel.selectItem
         )
     }
 

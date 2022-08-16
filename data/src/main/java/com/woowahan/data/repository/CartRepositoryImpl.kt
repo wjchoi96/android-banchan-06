@@ -86,11 +86,10 @@ class CartRepositoryImpl @Inject constructor(
                             CartModel(
                                 it.hash,
                                 it.count,
-                                CartModel.ViewType.Items,
+                                CartModel.ViewType.Content,
                                 it.title,
                                 detail.data.thumbImages.first(),
-                                detail.data.prices.last().priceStrToLong(),
-                                2500L //detail.data.deliveryFee,
+                                detail.data.prices.last().priceStrToLong()
                             )
                         }
                         println("fetchCartItems res => $res")
