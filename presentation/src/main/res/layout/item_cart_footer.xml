@@ -141,7 +141,7 @@
             android:text="@{freeDelivery + `원을 더 담으면 무료배송!`}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
-            android:visibility="@{freeDelivery.length() == 0 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{isFreeDelivery ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_order"

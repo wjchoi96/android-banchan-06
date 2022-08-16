@@ -135,9 +135,9 @@ class DefaultCartAdapter(
             binding.footerItem = item
             binding.freeDelivery = (40000L - item.price).toCashString()
             binding.isFreeDelivery = (40000L <= item.price)
-            binding.btnEnabled = (10000L >= item.price)
-            binding.btnText = if(10000L >= item.price){
-                "${item.totalPrice}원 주문하기"
+            binding.btnEnabled = (10000L <= item.price)
+            binding.btnText = if(10000L <= item.price){
+                "${item.totalPrice.toCashString()}원 주문하기"
             }else{
                 "최소주문금액을 확인해주세요"
             }
