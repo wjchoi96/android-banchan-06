@@ -17,6 +17,11 @@ interface CartDao {
             "where ${CartTableEntity.COLUMN_HASH} = :hash")
     fun updateCartItemCount(hash: String, count: Int): Int
 
+    @Query("update ${CartTableEntity.TABLE_NAME} set " +
+            "`select` = :select " +
+            "where ${CartTableEntity.COLUMN_HASH} = :hash")
+    fun updateCartItemSelect(hash: String, select: Boolean): Int
+
     @Query("DELETE FROM ${CartTableEntity.TABLE_NAME} WHERE ${CartTableEntity.COLUMN_HASH} in (:hash)")
     fun removeCartItem(vararg hash: String): Int
     @Query("DELETE FROM ${BanchanItemTableEntity.TABLE_NAME} WHERE ${BanchanItemTableEntity.COLUMN_HASH} in (:hash)")

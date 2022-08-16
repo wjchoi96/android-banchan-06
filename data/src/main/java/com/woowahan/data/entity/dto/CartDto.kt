@@ -17,6 +17,7 @@ data class CartDto(
     fun toEntity(): CartEntity = CartEntity(
         cartItemInfo.hash,
         cart.count,
+        cart.select,
         cartItemInfo.title
     )
 }
@@ -24,5 +25,6 @@ data class CartDto(
 data class CartEntity(
     val hash: String,
     val count: Int,
+    val select: Boolean,
     val title: String
 )
