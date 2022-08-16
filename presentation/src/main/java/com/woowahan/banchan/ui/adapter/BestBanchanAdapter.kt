@@ -22,7 +22,8 @@ import timber.log.Timber
 
 class BestBanchanAdapter(
     private val bannerTitle: String,
-    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+    private val banchanInsertCartListener: (BanchanModel, Boolean) -> Unit,
+    private val itemClickListener: (BanchanModel) -> Unit
 ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var bestBanchans = listOf<BestBanchanModel>()
@@ -43,7 +44,7 @@ class BestBanchanAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             BestBanchanModel.ViewType.Banner.value -> BanchanListBannerViewHolder.from(parent)
-            else -> HorizontalListViewHolder.from(parent, banchanInsertCartListener)
+            else -> HorizontalListViewHolder.from(parent, banchanInsertCartListener, itemClickListener)
         }
     }
 
@@ -87,12 +88,14 @@ class BestBanchanAdapter(
     class HorizontalListViewHolder(
         private val binding: ItemMenuHorizontalListBinding,
         private val context: Context,
-        private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+        private val banchanInsertCartListener: (BanchanModel, Boolean) -> Unit,
+        private val itemClickListener: (BanchanModel) -> Unit
     ): RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
+                itemClickListener: (BanchanModel) -> Unit
             ): HorizontalListViewHolder = HorizontalListViewHolder(
                 ItemMenuHorizontalListBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -100,12 +103,14 @@ class BestBanchanAdapter(
                     false
                 ),
                 parent.context,
-                banchanInsertCartListener
+                banchanInsertCartListener,
+                itemClickListener
             )
         }
         private val childAdapter: HorizontalBanchanListAdapter by lazy {
             HorizontalBanchanListAdapter(
-                banchanInsertCartListener
+                banchanInsertCartListener,
+                itemClickListener
             )
         }
         private var listSize: Int = 0
@@ -154,6 +159,7 @@ class BestBanchanAdapter(
             binding.title = item.title
             binding.adapter = childAdapter
             childAdapter.updateList(item.banchans.toList())
+
         }
 
         fun bindCartStateChangePayload(item: BestBanchanModel){

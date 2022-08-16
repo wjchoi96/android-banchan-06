@@ -74,6 +74,12 @@ class BestBanchanViewModel @Inject constructor(
         }
     }
 
+    val itemClickListener: (BanchanModel) -> Unit = {
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.ShowDetailView(it))
+        }
+    }
+
     private fun removeItemFromCart(banchanModel: BanchanModel){
         viewModelScope.launch {
             _dataLoading.emit(true)
@@ -132,5 +138,6 @@ class BestBanchanViewModel @Inject constructor(
         data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
         data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
         object ShowCartView: UiEvent()
+        data class ShowDetailView(val banchanModel: BanchanModel): UiEvent()
     }
 }

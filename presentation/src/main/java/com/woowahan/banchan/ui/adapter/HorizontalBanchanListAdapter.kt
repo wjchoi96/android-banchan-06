@@ -16,7 +16,8 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class HorizontalBanchanListAdapter(
-    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+    private val banchanInsertCartListener: (BanchanModel, Boolean) -> Unit,
+    private val itemClickListener: (BanchanModel) -> Unit
 ): RecyclerView.Adapter<HorizontalBanchanListAdapter.BestMenuHorizontalChildViewHolder>() {
 
     private var banchanList = listOf<BanchanModel>()
@@ -37,7 +38,8 @@ class HorizontalBanchanListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BestMenuHorizontalChildViewHolder {
         return BestMenuHorizontalChildViewHolder.from(
             parent,
-            banchanInsertCartListener
+            banchanInsertCartListener,
+            itemClickListener
         )
     }
 
@@ -68,12 +70,14 @@ class HorizontalBanchanListAdapter(
 
     class BestMenuHorizontalChildViewHolder(
         private val binding: ItemMenuBestHorizontalChildBinding,
-        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
+        val itemClickListener: (BanchanModel) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
+                itemClickListener: (BanchanModel) -> Unit
             ): BestMenuHorizontalChildViewHolder =
                 BestMenuHorizontalChildViewHolder(
                     ItemMenuBestHorizontalChildBinding.inflate(
@@ -81,7 +85,8 @@ class HorizontalBanchanListAdapter(
                         parent,
                         false
                     ),
-                    banchanInsertCartListener
+                    banchanInsertCartListener,
+                    itemClickListener
                 )
         }
 

@@ -25,7 +25,8 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
     private val adapter: BestBanchanAdapter by lazy {
         BestBanchanAdapter(
             getString(R.string.best_banchan_banner_title),
-            viewModel.clickInsertCartButton
+            viewModel.clickInsertCartButton,
+            viewModel.itemClickListener
         )
     }
 
@@ -68,6 +69,10 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
 
                     is BestBanchanViewModel.UiEvent.ShowCartView -> {
                         //TODO: startActivity(CartActivity.get(requireContext())
+                    }
+
+                    is BestBanchanViewModel.UiEvent.ShowDetailView -> {
+                        //TODO: startActivity(BanchanDetailActivity.get(requireContext(), it.hash) // or it
                     }
                 }
             }
