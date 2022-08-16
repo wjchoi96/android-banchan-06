@@ -11,10 +11,8 @@ import com.woowahan.domain.usecase.FetchSideDishBanchanUseCase
 import com.woowahan.domain.usecase.InsertCartItemUseCase
 import com.woowahan.domain.usecase.RemoveCartItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -61,18 +59,21 @@ class SideDishBanchanViewModel @Inject constructor(
         viewModelScope.launch {
             _dataLoading.value = true
             fetchSideBanchanUseCase.invoke()
-                .onSuccess {
-                    defaultBanchans = it
-                    _banchans.value = defaultBanchans
-                }.onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
+                .flowOn(Dispatchers.Default)
+                .collect { res ->
+                    res.onSuccess {
+                        defaultBanchans = it
+                        _banchans.value = defaultBanchans
+                    }.onFailure {
+                        it.printStackTrace()
+                        it.message?.let { message ->
+                            _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
+                    }.also {
+                        _dataLoading.value = false
+                        if (_refreshDataLoading.value)
+                            _refreshDataLoading.value = false
                     }
-                }.also {
-                    _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
                 }
         }
     }
