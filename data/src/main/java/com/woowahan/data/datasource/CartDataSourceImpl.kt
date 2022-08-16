@@ -48,7 +48,11 @@ class CartDataSourceImpl @Inject constructor(
     }
 
     override suspend fun updateCartItemSelect(hash: String, isSelect: Boolean): Int {
-        return cartDao.updateCartItemSelect(hash, isSelect)
+        return cartDao.updateCartItemSelect(isSelect, hash)
+    }
+
+    override suspend fun updateCartItemsSelect(hashes: List<String>, isSelect: Boolean): Int {
+        return cartDao.updateCartItemSelect(isSelect, *hashes.toTypedArray())
     }
 
     override suspend fun fetchCartItems(): List<CartEntity> {

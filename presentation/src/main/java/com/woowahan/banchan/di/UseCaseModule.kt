@@ -65,6 +65,10 @@ object UseCaseModule {
         UpdateCartItemCountUseCase(repo)
 
     @Provides
+    fun provideUpdateCartItemsSelectUseCase(repo: CartRepository)=
+        UpdateCartItemsSelectUseCase(repo)
+
+    @Provides
     fun provideUpdateCartItemSelectUseCase(repo: CartRepository) =
         UpdateCartItemSelectUseCase(repo)
 

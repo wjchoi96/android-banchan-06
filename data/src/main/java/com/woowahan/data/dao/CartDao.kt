@@ -20,7 +20,7 @@ interface CartDao {
     @Query("update ${CartTableEntity.TABLE_NAME} set " +
             "`select` = :select " +
             "where ${CartTableEntity.COLUMN_HASH} = :hash")
-    fun updateCartItemSelect(hash: String, select: Boolean): Int
+    fun updateCartItemSelect(select: Boolean, vararg hash: String): Int
 
     @Query("DELETE FROM ${CartTableEntity.TABLE_NAME} WHERE ${CartTableEntity.COLUMN_HASH} in (:hash)")
     fun removeCartItem(vararg hash: String): Int
