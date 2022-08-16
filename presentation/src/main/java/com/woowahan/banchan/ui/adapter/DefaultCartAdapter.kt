@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 class DefaultCartAdapter(
     private val selectAll: (Boolean) -> Unit,
     private val deleteAllSelected: () -> Unit,
-    private val selectItem: (CartModel, Boolean) -> Unit,
+    private val selectItem: (CartModel) -> Unit,
     private val deleteItem: (CartModel) -> Unit,
     private val minusClicked: (CartModel) -> Unit,
     private val plusClicked: (CartModel) -> Unit,
@@ -73,7 +73,7 @@ class DefaultCartAdapter(
 
     class CartItemViewHolder(
         private val binding: ItemCartContentBinding,
-        val selectItem: (CartModel, Boolean) -> Unit,
+        val selectItem: (CartModel) -> Unit,
         val deleteItem: (CartModel) -> Unit,
         val minusClicked: (CartModel) -> Unit,
         val plusClicked: (CartModel) -> Unit,
@@ -81,7 +81,7 @@ class DefaultCartAdapter(
         companion object {
             fun from(
                 parent: ViewGroup,
-                selectItem: (CartModel, Boolean) -> Unit,
+                selectItem: (CartModel) -> Unit,
                 deleteItem: (CartModel) -> Unit,
                 minusClicked: (CartModel) -> Unit,
                 plusClicked: (CartModel) -> Unit,
@@ -98,6 +98,7 @@ class DefaultCartAdapter(
 
         fun bind(item: CartModel) {
             binding.cartItem = item
+            binding.holder = this
         }
     }
 

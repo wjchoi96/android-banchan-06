@@ -90,10 +90,12 @@ class CartViewModel @Inject constructor(
 
     val selectAllItems: (Boolean) -> Unit = { isSelected ->
         if (isSelected) {
+            Timber.d("All selected")
             _cartItems.value.filterIsInstance<CartListModel.Content>().forEach { cartContent ->
                 selectedItems[cartContent.cart.hash] = cartContent.cart
             }
         } else {
+            Timber.d("All unselected")
             selectedItems.clear()
         }
     }
@@ -102,8 +104,15 @@ class CartViewModel @Inject constructor(
         removeCartItem(selectedItems.values.toList())
     }
 
-    val selectItem: (CartModel, Boolean) -> Unit = { cartModel, isSelected ->
-
+    val selectItem: (CartModel) -> Unit = { cartModel ->
+        _cartItems.value.filterIsInstance<CartListModel.Content>().map {
+            if (it.cart == cartModel) {
+                Timber.d("${cartModel.hash} ${cartModel.isSelected}")
+                CartListModel.Content(it.cart.copy(isSelected = cartModel.isSelected))
+            } else {
+                it
+            }
+        }
     }
 
     val deleteItem: (CartModel) -> Unit = { deleteItem ->
