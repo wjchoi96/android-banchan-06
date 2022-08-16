@@ -1,19 +1,21 @@
 package com.woowahan.banchan.ui.adapter
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
-import com.woowahan.banchan.ui.adapter.viewHolder.MenuVerticalViewHolder
+import com.woowahan.banchan.databinding.ItemMenuBestHorizontalChildBinding
 import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class HorizontalBanchanListAdapter(
     private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
-): RecyclerView.Adapter<MenuVerticalViewHolder>() {
+): RecyclerView.Adapter<HorizontalBanchanListAdapter.BestMenuHorizontalChildViewHolder>() {
 
     private var banchanList = listOf<BanchanModel>()
     private val cartStateChangePayload: String = "changePayload"
@@ -30,18 +32,51 @@ class HorizontalBanchanListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuVerticalViewHolder {
-        return MenuVerticalViewHolder.from(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BestMenuHorizontalChildViewHolder {
+        return BestMenuHorizontalChildViewHolder.from(
             parent,
             banchanInsertCartListener
         )
     }
 
-    override fun onBindViewHolder(holder: MenuVerticalViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BestMenuHorizontalChildViewHolder, position: Int) {
         holder.bind(banchanList[position])
     }
 
     override fun getItemCount(): Int {
         return banchanList.size
     }
+
+    class BestMenuHorizontalChildViewHolder(
+        private val binding: ItemMenuBestHorizontalChildBinding,
+        val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+    ) : RecyclerView.ViewHolder(binding.root) {
+        companion object {
+            fun from(
+                parent: ViewGroup,
+                banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+            ): BestMenuHorizontalChildViewHolder =
+                BestMenuHorizontalChildViewHolder(
+                    ItemMenuBestHorizontalChildBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    ),
+                    banchanInsertCartListener
+                )
+        }
+
+        fun bind(item: BanchanModel) {
+            binding.banchan = item
+            binding.isCartItem = item.isCartItem
+            binding.holder = this
+        }
+
+        fun bindCartStateChangePayload(item: BanchanModel) {
+            Timber.d("bindPayload bindCartStateChangePayload")
+            binding.isCartItem = item.isCartItem
+        }
+    }
+
+
 }
