@@ -97,7 +97,7 @@
             android:layout_marginTop="8dp"
             android:gravity="end"
             android:minWidth="140dp"
-            android:priceLongToStr="@{footerItem.totalPrice + footerItem.deliveryFee}"
+            android:priceLongToStr="@{footerItem.totalPrice}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             android:textStyle="bold"
