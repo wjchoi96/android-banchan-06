@@ -86,6 +86,9 @@ class BestBanchanViewModel @Inject constructor(
             removeCartItemUseCase.invoke(banchanModel.hash)
                 .onSuccess {
                     _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
+                    _eventFlow.emit(UiEvent.ShowDialog(
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
+                    ))
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -103,6 +106,9 @@ class BestBanchanViewModel @Inject constructor(
             insertCartItemUseCase.invoke(banchanModel, count)
                 .onSuccess {
                     _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
+                    _eventFlow.emit(UiEvent.ShowDialog(
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
+                    ))
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
