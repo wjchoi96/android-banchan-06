@@ -122,7 +122,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="40dp"
             android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/yellow_f9ba70"
+            android:backgroundTint="@{btnEnabled ? @color/yellow_f9ba70 : @color/yellow_fcdcb7}"
             android:elevation="10dp"
             android:enabled="@{btnEnabled}"
             android:text="@{btnText}"
