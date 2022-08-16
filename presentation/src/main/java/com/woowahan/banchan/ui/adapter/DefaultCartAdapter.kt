@@ -25,7 +25,7 @@ class DefaultCartAdapter(
     private val deleteItem: (CartModel) -> Unit,
     private val minusClicked: (CartModel) -> Unit,
     private val plusClicked: (CartModel) -> Unit,
-    private val orderClicked: (List<CartModel>) -> Unit
+    private val orderClicked: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListModel>()
     private val selectedItemSet = mutableSetOf<String>()
@@ -113,13 +113,13 @@ class DefaultCartAdapter(
 
     class CartFooterViewHolder(
         private val binding: ItemCartFooterBinding,
-        val orderClicked: (List<CartModel>) -> Unit
+        val orderClicked: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         companion object {
             fun from(
                 parent: ViewGroup,
-                orderClicked: (List<CartModel>) -> Unit
+                orderClicked: () -> Unit
             ): CartFooterViewHolder =
                 CartFooterViewHolder(
                     binding = ItemCartFooterBinding.inflate(
@@ -192,8 +192,8 @@ class DefaultCartAdapter(
             )
             else -> CartFooterViewHolder.from(
                 parent,
-                orderClicked = { cartList ->
-                    orderClicked(cartList)
+                orderClicked = {
+                    orderClicked()
                     selectedItemSet.clear()
                 }
             )

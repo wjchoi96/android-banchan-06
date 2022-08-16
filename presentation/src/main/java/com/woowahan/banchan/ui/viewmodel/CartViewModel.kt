@@ -8,7 +8,7 @@ import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.usecase.FetchCartItemsUseCase
 import com.woowahan.domain.usecase.RemoveCartItemUseCase
 import com.woowahan.domain.usecase.RemoveCartItemsUseCase
-import com.woowahan.domain.usecase.UpdateCartItemUseCase
+import com.woowahan.domain.usecase.UpdateCartItemCountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +23,7 @@ class CartViewModel @Inject constructor(
     private val fetchCartItemsUseCase: FetchCartItemsUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase,
     private val removeCartItemsUseCase: RemoveCartItemsUseCase,
-    private val updateCartItemUseCase: UpdateCartItemUseCase,
+    private val updateCartItemCountUseCase: UpdateCartItemCountUseCase,
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -140,7 +140,7 @@ class CartViewModel @Inject constructor(
     fun updateCartItem(hash: String, count: Int) {
         viewModelScope.launch {
             _dataLoading.value = true
-            updateCartItemUseCase(hash, count)
+            updateCartItemCountUseCase(hash, count)
                 .onSuccess { isSuccess ->
                 }
                 .onFailure {
