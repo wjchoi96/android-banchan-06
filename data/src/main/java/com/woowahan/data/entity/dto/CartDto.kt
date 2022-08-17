@@ -25,6 +25,6 @@ data class CartDto(
 data class CartEntity(
     val hash: String,
     val count: Int,
-    val select: Boolean,
+    val isSelect: Boolean,
     val title: String
 )

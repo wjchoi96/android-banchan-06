@@ -113,7 +113,7 @@ class CartRepositoryImpl @Inject constructor(
                                 title = it.title,
                                 imageUrl = detail.data.thumbImages.first(),
                                 price = detail.data.prices.last().priceStrToLong(),
-                                isSelected = it.select
+                                isSelected = it.isSelect
                             )
                         }
                         println("fetchCartItems res => $res")
