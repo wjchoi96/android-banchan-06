@@ -10,7 +10,7 @@ import com.woowahan.banchan.databinding.ItemCartContentBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
-import com.woowahan.domain.model.CartListModel
+import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,10 +26,10 @@ class DefaultCartAdapter(
     private val plusClicked: (CartModel) -> Unit,
     private val orderClicked: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var cartList = listOf<CartListModel>()
+    private var cartList = listOf<CartListItemModel>()
     private val cartStateChangePayload: String = "changePayload"
 
-    fun updateList(newList: List<CartListModel>) {
+    fun updateList(newList: List<CartListItemModel>) {
         CoroutineScope(Dispatchers.Default).launch {
             val diffCallback =
                 CartListModelDiffUtilCallback(cartList, newList, cartStateChangePayload)
@@ -124,7 +124,7 @@ class DefaultCartAdapter(
                 )
         }
 
-        fun bind(item: CartListModel.Footer) {
+        fun bind(item: CartListItemModel.Footer) {
             binding.holder = this
             binding.footerItem = item
             binding.freeDelivery = (40000L - item.price).toCashString()
@@ -145,8 +145,8 @@ class DefaultCartAdapter(
                 selectAll = { isSelected ->
                     selectAll(isSelected)
                     updateList(cartList.map {
-                        if (it is CartListModel.Content) {
-                            CartListModel.Content(it.cart.copy(isSelected = isSelected))
+                        if (it is CartListItemModel.Content) {
+                            CartListItemModel.Content(it.cart.copy(isSelected = isSelected))
                         } else {
                             it
                         }
@@ -170,17 +170,17 @@ class DefaultCartAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (cartList[position]) {
-            is CartListModel.Header -> CartModel.ViewType.Header.value
-            is CartListModel.Content -> CartModel.ViewType.Content.value
-            is CartListModel.Footer -> CartModel.ViewType.Footer.value
+            is CartListItemModel.Header -> CartModel.ViewType.Header.value
+            is CartListItemModel.Content -> CartModel.ViewType.Content.value
+            is CartListItemModel.Footer -> CartModel.ViewType.Footer.value
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is CartHeaderViewHolder -> holder.bind((cartList[position] as CartListModel.Header).isAllSelected)
-            is CartItemViewHolder -> holder.bind((cartList[position] as CartListModel.Content).cart)
-            is CartFooterViewHolder -> holder.bind(cartList[position] as CartListModel.Footer)
+            is CartHeaderViewHolder -> holder.bind((cartList[position] as CartListItemModel.Header).isAllSelected)
+            is CartItemViewHolder -> holder.bind((cartList[position] as CartListItemModel.Content).cart)
+            is CartFooterViewHolder -> holder.bind(cartList[position] as CartListItemModel.Footer)
         }
     }
 

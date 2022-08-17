@@ -3,7 +3,7 @@ package com.woowahan.banchan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
-import com.woowahan.domain.model.CartListModel
+import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.usecase.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,7 +29,7 @@ class CartViewModel @Inject constructor(
     private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val refreshDataLoading = _refreshDataLoading.asStateFlow()
 
-    private val _cartItems: MutableStateFlow<List<CartListModel>> = MutableStateFlow(emptyList())
+    private val _cartItems: MutableStateFlow<List<CartListItemModel>> = MutableStateFlow(emptyList())
     val cartItems = _cartItems.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> =
@@ -60,7 +60,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun removeCartItems(items: List<CartListModel.Content>) {
+    fun removeCartItems(items: List<CartListItemModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemsUseCase(items.map { it.cart.hash })
@@ -82,7 +82,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun clearCart(items: List<CartListModel.Content>) {
+    fun clearCart(items: List<CartListItemModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemsUseCase(items.map { it.cart.hash })
@@ -151,7 +151,7 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             _dataLoading.value = true
             updateCartItemsSelectUseCase(
-                _cartItems.value.filterIsInstance<CartListModel.Content>().map { it.cart.hash },
+                _cartItems.value.filterIsInstance<CartListItemModel.Content>().map { it.cart.hash },
                 isSelect
             )
                 .onSuccess { isSuccess ->
@@ -200,7 +200,7 @@ class CartViewModel @Inject constructor(
 
     val deleteAllSelectedItems: () -> Unit = {
         removeCartItems(
-            _cartItems.value.filterIsInstance<CartListModel.Content>()
+            _cartItems.value.filterIsInstance<CartListItemModel.Content>()
                 .filter { it.cart.isSelected })
     }
 
@@ -224,7 +224,7 @@ class CartViewModel @Inject constructor(
 
     val orderItems: () -> Unit = {
         clearCart(
-            _cartItems.value.filterIsInstance<CartListModel.Content>()
+            _cartItems.value.filterIsInstance<CartListItemModel.Content>()
                 .filter { it.cart.isSelected })
     }
 

@@ -1,14 +1,11 @@
 package com.woowahan.banchan
 
 import androidx.recyclerview.widget.DiffUtil
-import com.woowahan.domain.model.BanchanModel
-import com.woowahan.domain.model.CartListModel
-import com.woowahan.domain.model.CartModel
-import timber.log.Timber
+import com.woowahan.domain.model.CartListItemModel
 
 class CartListModelDiffUtilCallback(
-    private val oldList: List<CartListModel>,
-    private val newList: List<CartListModel>,
+    private val oldList: List<CartListItemModel>,
+    private val newList: List<CartListItemModel>,
     private val cartStateChangePayload: Any?
 ) : DiffUtil.Callback() {
     override fun getOldListSize(): Int = oldList.size
@@ -24,12 +21,12 @@ class CartListModelDiffUtilCallback(
     }
 
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
-        if (oldList[oldItemPosition] is CartListModel.Content && newList[newItemPosition] is CartListModel.Content) {
-            if ((oldList[oldItemPosition] as CartListModel.Content).cart.hash == (newList[newItemPosition] as CartListModel.Content).cart.hash) {
+        if (oldList[oldItemPosition] is CartListItemModel.Content && newList[newItemPosition] is CartListItemModel.Content) {
+            if ((oldList[oldItemPosition] as CartListItemModel.Content).cart.hash == (newList[newItemPosition] as CartListItemModel.Content).cart.hash) {
                 return cartStateChangePayload
             }
-        } else if (oldList[oldItemPosition] is CartListModel.Footer && newList[newItemPosition] is CartListModel.Footer) {
-            if ((oldList[oldItemPosition] as CartListModel.Footer).price == (newList[newItemPosition] as CartListModel.Footer).price) {
+        } else if (oldList[oldItemPosition] is CartListItemModel.Footer && newList[newItemPosition] is CartListItemModel.Footer) {
+            if ((oldList[oldItemPosition] as CartListItemModel.Footer).price == (newList[newItemPosition] as CartListItemModel.Footer).price) {
                 return cartStateChangePayload
             }
         }

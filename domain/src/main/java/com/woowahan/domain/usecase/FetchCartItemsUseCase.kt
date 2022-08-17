@@ -1,17 +1,14 @@
 package com.woowahan.domain.usecase
 
-import com.woowahan.domain.model.CartListModel
-import com.woowahan.domain.model.CartModel
+import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
 class FetchCartItemsUseCase(
     private val cartRepository: CartRepository
 ) {
-    suspend operator fun invoke(): Flow<Result<List<CartListModel>>> {
+    suspend operator fun invoke(): Flow<Result<List<CartListItemModel>>> {
         return cartRepository.fetchCartItems()
             .map {
                 kotlin.runCatching {
@@ -20,11 +17,11 @@ class FetchCartItemsUseCase(
                     val deliveryFee = 2500L
 
                     listOf(
-                        CartListModel.Header(
+                        CartListItemModel.Header(
                             isAllSelected = (list.none { !(it.isSelected) } && list.isNotEmpty())
                         )
-                    ) + list.map { CartListModel.Content(it) } + listOf(
-                        CartListModel.Footer(
+                    ) + list.map { CartListItemModel.Content(it) } + listOf(
+                        CartListItemModel.Footer(
                             price = price,
                             deliveryFee = deliveryFee,
                             totalPrice = price + deliveryFee

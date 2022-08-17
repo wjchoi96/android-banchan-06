@@ -1,10 +1,10 @@
 package com.woowahan.domain.model
 
-sealed class CartListModel {
-    data class Header(val isAllSelected: Boolean) : CartListModel()
-    data class Content(val cart: CartModel) : CartListModel()
+sealed class CartListItemModel {
+    data class Header(val isAllSelected: Boolean) : CartListItemModel()
+    data class Content(val cart: CartModel) : CartListItemModel()
     data class Footer(val price: Long, val deliveryFee: Long, val totalPrice: Long) :
-        CartListModel()
+        CartListItemModel()
 
     infix fun isSameIdWith(other: Any?): Boolean {
         return if (this is Header && other is Header) {

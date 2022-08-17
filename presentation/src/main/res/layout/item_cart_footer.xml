@@ -8,7 +8,7 @@
 
         <variable
             name="footerItem"
-            type="com.woowahan.domain.model.CartListModel.Footer" />
+            type="com.woowahan.domain.model.CartListItemModel.Footer" />
 
         <variable
             name="freeDelivery"
