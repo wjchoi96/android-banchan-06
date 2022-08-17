@@ -105,7 +105,6 @@ class CartRepositoryImpl @Inject constructor(
                             CartModel(
                                 hash = it.hash,
                                 count = it.count,
-                                viewType = CartModel.ViewType.Content,
                                 title = it.title,
                                 imageUrl = detail.data.thumbImages.first(),
                                 price = detail.data.prices.last().priceStrToLong(),

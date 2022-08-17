@@ -22,17 +22,12 @@ sealed class CartListItemModel {
 data class CartModel(
     val hash: String,
     val count: Int,
-    val viewType: ViewType = ViewType.Content,
     val title: String,
     val imageUrl: String,
     val price: Long,
     val deliveryFee: Long = 2500L,
     var isSelected: Boolean = false
 ) {
-    companion object {
-        fun empty(): CartModel = CartModel("", 0, ViewType.Content, "", "", 0L, 0L)
-    }
-
     enum class ViewType(val value: Int) {
         Header(0),
         Content(1),
