@@ -60,7 +60,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun removeCartItems(items: List<CartListItemModel.Content>) {
+    private fun removeCartItems(items: List<CartListItemModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemsUseCase(items.map { it.cart.hash })
@@ -82,7 +82,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun clearCart(items: List<CartListItemModel.Content>) {
+    private fun clearCart(items: List<CartListItemModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemsUseCase(items.map { it.cart.hash })
@@ -106,7 +106,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun removeCartItem(hash: String) {
+    private fun removeCartItem(hash: String) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemUseCase(hash)
@@ -128,7 +128,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun updateCartItemCount(hash: String, count: Int) {
+    private fun updateCartItemCount(hash: String, count: Int) {
         viewModelScope.launch {
             _dataLoading.value = true
             updateCartItemCountUseCase(hash, count)
@@ -147,7 +147,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun updateCartItemAllSelect(isSelect: Boolean) {
+    private fun updateCartItemAllSelect(isSelect: Boolean) {
         viewModelScope.launch {
             _dataLoading.value = true
             updateCartItemsSelectUseCase(
@@ -172,7 +172,7 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun updateCartItemSelect(cartModel: CartModel, isSelect: Boolean) {
+    private fun updateCartItemSelect(cartModel: CartModel, isSelect: Boolean) {
         viewModelScope.launch {
             _dataLoading.value = true
             updateCartItemSelectUseCase(cartModel.hash, isSelect)
