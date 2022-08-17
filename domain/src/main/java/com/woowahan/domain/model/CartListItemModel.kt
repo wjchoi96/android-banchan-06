@@ -3,8 +3,12 @@ package com.woowahan.domain.model
 sealed class CartListItemModel {
     data class Header(val isAllSelected: Boolean) : CartListItemModel()
     data class Content(val cart: CartModel) : CartListItemModel()
-    data class Footer(val price: Long, val deliveryFee: Long, val totalPrice: Long) :
-        CartListItemModel()
+    data class Footer(
+        val price: Long,
+        val deliveryFee: Long = 2500L,
+    ) : CartListItemModel() {
+        val totalPrice: Long = price + deliveryFee
+    }
 
     infix fun isSameIdWith(other: Any?): Boolean {
         return if (this is Header && other is Header) {
@@ -25,7 +29,6 @@ data class CartModel(
     val title: String,
     val imageUrl: String,
     val price: Long,
-    val deliveryFee: Long = 2500L,
     var isSelected: Boolean = false
 ) {
     enum class ViewType(val value: Int) {
