@@ -46,8 +46,6 @@ class DefaultCartAdapter(
         val selectAll: (Boolean) -> Unit,
         val deleteAllSelected: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        var isSelectedAll = ObservableField(false)
-
         companion object {
             fun from(
                 parent: ViewGroup,
