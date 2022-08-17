@@ -63,12 +63,8 @@ class CartRepositoryImpl @Inject constructor(
         isSelect: Boolean
     ): Result<Boolean> {
         return withContext(coroutineDispatcher) {
-            var cnt = 0
             kotlin.runCatching {
-                hashes.map { hash ->
-                    cnt += cartDataSource.updateCartItemSelect(hash, isSelect)
-                }
-                cnt != 0
+                cartDataSource.updateCartItemsSelect(hashes, isSelect) != 0
             }
         }
     }
