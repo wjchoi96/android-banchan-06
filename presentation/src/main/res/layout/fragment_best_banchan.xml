@@ -30,6 +30,7 @@
             app:onRefreshListener="@{()->viewModel.onRefresh()}"
             >
             <androidx.recyclerview.widget.RecyclerView
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:adapter="@{adapter}"
                 android:id="@+id/rv_main_dish"
                 android:layout_width="0dp"

@@ -35,12 +35,7 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
         binding.viewModel = viewModel
         binding.adapter = adapter
 
-        setUpRecyclerView()
         observeData()
-    }
-
-    private fun setUpRecyclerView() {
-        binding.rvMainDish.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onStart() {
