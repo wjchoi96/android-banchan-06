@@ -97,9 +97,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                     }
 
                     is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
-                        val cartIntent = Intent(requireActivity(), CartActivity::class.java)
-                        cartIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        startActivity(cartIntent)
+                        startActivity(CartActivity.get(requireContext()))
                     }
                 }
             }

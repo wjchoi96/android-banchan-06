@@ -1,5 +1,7 @@
 package com.woowahan.banchan.ui.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -20,6 +22,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class CartActivity : BaseActivity<ActivityCartBinding>() {
     private val viewModel: CartViewModel by viewModels()
+
+    companion object {
+        fun get(context: Context): Intent {
+            return Intent(context, CartActivity::class.java).apply {
+                this.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            }
+        }
+    }
 
     override val layoutResId: Int
         get() = R.layout.activity_cart

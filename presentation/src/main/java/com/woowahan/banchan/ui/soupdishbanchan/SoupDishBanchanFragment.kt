@@ -87,9 +87,7 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
                     }
 
                     is SoupDishBanchanViewModel.UiEvent.ShowCartView -> {
-                        val cartIntent = Intent(requireActivity(), CartActivity::class.java)
-                        cartIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        startActivity(cartIntent)
+                        startActivity(CartActivity.get(requireContext()))
                     }
 
                 }
@@ -103,7 +101,7 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
         }
     }
 
-    private val gridItemDecoration  by lazy {
+    private val gridItemDecoration by lazy {
         GridItemDecoration(
             requireContext(),
             spanCount

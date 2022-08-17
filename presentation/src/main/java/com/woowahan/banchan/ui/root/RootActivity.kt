@@ -70,9 +70,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
 
         binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_cart).actionView.let {
             (it.findViewById(R.id.iv_cart_image) as ImageView).setOnClickListener {
-                val cartIntent = Intent(this, CartActivity::class.java)
-                cartIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                startActivity(cartIntent)
+                startActivity(CartActivity.get(this))
             }
         }
 
