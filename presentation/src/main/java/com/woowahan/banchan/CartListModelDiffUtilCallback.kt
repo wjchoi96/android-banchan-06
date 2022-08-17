@@ -16,18 +16,7 @@ class CartListModelDiffUtilCallback(
     override fun getNewListSize(): Int = newList.size
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return if (oldList[oldItemPosition] is CartListModel.Header && newList[newItemPosition] is CartListModel.Header) {
-            // Header 면 isAllSelected 비교
-            (oldList[oldItemPosition] as CartListModel.Header).isAllSelected == (newList[newItemPosition] as CartListModel.Header).isAllSelected
-        } else if (oldList[oldItemPosition] is CartListModel.Content && newList[newItemPosition] is CartListModel.Content) {
-            // Content 면 해쉬 비교
-            (oldList[oldItemPosition] as CartListModel.Content).cart.hash == (newList[newItemPosition] as CartListModel.Content).cart.hash
-        } else if (oldList[oldItemPosition] is CartListModel.Footer && newList[newItemPosition] is CartListModel.Footer) {
-            // Footer 면 price 비교
-            (oldList[oldItemPosition] as CartListModel.Footer).price == (newList[newItemPosition] as CartListModel.Footer).price
-        } else {
-            false
-        }
+        return oldList[oldItemPosition] isSameIdWith newList[newItemPosition]
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

@@ -6,7 +6,7 @@ sealed class CartListModel {
     data class Footer(val price: Long, val deliveryFee: Long, val totalPrice: Long) :
         CartListModel()
 
-    fun isSameHash(other: Any?): Boolean {
+    infix fun isSameIdWith(other: Any?): Boolean {
         return if (this is Header && other is Header) {
             this.isAllSelected == other.isAllSelected
         } else if (this is Content && other is Content) {
@@ -31,14 +31,6 @@ data class CartModel(
 ) {
     companion object {
         fun empty(): CartModel = CartModel("", 0, ViewType.Content, "", "", 0L, 0L)
-    }
-
-    fun isSameHash(other: Any?): Boolean {
-        return if (other is CartModel) {
-            this.hash == other.hash
-        } else {
-            false
-        }
     }
 
     enum class ViewType(val value: Int) {
