@@ -83,7 +83,8 @@ class ViewModeToggleBanchanAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when{
-            banchanList[position].viewType.value < 2 -> banchanList[position].viewType.value
+            banchanList[position].viewType.value != BanchanModel.ViewType.Item.value ->
+                banchanList[position].viewType.value
             // isGridView 가 변경되었을때, onCreateViewHolder 가 호출될 수 있도록 viewType 을 다르게 해준다
             else -> when(isGridView){
                 true -> banchanList[position].viewType.value
