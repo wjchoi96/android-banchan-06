@@ -6,14 +6,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentMainDishBanchanBinding
+import com.woowahan.banchan.extension.repeatOnStarted
+import com.woowahan.banchan.extension.showSnackBar
+import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
-import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.extension.dp
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
@@ -34,6 +34,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     private val adapter: ViewModeToggleBanchanAdapter by lazy {
         ViewModeToggleBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
+            viewModel.filter,
+            viewModel.gridViewMode.value,
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.viewModeToggleEvent,
@@ -48,10 +50,11 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         binding.viewModel = viewModel
         binding.adapter = adapter
 
+        setUpRecyclerView()
         observeData()
     }
 
-    private fun setUpGridRecyclerView() {
+    private fun setUpRecyclerView(){
         binding.rvMainDish.layoutManager = GridLayoutManager(context, spanCount).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
@@ -62,14 +65,16 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                 }
             }
         }
+    }
 
+    private fun setUpGridRecyclerView() {
+        (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = spanCount
         binding.rvMainDish.addItemDecoration(gridItemDecoration)
     }
 
     private fun setUpLinearRecyclerView() {
         binding.rvMainDish.removeItemDecoration(gridItemDecoration)
-        binding.rvMainDish.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = 1
     }
 
     override fun onStart() {
@@ -105,12 +110,12 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
 
         repeatOnStarted {
             viewModel.gridViewMode.collect {
-                if (it) {
-                    setUpGridRecyclerView()
-                } else {
-                    setUpLinearRecyclerView()
+                Timber.d("gridViewMode => $it")
+                when(it){
+                    true -> setUpGridRecyclerView()
+                    else -> setUpLinearRecyclerView()
                 }
-                binding.rvMainDish.refresh()
+                adapter.refreshList()
             }
         }
 
@@ -127,12 +132,6 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             requireContext(),
             spanCount
         ).decoration
-    }
-
-    private fun RecyclerView.refresh() {
-        val adapterRef = this.adapter
-        this.adapter = null
-        this.adapter = adapterRef
     }
 
 }

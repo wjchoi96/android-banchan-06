@@ -16,13 +16,12 @@ class FetchBestBanchanUseCase(
                 listOf(
                     BestBanchanModel.empty().copy(viewType = BestBanchanModel.ViewType.Banner)
                 ) + it.getOrThrow().map {
-                    it.banchans.map { banchan ->
-                        if(cart.contains(banchan.hash))
+                    it.copy(banchans = it.banchans.map { banchan ->
+                        if(cart.contains(banchan.hash)) {
                             banchan.copy(isCartItem = true)
-                        else
+                        }else
                             banchan
-                    }
-                    it
+                    })
                 }
             }
         }
