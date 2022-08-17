@@ -5,10 +5,7 @@ import com.woowahan.data.apiservice.BestBanchanApiService
 import com.woowahan.data.apiservice.MainDishBanchanApiService
 import com.woowahan.data.apiservice.SideDishBanchanApiService
 import com.woowahan.data.apiservice.SoupDishBanchanApiService
-import com.woowahan.data.entity.BestBanchanEntity
-import com.woowahan.data.entity.MainDishBanchanEntity
-import com.woowahan.data.entity.SideDishBanchanEntity
-import com.woowahan.data.entity.SoupDishBanchanEntity
+import com.woowahan.data.entity.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -77,7 +74,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchBestBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchBestBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("best_fail.json")
         val response = MockResponse().apply {
@@ -92,7 +89,8 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
     }
 
     @Test
@@ -114,7 +112,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchMainDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchMainDishBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("main_dish_fail.json")
         val response = MockResponse().apply {
@@ -129,7 +127,8 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
     }
 
 
@@ -152,7 +151,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchSoupDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchSoupDishBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("soup_dish_fail.json")
         val response = MockResponse().apply {
@@ -167,7 +166,8 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
     }
 
     @Test
@@ -189,7 +189,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchSideDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchSideDishBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("side_dish_fail.json")
         val response = MockResponse().apply {
@@ -204,7 +204,8 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
     }
 
 
