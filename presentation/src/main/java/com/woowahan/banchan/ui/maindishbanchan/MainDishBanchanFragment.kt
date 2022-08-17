@@ -1,7 +1,5 @@
 package com.woowahan.banchan.ui.maindishbanchan
 
-import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -14,10 +12,6 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
-import com.woowahan.banchan.extension.dp
-import com.woowahan.banchan.extension.repeatOnStarted
-import com.woowahan.banchan.extension.showSnackBar
-import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
