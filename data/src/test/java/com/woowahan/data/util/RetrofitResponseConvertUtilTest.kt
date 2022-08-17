@@ -68,7 +68,7 @@ class RetrofitResponseConvertUtilTest {
     }
 
     @Test
-    fun getDataWithStatusCode_statusCodeNotOkResponse_throwStatusCodeNotOk() = runTest {
+    fun getDataWithStatusCode_statusCodeNotOkResponse_throwApiStatusCodeNotOk() = runTest {
         //Given
         val statusCode = 500
         val responseJson = "{ " +
@@ -95,7 +95,7 @@ class RetrofitResponseConvertUtilTest {
     }
 
     @Test
-    fun getDataWithStatusCode_responseCodeNotOk_throwResponseCodeNotOk() = runTest {
+    fun getDataWithStatusCode_responseCodeNotOk_throwApiIsNotSuccessful() = runTest {
         //Given
         val responseJson = "{ " +
                 "\"statusCode\": 200, " +
@@ -122,7 +122,7 @@ class RetrofitResponseConvertUtilTest {
     }
 
     @Test
-    fun getDataWithStatusCode_responseCodeNotOkAndStatusCodeNotOk_throwResponseCodeNotOk() = runTest {
+    fun getDataWithStatusCode_responseCodeNotOkAndStatusCodeNotOk_throwApiIsNotSuccessful() = runTest {
         //Given
         val responseJson = "{ " +
                 "\"statusCode\": 500, " +
@@ -170,7 +170,7 @@ class RetrofitResponseConvertUtilTest {
     }
 
     @Test
-    fun getData_responseCodeNotOk_throwResponseCodeNotOk() = runTest {
+    fun getData_responseCodeNotOk_throwApiIsNotSuccessful() = runTest {
         //Given
         val responseJson = readResponse("detail_success.json")
         val response = MockResponse().apply {
