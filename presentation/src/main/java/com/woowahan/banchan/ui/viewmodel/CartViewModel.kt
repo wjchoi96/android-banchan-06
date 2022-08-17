@@ -88,7 +88,7 @@ class CartViewModel @Inject constructor(
             removeCartItemsUseCase(items.map { it.cart.hash })
                 .onSuccess { isSuccess ->
                     if (isSuccess) {
-                        _eventFlow.emit(UiEvent.GoToOrderList("go"))
+                        _eventFlow.emit(UiEvent.GoToOrderList)
                     } else {
                         _eventFlow.emit(UiEvent.ShowToast("Can't order"))
                     }
@@ -237,6 +237,6 @@ class CartViewModel @Inject constructor(
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
         data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
-        data class GoToOrderList(val message: String) : UiEvent()
+        object GoToOrderList : UiEvent()
     }
 }
