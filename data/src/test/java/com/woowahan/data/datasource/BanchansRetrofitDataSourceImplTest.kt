@@ -94,6 +94,26 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
+    fun fetchBestBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("best_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchBestBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+    }
+
+    @Test
     fun fetchMainDishBanchans_mockServerSuccessRequest_isNotNullAndEquals() = runTest {
         //Given
         val responseJson = readResponse("main_dish_success.json")
@@ -129,6 +149,26 @@ class BanchansRetrofitDataSourceImplTest{
         //Then
         assertThat(actualResult)
             .isInstanceOf(ApiStatusCodeNotOk::class.java)
+    }
+
+    @Test
+    fun fetchMainDishBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("main_dish_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchMainDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
     }
 
 
@@ -171,6 +211,26 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
+    fun fetchSoupDishBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("soup_dish_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSoupDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+    }
+
+    @Test
     fun fetchSideDishBanchans_mockServerSuccessRequest_isNotNullAndEquals() = runTest {
         //Given
         val responseJson = readResponse("side_dish_success.json")
@@ -206,6 +266,26 @@ class BanchansRetrofitDataSourceImplTest{
         //Then
         assertThat(actualResult)
             .isInstanceOf(ApiStatusCodeNotOk::class.java)
+    }
+
+    @Test
+    fun fetchSideDishBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("side_dish_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSideDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
     }
 
 
