@@ -47,7 +47,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
 
         binding.viewModel = viewModel
         binding.adapter = adapter
-        binding.title = "Cart"
+        binding.title = getString(R.string.cart_title)
         binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener { onBackPressed() }
 
         observeData()
