@@ -12,7 +12,7 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
-import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
+import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -96,7 +96,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                     }
 
                     is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
-                        //TODO: startActivity(CartActivity.get(requireContext())
+                        startActivity(CartActivity.get(requireContext()))
                     }
                 }
             }

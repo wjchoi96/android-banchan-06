@@ -16,7 +16,7 @@ class CartRepositoryImpl @Inject constructor(
     private val cartDataSource: CartDataSource,
     private val banchanDetailDataSource: BanchanDetailDataSource,
     private val coroutineDispatcher: CoroutineDispatcher
-): CartRepository {
+) : CartRepository {
 
     override fun getCartSizeFlow(): Flow<Int> {
         return cartDataSource.getCartSizeFlow()
@@ -34,32 +34,35 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun removeCartItem(hash: String): Result<Boolean> {
+    override suspend fun removeCartItem(vararg hashes: String): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.removeCartItem(hash) != 0
+                cartDataSource.removeCartItem(*hashes) != 0
             }
         }
     }
 
-    override suspend fun removeCartItems(hashes: List<String>): Result<Boolean> {
+    override suspend fun updateCartItemCount(hash: String, count: Int): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.removeCartItems(hashes) != 0
+                cartDataSource.updateCartItemCount(hash, count) != 0
             }
         }
     }
 
-    override suspend fun updateCartItem(hash: String, count: Int): Result<Boolean> {
+    override suspend fun updateCartItemSelect(
+        isSelect: Boolean,
+        vararg hashes: String,
+    ): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.updateCartItem(hash, count) != 0
+                cartDataSource.updateCartItemSelect(isSelect, *hashes) != 0
             }
         }
     }
 
     override suspend fun fetchCartItemsKey(): Result<Set<String>> {
-        return withContext(coroutineDispatcher){
+        return withContext(coroutineDispatcher) {
             kotlin.runCatching {
                 cartDataSource.fetchCartItems().groupBy { it.hash }.keys
             }
@@ -69,7 +72,7 @@ class CartRepositoryImpl @Inject constructor(
     override suspend fun fetchCartItems(): Flow<Result<List<CartModel>>> {
         return cartDataSource.fetchCartItemsFlow()
             .flowOn(coroutineDispatcher)
-            .map{ list ->
+            .map { list ->
                 kotlin.runCatching {
                     coroutineScope {
                         val detailMap = list.map {
@@ -82,13 +85,14 @@ class CartRepositoryImpl @Inject constructor(
 
                         val res = list.map {
                             val detail = detailMap[it.hash]!!
+
                             CartModel(
-                                it.hash,
-                                it.count,
-                                it.title,
-                                detail.data.thumbImages.first(),
-                                detail.data.prices.last().priceStrToLong(),
-                                2500L //detail.data.deliveryFee
+                                hash = it.hash,
+                                count = it.count,
+                                title = it.title,
+                                imageUrl = detail.data.thumbImages.first(),
+                                price = detail.data.prices.last().priceStrToLong(),
+                                isSelected = it.isSelect
                             )
                         }
                         println("fetchCartItems res => $res")
