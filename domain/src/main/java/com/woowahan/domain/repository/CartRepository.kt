@@ -17,8 +17,6 @@ interface CartRepository {
 
     suspend fun updateCartItemsSelect(hashes: List<String>, isSelect: Boolean): Result<Boolean>
 
-    suspend fun updateCartItemSelect(hash: String, isSelect: Boolean): Result<Boolean>
-
     suspend fun fetchCartItemsKey(): Result<Set<String>>
 
     suspend fun fetchCartItems(): Flow<Result<List<CartModel>>>

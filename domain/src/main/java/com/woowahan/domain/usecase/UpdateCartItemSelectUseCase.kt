@@ -7,7 +7,7 @@ class UpdateCartItemSelectUseCase(
 ) {
     suspend operator fun invoke(hash: String, isSelect: Boolean): Result<Boolean> {
         return kotlin.runCatching {
-            cartRepository.updateCartItemSelect(hash, isSelect).getOrThrow()
+            cartRepository.updateCartItemsSelect(listOf(hash), isSelect).getOrThrow()
         }
     }
 }

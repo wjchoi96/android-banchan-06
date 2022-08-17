@@ -69,14 +69,6 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateCartItemSelect(hash: String, isSelect: Boolean): Result<Boolean> {
-        return withContext(coroutineDispatcher) {
-            kotlin.runCatching {
-                cartDataSource.updateCartItemSelect(hash, isSelect) != 0
-            }
-        }
-    }
-
     override suspend fun fetchCartItemsKey(): Result<Set<String>> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
