@@ -9,13 +9,11 @@ interface CartRepository {
 
     suspend fun insertCartItem(banchan: BanchanModel, count: Int): Result<Boolean>
 
-    suspend fun removeCartItem(hash: String): Result<Boolean>
-
-    suspend fun removeCartItems(hashes: List<String>): Result<Boolean>
+    suspend fun removeCartItem(vararg hashes: String): Result<Boolean>
 
     suspend fun updateCartItemCount(hash: String, count: Int): Result<Boolean>
 
-    suspend fun updateCartItemsSelect(hashes: List<String>, isSelect: Boolean): Result<Boolean>
+    suspend fun updateCartItemSelect(isSelect: Boolean, vararg hashes: String): Result<Boolean>
 
     suspend fun fetchCartItemsKey(): Result<Set<String>>
 

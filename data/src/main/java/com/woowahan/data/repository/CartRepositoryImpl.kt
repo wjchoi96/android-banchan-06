@@ -34,18 +34,10 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun removeCartItem(hash: String): Result<Boolean> {
+    override suspend fun removeCartItem(vararg hashes: String): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.removeCartItem(hash) != 0
-            }
-        }
-    }
-
-    override suspend fun removeCartItems(hashes: List<String>): Result<Boolean> {
-        return withContext(coroutineDispatcher) {
-            kotlin.runCatching {
-                cartDataSource.removeCartItems(hashes) != 0
+                cartDataSource.removeCartItem(*hashes) != 0
             }
         }
     }
@@ -58,13 +50,13 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateCartItemsSelect(
-        hashes: List<String>,
-        isSelect: Boolean
+    override suspend fun updateCartItemSelect(
+        isSelect: Boolean,
+        vararg hashes: String,
     ): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.updateCartItemsSelect(hashes, isSelect) != 0
+                cartDataSource.updateCartItemSelect(isSelect, *hashes) != 0
             }
         }
     }

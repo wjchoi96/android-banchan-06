@@ -23,17 +23,9 @@ class CartDataSourceImpl @Inject constructor(
         )
     }
 
-    // 단순 제거 -> 제거된 Item 리턴
-    override suspend fun removeCartItem(hash: String): Int {
-        val res = cartDao.removeCartItem(hash)
-        cartDao.removeCartItemInfo(hash)
-        return res
-    }
-
-    // 목록 제거 -> 제거된 Items 리턴
-    override suspend fun removeCartItems(hashes: List<String>): Int {
-        val res = cartDao.removeCartItem(*hashes.toTypedArray())
-        cartDao.removeCartItemInfo(*hashes.toTypedArray())
+    override suspend fun removeCartItem(vararg hashes: String): Int {
+        val res = cartDao.removeCartItem(*hashes)
+        cartDao.removeCartItemInfo(*hashes)
         return res
     }
 
@@ -42,8 +34,8 @@ class CartDataSourceImpl @Inject constructor(
         return cartDao.updateCartItemCount(hash, count)
     }
 
-    override suspend fun updateCartItemsSelect(hashes: List<String>, isSelect: Boolean): Int {
-        return cartDao.updateCartItemSelect(isSelect, *hashes.toTypedArray())
+    override suspend fun updateCartItemSelect(isSelect: Boolean, vararg hashes: String):Int {
+        return cartDao.updateCartItemSelect(isSelect, *hashes)
     }
 
     override suspend fun fetchCartItems(): List<CartEntity> {
