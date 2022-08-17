@@ -14,4 +14,7 @@
     <string name="main_dish_banchan_banner_title">모두가 좋아하는\n든든한 메인 요리</string>
     <string name="soup_dish_banchan_banner_title">정성이 담긴\n뜨끈뜨근 국물 요리</string>
     <string name="side_dish_banchan_banner_title">식탁을 풍성하게 하는\n정갈한 밑반찬</string>
+    
+    <!-- recent viewed -->
+    <string name="recent_viewed_title">Recently viewed products</string>
 </resources>
