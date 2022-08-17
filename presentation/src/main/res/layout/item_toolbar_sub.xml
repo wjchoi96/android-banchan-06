@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="title"
+            type="String" />
+    </data>
     <com.google.android.material.appbar.AppBarLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layout_app_bar"
@@ -11,7 +16,7 @@
             android:background="@color/yellow_f9ba70"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="TITLE"
+            app:title="@{title}"
             app:titleTextAppearance="@style/ToolBarTitleTextStyle"
             app:navigationIcon="@drawable/ic_arrow_left"
             />
