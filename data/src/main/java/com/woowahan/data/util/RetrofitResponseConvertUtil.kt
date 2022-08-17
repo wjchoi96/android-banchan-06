@@ -1,6 +1,7 @@
 package com.woowahan.data.util
 
 import com.woowahan.data.entity.ApiBodyIsNull
+import com.woowahan.data.entity.ApiIsNotSuccessful
 import com.woowahan.data.entity.ApiStatusCodeNotOk
 import retrofit2.Response
 
@@ -16,7 +17,7 @@ object RetrofitResponseConvertUtil {
 
     private fun <T>getDataOrError(response: Response<T>): Response<T> {
         val error: Throwable? = when {
-            !response.isSuccessful -> Throwable(response.message())
+            !response.isSuccessful -> ApiIsNotSuccessful(response.message())
             response.body() == null -> ApiBodyIsNull()
             else -> null
         }
@@ -29,7 +30,7 @@ object RetrofitResponseConvertUtil {
 
     private fun <T>getDataOrError(response: Response<T>, statusCode: Int?): Response<T> {
         val error: Throwable? = when {
-            !response.isSuccessful -> Throwable(response.message())
+            !response.isSuccessful -> ApiIsNotSuccessful(response.message())
             response.body() == null -> ApiBodyIsNull()
             statusCode == null || statusCode != 200 -> ApiStatusCodeNotOk(statusCode)
             else -> null

@@ -1,7 +1,7 @@
 package com.woowahan.data.entity
 
 data class ApiStatusCodeNotOk(
-    val statusCode: Int?
+    private val statusCode: Int?
 ): Throwable() {
     override val message = "api response status code is not 200[$statusCode]"
 }
@@ -9,3 +9,7 @@ data class ApiStatusCodeNotOk(
 class ApiBodyIsNull: Throwable() {
     override val message = "api response body is null"
 }
+
+data class ApiIsNotSuccessful(
+    override val message: String
+): Throwable()
