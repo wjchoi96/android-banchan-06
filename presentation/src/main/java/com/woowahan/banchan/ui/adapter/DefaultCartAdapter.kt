@@ -140,16 +140,7 @@ class DefaultCartAdapter(
         return when (viewType) {
             CartModel.ViewType.Header.value -> CartHeaderViewHolder.from(
                 parent,
-                selectAll = { isSelected ->
-                    selectAll(isSelected)
-                    updateList(cartList.map {
-                        if (it is CartListItemModel.Content) {
-                            CartListItemModel.Content(it.cart.copy(isSelected = isSelected))
-                        } else {
-                            it
-                        }
-                    })
-                },
+                selectAll = selectAll,
                 deleteAllSelected = deleteAllSelected
             )
             CartModel.ViewType.Content.value -> CartItemViewHolder.from(
