@@ -231,7 +231,6 @@ class CartViewModel @Inject constructor(
     fun onRefresh() {
         _refreshDataLoading.value = true
         fetchCartItems()
-        viewModelScope
     }
 
     sealed class UiEvent {
