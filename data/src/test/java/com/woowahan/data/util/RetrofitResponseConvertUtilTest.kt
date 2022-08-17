@@ -3,6 +3,8 @@ package com.woowahan.data.util
 import com.google.gson.Gson
 import com.woowahan.data.apiservice.BanchanDetailApiService
 import com.woowahan.data.apiservice.MainDishBanchanApiService
+import com.woowahan.data.entity.ApiIsNotSuccessful
+import com.woowahan.data.entity.ApiStatusCodeNotOk
 import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.data.entity.MainDishBanchanEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -68,8 +70,9 @@ class RetrofitResponseConvertUtilTest {
     @Test
     fun getDataWithStatusCode_statusCodeNotOkResponse_throwStatusCodeNotOk() = runTest {
         //Given
+        val statusCode = 500
         val responseJson = "{ " +
-                "\"statusCode\": 500, " +
+                "\"statusCode\": $statusCode, " +
                 "\"body\": [] " +
                 "}"
         val response = MockResponse().apply {
@@ -87,9 +90,8 @@ class RetrofitResponseConvertUtilTest {
 
         //Then
         assertThat(actualResult)
-            .isInstanceOf(Throwable::class.java)
-            .hasMessageContaining("api response")
-            .hasMessageContaining(res.body()?.statusCode?.toString())
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
+            .isEqualTo(ApiStatusCodeNotOk(statusCode))
     }
 
     @Test
@@ -113,10 +115,10 @@ class RetrofitResponseConvertUtilTest {
         }
 
         //Then
-        val expected = res.message()
+        val expected = ApiIsNotSuccessful(res.message())
         assertThat(actualResult)
-            .isInstanceOf(Throwable::class.java)
-            .hasMessageContaining(expected)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+            .isEqualTo(expected)
     }
 
     @Test
@@ -140,10 +142,10 @@ class RetrofitResponseConvertUtilTest {
         }
 
         //Then
-        val expected = res.message()
+        val expected = ApiIsNotSuccessful(res.message())
         assertThat(actualResult)
-            .isInstanceOf(Throwable::class.java)
-            .hasMessageContaining(expected)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+            .isEqualTo(expected)
     }
 
     @Test
@@ -185,9 +187,10 @@ class RetrofitResponseConvertUtilTest {
         }
 
         //Then
+        val expected = ApiIsNotSuccessful(res.message())
         assertThat(actualResult)
-            .isInstanceOf(Throwable::class.java)
-            .hasMessageContaining(res.message())
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+            .isEqualTo(expected)
     }
 
 }
