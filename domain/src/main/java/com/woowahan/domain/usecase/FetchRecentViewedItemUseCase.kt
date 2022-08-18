@@ -4,10 +4,10 @@ import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.repository.RecentViewedRepository
 import kotlinx.coroutines.flow.Flow
 
-class FetchSevenRecentViewedItemUseCase(
+class FetchRecentViewedItemUseCase(
     private val recentViewedRepository: RecentViewedRepository,
 ) {
-    suspend operator fun invoke(): Flow<Result<List<RecentViewedItemModel>>> {
-        return recentViewedRepository.fetchRecentViewedItems(fetchItemsCnt = 7)
+    suspend operator fun invoke(fetchItemsCnt: Int? = null): Flow<Result<List<RecentViewedItemModel>>> {
+        return recentViewedRepository.fetchRecentViewedItems(fetchItemsCnt)
     }
 }

@@ -5,9 +5,9 @@ import com.woowahan.domain.repository.CartRepository
 class UpdateCartItemSelectUseCase(
     private val cartRepository: CartRepository
 ) {
-    suspend operator fun invoke(hash: String, isSelect: Boolean): Result<Boolean> {
+    suspend operator fun invoke(isSelect: Boolean, vararg hashes: String): Result<Boolean> {
         return kotlin.runCatching {
-            cartRepository.updateCartItemSelect(isSelect, hash).getOrThrow()
+            cartRepository.updateCartItemSelect(isSelect, *hashes).getOrThrow()
         }
     }
 }

@@ -5,9 +5,9 @@ import com.woowahan.domain.repository.CartRepository
 class RemoveCartItemUseCase(
     private val cartRepository: CartRepository
 ) {
-    suspend operator fun invoke(hash: String): Result<Boolean>{
+    suspend operator fun invoke(vararg hashes: String): Result<Boolean>{
         return kotlin.runCatching {
-            cartRepository.removeCartItem(hash).getOrThrow()
+            cartRepository.removeCartItem(*hashes).getOrThrow()
         }
     }
 }

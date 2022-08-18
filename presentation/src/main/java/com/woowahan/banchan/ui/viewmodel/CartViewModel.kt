@@ -18,10 +18,8 @@ import javax.inject.Inject
 class CartViewModel @Inject constructor(
     private val fetchCartItemsUseCase: FetchCartItemsUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase,
-    private val removeCartItemsUseCase: RemoveCartItemsUseCase,
     private val updateCartItemCountUseCase: UpdateCartItemCountUseCase,
-    private val updateCartItemSelectUseCase: UpdateCartItemSelectUseCase,
-    private val updateCartItemsSelectUseCase: UpdateCartItemsSelectUseCase
+    private val updateCartItemSelectUseCase: UpdateCartItemSelectUseCase
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -63,7 +61,7 @@ class CartViewModel @Inject constructor(
     private fun removeCartItems(items: List<CartListItemModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
-            removeCartItemsUseCase(items.map { it.cart.hash })
+            removeCartItemUseCase(*(items.map { it.cart.hash }).toTypedArray())
                 .onSuccess { isSuccess ->
                     if (!isSuccess) {
                         _eventFlow.emit(UiEvent.ShowToast("Can't delete items"))
@@ -85,7 +83,7 @@ class CartViewModel @Inject constructor(
     private fun clearCart(items: List<CartListItemModel.Content>) {
         viewModelScope.launch {
             _dataLoading.value = true
-            removeCartItemsUseCase(items.map { it.cart.hash })
+            removeCartItemUseCase(*(items.map { it.cart.hash }).toTypedArray())
                 .onSuccess { isSuccess ->
                     if (isSuccess) {
                         _eventFlow.emit(UiEvent.GoToOrderList)
@@ -150,9 +148,9 @@ class CartViewModel @Inject constructor(
     private fun updateCartItemAllSelect(isSelect: Boolean) {
         viewModelScope.launch {
             _dataLoading.value = true
-            updateCartItemsSelectUseCase(
-                _cartItems.value.filterIsInstance<CartListItemModel.Content>().map { it.cart.hash },
-                isSelect
+            updateCartItemSelectUseCase(
+                isSelect,
+                *(_cartItems.value.filterIsInstance<CartListItemModel.Content>().map { it.cart.hash }).toTypedArray()
             )
                 .onSuccess { isSuccess ->
                     if (!isSuccess) {
@@ -175,7 +173,7 @@ class CartViewModel @Inject constructor(
     private fun updateCartItemSelect(cartModel: CartModel, isSelect: Boolean) {
         viewModelScope.launch {
             _dataLoading.value = true
-            updateCartItemSelectUseCase(cartModel.hash, isSelect)
+            updateCartItemSelectUseCase(isSelect, cartModel.hash)
                 .onSuccess { isSuccess ->
                     if (!isSuccess) {
                         _eventFlow.emit(UiEvent.ShowToast("Can't select all"))

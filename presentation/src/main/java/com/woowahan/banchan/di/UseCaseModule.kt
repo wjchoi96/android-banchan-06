@@ -58,16 +58,8 @@ object UseCaseModule {
         RemoveCartItemUseCase(repo)
 
     @Provides
-    fun provideRemoveCartItemsUseCase(repo: CartRepository) =
-        RemoveCartItemsUseCase(repo)
-
-    @Provides
     fun provideUpdateCartItemCountUseCase(repo: CartRepository) =
         UpdateCartItemCountUseCase(repo)
-
-    @Provides
-    fun provideUpdateCartItemsSelectUseCase(repo: CartRepository) =
-        UpdateCartItemsSelectUseCase(repo)
 
     @Provides
     fun provideUpdateCartItemSelectUseCase(repo: CartRepository) =
@@ -75,11 +67,7 @@ object UseCaseModule {
 
     @Provides
     fun provideFetchAllRecentViewedItemUseCase(repo: RecentViewedRepository) =
-        FetchAllRecentViewedItemUseCase(repo)
-
-    @Provides
-    fun provideFetchSevenRecentViewedItemUseCase(repo: RecentViewedRepository) =
-        FetchSevenRecentViewedItemUseCase(repo)
+        FetchRecentViewedItemUseCase(repo)
 
     @Provides
     fun provideInsertRecentViewedItemUseCase(repo: RecentViewedRepository) =
