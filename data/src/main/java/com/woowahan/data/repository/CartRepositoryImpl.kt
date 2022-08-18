@@ -2,7 +2,9 @@ package com.woowahan.data.repository
 
 import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.CartDataSource
+import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.domain.extension.priceStrToLong
+import com.woowahan.domain.model.BanchanDetailModel
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.CartModel
@@ -18,6 +20,8 @@ class CartRepositoryImpl @Inject constructor(
     private val banchanDetailDataSource: BanchanDetailDataSource,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : CartRepository {
+
+    private val cacheMap = mutableMapOf<String, BanchanDetailEntity>()
 
     override fun getCartSizeFlow(): Flow<Int> {
         return cartDataSource.getCartSizeFlow()
@@ -75,16 +79,22 @@ class CartRepositoryImpl @Inject constructor(
             .map { list ->
                 kotlin.runCatching {
                     coroutineScope {
-                        val detailMap = list.map {
+                        list.map {
                             async {
-                                println("fetchCartItems async run => ${it.hash}")
-                                banchanDetailDataSource.fetchBanchanDetail(it.hash)
+                                if(!cacheMap.containsKey(it.hash)) {
+                                    println("fetchCartItems async run => ${it.hash}")
+                                    banchanDetailDataSource.fetchBanchanDetail(it.hash).also {
+                                        cacheMap[it.hash] = it
+                                    }
+                                }else{
+                                    cacheMap[it.hash]!!
+                                }
                             }
-                        }.awaitAll().associateBy { item -> item.hash }
+                        }.awaitAll()
                         println("fetchCartItems async list finish")
 
                         val res = list.map {
-                            val detail = detailMap[it.hash]!!
+                            val detail = cacheMap[it.hash]!!
 
                             CartModel(
                                 hash = it.hash,
