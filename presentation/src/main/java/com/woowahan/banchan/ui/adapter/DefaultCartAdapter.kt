@@ -2,6 +2,7 @@ package com.woowahan.banchan.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -80,7 +81,7 @@ class DefaultCartAdapter(
         val selectItem: (CartModel, Boolean) -> Unit,
         val deleteItem: (CartModel) -> Unit,
         val minusClicked: (CartModel) -> Unit,
-        val plusClicked: (CartModel) -> Unit,
+        val plusClicked: (CartModel) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
@@ -88,7 +89,7 @@ class DefaultCartAdapter(
                 selectItem: (CartModel, Boolean) -> Unit,
                 deleteItem: (CartModel) -> Unit,
                 minusClicked: (CartModel) -> Unit,
-                plusClicked: (CartModel) -> Unit,
+                plusClicked: (CartModel) -> Unit
             ): CartItemViewHolder =
                 CartItemViewHolder(
                     binding = ItemCartContentBinding.inflate(
@@ -104,6 +105,9 @@ class DefaultCartAdapter(
             binding.cartItem = item
             binding.holder = this
             binding.isSelected = item.isSelected
+
+            binding.edtQuantity.doOnTextChanged { text, start, before, count ->
+            }
         }
     }
 

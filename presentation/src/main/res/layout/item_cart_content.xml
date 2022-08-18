@@ -101,7 +101,7 @@
             app:cardCornerRadius="14dp"
             app:cardElevation="@dimen/round_btn_elevation"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"
-            app:layout_constraintStart_toEndOf="@id/tv_quantity"
+            app:layout_constraintStart_toEndOf="@id/edt_quantity"
             app:layout_constraintTop_toTopOf="@id/btn_minus">
 
             <ImageView
@@ -112,15 +112,20 @@
                 app:srcCompat="@drawable/ic_plus" />
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/tv_quantity"
+        <EditText
+            android:id="@+id/edt_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@null"
             android:gravity="center"
+            android:hint="0"
+            android:inputType="number"
+            android:maxLength="3"
             android:minWidth="44dp"
             android:paddingHorizontal="3dp"
             android:text="@{Integer.toString(cartItem.count)}"
             android:textColor="@color/black_000000"
+            android:textColorHint="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"
             app:layout_constraintStart_toEndOf="@id/btn_minus"

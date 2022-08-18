@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
 @HiltViewModel
 class CartViewModel @Inject constructor(
     private val fetchCartItemsUseCase: FetchCartItemsUseCase,
@@ -30,7 +32,8 @@ class CartViewModel @Inject constructor(
     private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val refreshDataLoading = _refreshDataLoading.asStateFlow()
 
-    private val _cartItems: MutableStateFlow<List<CartListItemModel>> = MutableStateFlow(emptyList())
+    private val _cartItems: MutableStateFlow<List<CartListItemModel>> =
+        MutableStateFlow(emptyList())
     val cartItems = _cartItems.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> =
@@ -153,7 +156,8 @@ class CartViewModel @Inject constructor(
             _dataLoading.value = true
             updateCartItemSelectUseCase(
                 isSelect,
-                *(_cartItems.value.filterIsInstance<CartListItemModel.Content>().map { it.cart.hash }).toTypedArray()
+                *(_cartItems.value.filterIsInstance<CartListItemModel.Content>()
+                    .map { it.cart.hash }).toTypedArray()
             )
                 .onSuccess { isSuccess ->
                     if (!isSuccess) {

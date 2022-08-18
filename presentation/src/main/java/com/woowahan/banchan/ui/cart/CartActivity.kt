@@ -2,8 +2,11 @@ package com.woowahan.banchan.ui.cart
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityCartBinding
@@ -84,5 +87,26 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                 adapter.updateList(it)
             }
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val view = currentFocus
+        view?.let {
+            val rect = Rect()
+            val x = ev?.x
+            val y = ev?.y
+
+            if (x != null && y != null) {
+                view.getGlobalVisibleRect(rect)
+                if (!rect.contains(x.toInt(), y.toInt())) {
+                    val imm = (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
+                    imm.let {
+                        imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    }
+                    view.clearFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }
