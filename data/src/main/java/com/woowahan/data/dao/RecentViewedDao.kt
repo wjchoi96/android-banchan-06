@@ -14,9 +14,5 @@ interface RecentViewedDao {
 
     @Transaction
     @Query("SELECT * FROM ${RecentViewedTableEntity.TABLE_NAME}")
-    fun fetchRecentViewedItems(): List<RecentViewedDto>
-
-    @Transaction
-    @Query("SELECT * FROM ${RecentViewedTableEntity.TABLE_NAME}")
     fun fetchRecentViewedItemsFlow(): Flow<List<RecentViewedDto>>
 }
