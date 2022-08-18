@@ -4,6 +4,7 @@ import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.CartDataSource
 import com.woowahan.domain.extension.priceStrToLong
 import com.woowahan.domain.model.BanchanModel
+import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.*
@@ -23,12 +24,12 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun insertCartItem(
-        banchan: BanchanModel,
+        banchan: BaseBanchan,
         count: Int
     ): Result<Boolean> {
         return withContext(coroutineDispatcher) {
             kotlin.runCatching {
-                cartDataSource.insertCartItem(banchan, count)
+                cartDataSource.insertCartItem(banchan.hash, banchan.title, count)
                 true
             }
         }

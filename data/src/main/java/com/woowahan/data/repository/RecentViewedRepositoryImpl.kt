@@ -57,8 +57,8 @@ class RecentViewedRepositoryImpl @Inject constructor(
                                 hash = it.hash,
                                 title = it.title,
                                 imageUrl = detail.data.thumbImages.first(),
-                                n_price = detail.data.prices.first().priceStrToLong(),
-                                s_price = (if (detail.data.prices.size > 1) detail.data.prices[1] else "0").priceStrToLong(),
+                                price = detail.data.prices.first().priceStrToLong(),
+                                salePrice = (if (detail.data.prices.size > 1) detail.data.prices[1] else "0").priceStrToLong(),
                                 time = BanchanDateConvertUtil.convert(it.time)
                             )
                         }

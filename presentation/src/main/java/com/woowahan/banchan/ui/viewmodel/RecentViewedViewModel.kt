@@ -6,6 +6,7 @@ import com.woowahan.banchan.extension.getNewListApplyCartState
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
+import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.usecase.banchan.FetchMainDishBanchanUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
@@ -60,7 +61,7 @@ class RecentViewedViewModel @Inject constructor(
     }
 
 
-    val clickInsertCartButton: (BanchanModel, Boolean)->(Unit) = { banchan, isCartItem ->
+    val clickInsertCartButton: (BaseBanchan, Boolean)->(Unit) = { banchan, isCartItem ->
         viewModelScope.launch {
             when(isCartItem){
                 true -> removeItemFromCart(banchan)
@@ -80,7 +81,7 @@ class RecentViewedViewModel @Inject constructor(
         }
     }
 
-    private fun removeItemFromCart(banchanModel: BanchanModel){
+    private fun removeItemFromCart(banchanModel: BaseBanchan){
         viewModelScope.launch {
             _dataLoading.emit(true)
             removeCartItemUseCase.invoke(banchanModel.hash)
@@ -100,7 +101,7 @@ class RecentViewedViewModel @Inject constructor(
         }
     }
 
-    private fun insertItemsToCart(banchanModel: BanchanModel, count: Int){
+    private fun insertItemsToCart(banchanModel: BaseBanchan, count: Int){
         viewModelScope.launch {
             _dataLoading.emit(true)
             insertCartItemUseCase.invoke(banchanModel, count)
