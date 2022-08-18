@@ -1,4 +1,4 @@
-package com.woowahan.domain.usecase
+package com.woowahan.domain.usecase.recentviewed
 
 import com.woowahan.domain.util.BanchanDateConvertUtil
 import com.woowahan.domain.model.BanchanModel

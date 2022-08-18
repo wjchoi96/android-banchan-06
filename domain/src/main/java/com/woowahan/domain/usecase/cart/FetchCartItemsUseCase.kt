@@ -1,4 +1,4 @@
-package com.woowahan.domain.usecase
+package com.woowahan.domain.usecase.cart
 
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.repository.CartRepository

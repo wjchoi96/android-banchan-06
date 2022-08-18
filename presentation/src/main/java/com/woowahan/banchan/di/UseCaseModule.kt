@@ -3,7 +3,13 @@ package com.woowahan.banchan.di
 import com.woowahan.domain.repository.BanchanRepository
 import com.woowahan.domain.repository.CartRepository
 import com.woowahan.domain.repository.RecentViewedRepository
-import com.woowahan.domain.usecase.*
+import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
+import com.woowahan.domain.usecase.banchan.FetchMainDishBanchanUseCase
+import com.woowahan.domain.usecase.banchan.FetchSideDishBanchanUseCase
+import com.woowahan.domain.usecase.banchan.FetchSoupDishBanchanUseCase
+import com.woowahan.domain.usecase.cart.*
+import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
+import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

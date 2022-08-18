@@ -1,4 +1,4 @@
-package com.woowahan.domain.usecase
+package com.woowahan.domain.usecase.recentviewed
 
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.repository.RecentViewedRepository
