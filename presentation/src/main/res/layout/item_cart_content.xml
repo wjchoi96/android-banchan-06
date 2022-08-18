@@ -81,7 +81,7 @@
             android:id="@+id/ibtn_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
+            android:background="?android:attr/selectableItemBackground"
             android:onClick="@{()->holder.deleteItem.invoke(cartItem)}"
             android:padding="5dp"
             android:src="@drawable/ic_close"
