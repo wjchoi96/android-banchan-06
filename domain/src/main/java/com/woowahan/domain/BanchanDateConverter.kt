@@ -4,8 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("SimpleDateFormat")
-class BanchanDateConverter {
-    private val banchanDateFormatString = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+object BanchanDateConverter {
+    private const val banchanDateFormatString = "yyyy-MM-dd'T'HH:mm:ss'Z'"
     private val formatter = SimpleDateFormat(banchanDateFormatString).apply {
         timeZone = TimeZone.getTimeZone("UTC")
     }
