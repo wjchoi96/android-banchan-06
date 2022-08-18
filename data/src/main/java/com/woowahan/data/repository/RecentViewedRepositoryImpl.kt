@@ -34,7 +34,6 @@ class RecentViewedRepositoryImpl @Inject constructor(
 
     override suspend fun fetchRecentViewedItems(): Flow<Result<List<RecentViewedItemModel>>> {
         return recentViewedDataSource.fetchRecentViewedFlow()
-            .flowOn(coroutineDispatcher)
             .map { list ->
                 kotlin.runCatching {
                     coroutineScope {
@@ -62,6 +61,6 @@ class RecentViewedRepositoryImpl @Inject constructor(
                         res
                     }
                 }
-            }
+            }.flowOn(coroutineDispatcher)
     }
 }

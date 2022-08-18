@@ -71,7 +71,6 @@ class CartRepositoryImpl @Inject constructor(
 
     override suspend fun fetchCartItems(): Flow<Result<List<CartModel>>> {
         return cartDataSource.fetchCartItemsFlow()
-            .flowOn(coroutineDispatcher)
             .map { list ->
                 kotlin.runCatching {
                     coroutineScope {
@@ -99,7 +98,7 @@ class CartRepositoryImpl @Inject constructor(
                         res
                     }
                 }
-            }
+            }.flowOn(coroutineDispatcher)
     }
 
 }
