@@ -13,6 +13,10 @@ interface RecentViewedDao {
     fun insertRecentViewed(banchan: BanchanItemTableEntity, recentViewed: RecentViewedTableEntity)
 
     @Transaction
-    @Query("SELECT * FROM ${RecentViewedTableEntity.TABLE_NAME}")
-    fun fetchRecentViewedItemsFlow(): Flow<List<RecentViewedDto>>
+    @Query("SELECT * FROM ${RecentViewedTableEntity.TABLE_NAME} ORDER BY ${RecentViewedTableEntity.COLUMN_TIME} DESC")
+    fun fetchAllRecentViewedItemsFlow(): Flow<List<RecentViewedDto>>
+
+    @Transaction
+    @Query("SELECT * FROM ${RecentViewedTableEntity.TABLE_NAME} ORDER BY ${RecentViewedTableEntity.COLUMN_TIME} DESC LIMIT :count")
+    fun fetchSeveralRecentViewedItemsFlow(count: Int): Flow<List<RecentViewedDto>>
 }

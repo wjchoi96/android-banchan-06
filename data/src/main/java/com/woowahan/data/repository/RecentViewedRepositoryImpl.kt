@@ -27,15 +27,18 @@ class RecentViewedRepositoryImpl @Inject constructor(
         return flow<Result<Boolean>> {
             withContext(coroutineDispatcher) {
                 kotlin.runCatching {
-                    recentViewedDataSource.insertRecentViewed(banchan, BanchanDateConvertUtil.convert(time))
+                    recentViewedDataSource.insertRecentViewed(
+                        banchan,
+                        BanchanDateConvertUtil.convert(time)
+                    )
                     true
                 }
             }
         }.flowOn(coroutineDispatcher)
     }
 
-    override suspend fun fetchRecentViewedItems(): Flow<Result<List<RecentViewedItemModel>>> {
-        return recentViewedDataSource.fetchRecentViewedFlow()
+    override suspend fun fetchRecentViewedItems(fetchItemsCnt: Int?): Flow<Result<List<RecentViewedItemModel>>> {
+        return recentViewedDataSource.fetchRecentViewedFlow(fetchItemsCnt)
             .map { list ->
                 kotlin.runCatching {
                     coroutineScope {

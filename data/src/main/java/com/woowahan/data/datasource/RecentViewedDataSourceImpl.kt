@@ -1,12 +1,8 @@
 package com.woowahan.data.datasource
 
-import com.woowahan.data.dao.CartDao
 import com.woowahan.data.dao.RecentViewedDao
-import com.woowahan.data.entity.dto.CartDto
-import com.woowahan.data.entity.dto.RecentViewedDto
 import com.woowahan.data.entity.dto.RecentViewedEntity
 import com.woowahan.data.entity.table.BanchanItemTableEntity
-import com.woowahan.data.entity.table.CartTableEntity
 import com.woowahan.data.entity.table.RecentViewedTableEntity
 import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.flow.Flow
@@ -28,8 +24,12 @@ class RecentViewedDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun fetchRecentViewedFlow(): Flow<List<RecentViewedEntity>> {
-        return recentViewedDao.fetchRecentViewedItemsFlow().map { it.map { dto -> dto.toEntity() } }
+    override suspend fun fetchRecentViewedFlow(fetchItemsCnt: Int?): Flow<List<RecentViewedEntity>> {
+        return (if (fetchItemsCnt == null) {
+            recentViewedDao.fetchAllRecentViewedItemsFlow()
+        } else {
+            recentViewedDao.fetchSeveralRecentViewedItemsFlow(fetchItemsCnt)
+        }).map { it.map { dto -> dto.toEntity() } }
     }
 
 }

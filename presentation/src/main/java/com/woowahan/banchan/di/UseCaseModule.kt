@@ -74,8 +74,12 @@ object UseCaseModule {
         UpdateCartItemSelectUseCase(repo)
 
     @Provides
-    fun provideFetchRecentViewedItemUseCase(repo: RecentViewedRepository) =
-        FetchRecentViewedItemUseCase(repo)
+    fun provideFetchAllRecentViewedItemUseCase(repo: RecentViewedRepository) =
+        FetchAllRecentViewedItemUseCase(repo)
+
+    @Provides
+    fun provideFetchSevenRecentViewedItemUseCase(repo: RecentViewedRepository) =
+        FetchSevenRecentViewedItemUseCase(repo)
 
     @Provides
     fun provideInsertRecentViewedItemUseCase(repo: RecentViewedRepository) =

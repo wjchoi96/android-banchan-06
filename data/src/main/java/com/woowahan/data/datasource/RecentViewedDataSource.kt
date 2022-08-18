@@ -10,5 +10,5 @@ import kotlinx.coroutines.flow.Flow
 interface RecentViewedDataSource {
     suspend fun insertRecentViewed(banchan: BanchanModel, time: String)
 
-    suspend fun fetchRecentViewedFlow(): Flow<List<RecentViewedEntity>>
+    suspend fun fetchRecentViewedFlow(fetchItemsCnt: Int?): Flow<List<RecentViewedEntity>>
 }

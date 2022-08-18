@@ -8,5 +8,5 @@ import java.util.*
 interface RecentViewedRepository {
     suspend fun insertRecentViewedItem(banchan: BanchanModel, time: Date): Flow<Result<Boolean>>
 
-    suspend fun fetchRecentViewedItems(): Flow<Result<List<RecentViewedItemModel>>>
+    suspend fun fetchRecentViewedItems(fetchItemsCnt: Int?): Flow<Result<List<RecentViewedItemModel>>>
 }
