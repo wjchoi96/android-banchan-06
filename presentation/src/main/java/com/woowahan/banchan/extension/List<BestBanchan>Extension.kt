@@ -1,10 +1,11 @@
 package com.woowahan.banchan.extension
 
 import com.woowahan.domain.model.BanchanModel
+import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.BestBanchanModel
 import timber.log.Timber
 
-fun List<BestBanchanModel>.getNewListApplyCartState(banchanModel: BanchanModel, state: Boolean): List<BestBanchanModel>{
+fun List<BestBanchanModel>.getNewListApplyCartState(banchanModel: BaseBanchan, state: Boolean): List<BestBanchanModel>{
 
     var newBestBanchan: BestBanchanModel? = null
     var newBestBanchanPosition: Int = -1

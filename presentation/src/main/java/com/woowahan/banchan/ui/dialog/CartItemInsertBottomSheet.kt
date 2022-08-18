@@ -9,13 +9,14 @@ import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.DialogCartAddBinding
 import com.woowahan.banchan.extension.toCashString
 import com.woowahan.domain.model.BanchanModel
+import com.woowahan.domain.model.BaseBanchan
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 
 class CartItemInsertBottomSheet constructor(
-    private val banchan: BanchanModel,
-    private val insertListener: (BanchanModel, Int) -> (Unit)
+    private val banchan: BaseBanchan,
+    private val insertListener: (BaseBanchan, Int) -> (Unit)
 ): BottomSheetDialogFragment() {
     private var _binding: DialogCartAddBinding? = null
     private val binding get() = _binding ?: error("Binding not Initialized")
@@ -39,7 +40,7 @@ class CartItemInsertBottomSheet constructor(
             setCartCost(it-1)
         }
     }
-    val insertButtonClick: (BanchanModel, Int) -> (Unit) = { banchan, count ->
+    val insertButtonClick: (BaseBanchan, Int) -> (Unit) = { banchan, count ->
         insertListener(banchan, count)
         this.dismiss()
     }
