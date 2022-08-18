@@ -1,15 +1,15 @@
 package com.woowahan.domain.model
 
 data class BanchanModel(
-    val hash: String,
-    val title: String,
+    override val hash: String,
+    override val title: String,
     val description: String,
-    val imageUrl: String,
-    val price: Long,
-    val salePrice: Long,
+    override val imageUrl: String,
+    override val price: Long,
+    override val salePrice: Long,
     val viewType: ViewType = ViewType.Item,
     val isCartItem: Boolean = false
-) {
+): BaseBanchan() {
     companion object {
         fun empty(): BanchanModel = BanchanModel("", "", "", "", 0L, 0L)
         fun getFilterList(): List<String> {
@@ -29,13 +29,4 @@ data class BanchanModel(
         PriceLower(2, "금액 낮은순"),
         SalePercentHigher(3, "할인율순")
     }
-
-    val salePercent: Int
-        get() {
-            return if (salePrice != 0L) {
-                val saleValue = (price - salePrice).toFloat()
-                (saleValue / price * 100).toInt()
-            } else
-                0
-        }
 }
