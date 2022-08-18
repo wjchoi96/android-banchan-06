@@ -110,6 +110,7 @@
                     tools:text="12,950원" />
 
                 <TextView
+                    android:setCancelLine="@{banchan.salePrice != 0L}"
                     android:setCashString="@{banchan.price}"
                     android:id="@+id/tv_one_original_price"
                     android:layout_width="wrap_content"
