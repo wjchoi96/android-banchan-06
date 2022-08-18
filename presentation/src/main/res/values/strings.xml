@@ -6,12 +6,14 @@
     <!-- use at main tab, title -->
     <string name="best_banchan_title">기획전</string>
     <string name="main_dish_banchan_title">든든한 메인요리</string>
-    <string name="soup_dish_banchan_banner_title">정성이 담긴\n뜨끈뜨근 국물 요리</string>
-    <string name="side_dish_banchan_banner_title">식탁을 풍성하게 하는\n정갈한 밑반찬</string>
+    <string name="soup_dish_banchan_title">뜨끈한 국물요리</string>
+    <string name="side_dish_banchan_title">정갈한 밑반찬</string>
 
     <!-- banner title -->
     <string name="best_banchan_banner_title">한 번 주문하면\n두 번 반하는 반찬들</string>
     <string name="main_dish_banchan_banner_title">모두가 좋아하는\n든든한 메인 요리</string>
+    <string name="soup_dish_banchan_banner_title">정성이 담긴\n뜨끈뜨근 국물 요리</string>
+    <string name="side_dish_banchan_banner_title">식탁을 풍성하게 하는\n정갈한 밑반찬</string>
   
     <!-- use at cart -->
     <string name="cart_unselect">선택 해제₩</string>
