@@ -18,5 +18,5 @@ interface CartRepository {
 
     suspend fun fetchCartItemsKey(): Result<Set<String>>
 
-    suspend fun fetchCartItems(): Flow<Result<List<CartModel>>>
+    suspend fun fetchCartItems(): Flow<List<CartModel>>
 }

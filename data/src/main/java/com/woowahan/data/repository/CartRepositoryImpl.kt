@@ -74,42 +74,40 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchCartItems(): Flow<Result<List<CartModel>>> {
+    override suspend fun fetchCartItems(): Flow<List<CartModel>> {
         return cartDataSource.fetchCartItemsFlow()
             .map { list ->
-                kotlin.runCatching {
-                    coroutineScope {
-                        list.map {
-                            async {
-                                if(!cacheMap.containsKey(it.hash)) {
-                                    println("fetchCartItems async run => ${it.hash}")
-                                    banchanDetailDataSource.fetchBanchanDetail(it.hash).also {
-                                        cacheMap[it.hash] = it
-                                    }
-                                }else{
-                                    cacheMap[it.hash]!!
+                coroutineScope {
+                    list.map {
+                        async {
+                            if(!cacheMap.containsKey(it.hash)) {
+                                println("fetchCartItems async run => ${it.hash}")
+                                banchanDetailDataSource.fetchBanchanDetail(it.hash).also {
+                                    cacheMap[it.hash] = it
                                 }
+                            }else{
+                                cacheMap[it.hash]!!
                             }
-                        }.awaitAll()
-                        println("fetchCartItems async list finish")
-
-                        val res = list.map {
-                            val detail = cacheMap[it.hash]!!
-
-                            CartModel(
-                                hash = it.hash,
-                                count = it.count,
-                                title = it.title,
-                                imageUrl = detail.data.thumbImages.first(),
-                                price = detail.data.prices.last().priceStrToLong(),
-                                isSelected = it.isSelect
-                            )
                         }
-                        println("fetchCartItems res => $res")
-                        res
+                    }.awaitAll()
+                    println("fetchCartItems async list finish")
+
+                    val res = list.map {
+                        val detail = cacheMap[it.hash]!!
+
+                        CartModel(
+                            hash = it.hash,
+                            count = it.count,
+                            title = it.title,
+                            imageUrl = detail.data.thumbImages.first(),
+                            price = detail.data.prices.last().priceStrToLong(),
+                            isSelected = it.isSelect
+                        )
                     }
+                    println("fetchCartItems res => $res")
+                    res
                 }
-            }.flowOn(coroutineDispatcher)
+            }
     }
 
 }

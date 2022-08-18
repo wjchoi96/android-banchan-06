@@ -47,10 +47,13 @@ class CartViewModel @Inject constructor(
             fetchCartItemsUseCase().collect {
                 it.onSuccess {
                     _cartItems.value = it
-                }.onFailure {
+                }.onFailureWithData { it, data ->
                     it.printStackTrace()
                     it.message?.let { message ->
                         _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                    data?.let {
+                        _cartItems.value = it
                     }
                 }.also {
                     _dataLoading.value = false
