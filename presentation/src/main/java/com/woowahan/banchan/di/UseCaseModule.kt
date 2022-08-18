@@ -2,6 +2,7 @@ package com.woowahan.banchan.di
 
 import com.woowahan.domain.repository.BanchanRepository
 import com.woowahan.domain.repository.CartRepository
+import com.woowahan.domain.repository.RecentViewedRepository
 import com.woowahan.domain.usecase.*
 import dagger.Module
 import dagger.Provides
@@ -65,11 +66,18 @@ object UseCaseModule {
         UpdateCartItemCountUseCase(repo)
 
     @Provides
-    fun provideUpdateCartItemsSelectUseCase(repo: CartRepository)=
+    fun provideUpdateCartItemsSelectUseCase(repo: CartRepository) =
         UpdateCartItemsSelectUseCase(repo)
 
     @Provides
     fun provideUpdateCartItemSelectUseCase(repo: CartRepository) =
         UpdateCartItemSelectUseCase(repo)
 
+    @Provides
+    fun provideFetchRecentViewedItemUseCase(repo: RecentViewedRepository) =
+        FetchRecentViewedItemUseCase(repo)
+
+    @Provides
+    fun provideInsertRecentViewedItemUseCase(repo: RecentViewedRepository) =
+        InsertRecentViewedItemUseCase(repo)
 }
