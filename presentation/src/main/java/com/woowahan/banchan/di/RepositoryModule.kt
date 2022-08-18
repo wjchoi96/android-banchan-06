@@ -46,7 +46,7 @@ object RepositoryModule {
     fun provideRecentViewedRepository(
         recentViewedDataSource: RecentViewedDataSource,
         banchanDetailDataSource: BanchanDetailDataSource,
-        coroutineDispatcher: CoroutineDispatcher
+        @DefaultDispatcher coroutineDispatcher: CoroutineDispatcher
     ): RecentViewedRepository = RecentViewedRepositoryImpl(
         recentViewedDataSource,
         banchanDetailDataSource,
