@@ -1,19 +1,17 @@
 package com.woowahan.domain.model
 
-import com.woowahan.domain.extension.priceStrToLong
-
 data class BanchanModel(
     val hash: String,
     val title: String,
     val description: String,
     val imageUrl: String,
-    val price: String,
-    val salePrice: String?,
+    val price: Long,
+    val salePrice: Long,
     val viewType: ViewType = ViewType.Item,
     val isCartItem: Boolean = false
 ) {
     companion object {
-        fun empty(): BanchanModel = BanchanModel("", "", "", "", "", null)
+        fun empty(): BanchanModel = BanchanModel("", "", "", "", 0L, 0L)
         fun getFilterList(): List<String> {
             return FilterType.values().map { it.title }
         }
@@ -32,16 +30,11 @@ data class BanchanModel(
         SalePercentHigher(3, "할인율순")
     }
 
-    val priceRaw: Long = price.priceStrToLong()
-
-    val salePriceRaw: Long =
-        if (salePrice.isNullOrBlank()) 0 else salePrice.priceStrToLong()
-
     val salePercent: Int
         get() {
-            return if (salePriceRaw != 0L) {
-                val saleValue = (priceRaw - salePriceRaw).toFloat()
-                (saleValue / priceRaw * 100).toInt()
+            return if (salePrice != 0L) {
+                val saleValue = (price - salePrice).toFloat()
+                (saleValue / price * 100).toInt()
             } else
                 0
         }

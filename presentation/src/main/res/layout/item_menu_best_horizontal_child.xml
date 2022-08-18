@@ -113,7 +113,7 @@
                 android:textColor="@color/orange_f46700"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:visibility="@{banchan.salePrice != null ? View.VISIBLE : View.GONE}"
+                android:visibility="@{banchan.salePrice != 0L ? View.VISIBLE : View.GONE}"
                 tools:text="할인율" />
 
             <TextView
@@ -123,7 +123,7 @@
                 android:layout_marginEnd="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{banchan.salePrice != null ? banchan.salePrice : banchan.price}"
+                android:setCashString="@{banchan.salePrice != 0L ? banchan.salePrice : banchan.price}"
                 android:textColor="@color/black_000000"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -137,10 +137,10 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="5dp"
-            android:text="@{banchan.price}"
+            android:setCashString="@{banchan.price}"
             android:textColor="@color/grey_828282"
             android:textSize="12sp"
-            android:visibility="@{banchan.salePrice != null ? View.VISIBLE : View.INVISIBLE}"
+            android:visibility="@{banchan.salePrice != 0L ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/iv_menu_image"
             app:layout_constraintStart_toStartOf="@id/iv_menu_image"
             app:layout_constraintTop_toBottomOf="@id/layout_menu"

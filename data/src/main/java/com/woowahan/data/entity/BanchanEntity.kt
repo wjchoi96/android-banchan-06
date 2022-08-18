@@ -1,6 +1,7 @@
 package com.woowahan.data.entity
 
 import com.google.gson.annotations.SerializedName
+import com.woowahan.domain.extension.priceStrToLong
 import com.woowahan.domain.model.BanchanModel
 
 data class BanchanEntity(
@@ -28,7 +29,7 @@ data class BanchanEntity(
         title = this.title,
         description = this.description,
         imageUrl = this.image,
-        price = if(!nPrice.isNullOrBlank()) nPrice else sPrice,
-        salePrice = if(!nPrice.isNullOrBlank()) sPrice else null,
+        price = (if(!nPrice.isNullOrBlank()) nPrice else sPrice).priceStrToLong(),
+        salePrice = (if(!nPrice.isNullOrBlank()) sPrice else null)?.priceStrToLong() ?: 0L,
     )
 }
