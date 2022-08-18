@@ -5,7 +5,7 @@
 
         <variable
             name="banchan"
-            type="com.woowahan.domain.model.BanchanModel" />
+            type="com.woowahan.domain.model.RecentViewedItemModel" />
 
         <variable
             name="holder"
@@ -61,7 +61,7 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:text="@{banchan.title}"
+            android:setTimeText="@{banchan.time}"
             android:id="@+id/tv_menu_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
         </LinearLayout>
 
         <TextView
-            android:text="@{banchan.description}"
+            android:setTimeText="@{banchan.time}"
             android:id="@+id/tv_time_stamp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

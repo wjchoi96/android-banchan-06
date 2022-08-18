@@ -7,9 +7,10 @@ import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
-import com.woowahan.domain.usecase.banchan.FetchMainDishBanchanUseCase
+import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
+import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecentViewedViewModel @Inject constructor(
-    private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase,
+    private val fetchRecentViewedItemUseCase: FetchRecentViewedItemUseCase,
     private val insertCartItemUseCase: InsertCartItemUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase
 ) : ViewModel() {
@@ -28,7 +29,7 @@ class RecentViewedViewModel @Inject constructor(
     private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val refreshDataLoading = _refreshDataLoading.asStateFlow()
 
-    private val _banchans: MutableStateFlow<List<BanchanModel>> = MutableStateFlow(emptyList())
+    private val _banchans: MutableStateFlow<List<RecentViewedItemModel>> = MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
@@ -41,11 +42,11 @@ class RecentViewedViewModel @Inject constructor(
         }
         viewModelScope.launch {
             _dataLoading.value = true
-            fetchMainDishBanchanUseCase.invoke()
+            fetchRecentViewedItemUseCase.invoke()
                 .flowOn(Dispatchers.Default)
                 .collect { res ->
                     res.onSuccess {
-                        _banchans.value = it.filter { it.viewType == BanchanModel.ViewType.Item }
+                        _banchans.value = it
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
@@ -60,8 +61,7 @@ class RecentViewedViewModel @Inject constructor(
         }
     }
 
-
-    val clickInsertCartButton: (BaseBanchan, Boolean)->(Unit) = { banchan, isCartItem ->
+    val clickInsertCartButton: (RecentViewedItemModel, Boolean)->(Unit) = { banchan, isCartItem ->
         viewModelScope.launch {
             when(isCartItem){
                 true -> removeItemFromCart(banchan)
@@ -75,7 +75,7 @@ class RecentViewedViewModel @Inject constructor(
         }
     }
 
-    val itemClickListener: (BanchanModel) -> Unit = {
+    val itemClickListener: (RecentViewedItemModel) -> Unit = {
         viewModelScope.launch {
             _eventFlow.emit(UiEvent.ShowDetailView(it))
         }
@@ -144,7 +144,7 @@ class RecentViewedViewModel @Inject constructor(
         data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
         data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
         object ShowCartView: UiEvent()
-        data class ShowDetailView(val banchanModel: BanchanModel): UiEvent()
+        data class ShowDetailView(val banchan: BaseBanchan): UiEvent()
     }
 
 }
