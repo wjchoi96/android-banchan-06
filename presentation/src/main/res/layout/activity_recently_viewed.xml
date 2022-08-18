@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.woowahan.banchan.ui.viewmodel.RecentlyViewedViewModel" />
+
+        <variable
+            name="adapter"
+            type="com.woowahan.banchan.ui.adapter.RecentlyViewedAdapter" />
+
+        <variable
+            name="title"
+            type="String" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_background"
+        tools:context=".ui.recentlyviewed.RecentlyViewedActivity">
+
+        <include
+            bind:title="@{title}"
+            android:id="@+id/layout_include_tool_bar"
+            layout="@layout/item_toolbar_sub"
+            />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            app:layout_constraintTop_toBottomOf="@id/layout_include_tool_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/swipe_layout"
+            app:refreshing="@{viewModel.refreshDataLoading}"
+            app:onRefreshListener="@{()->viewModel.onRefresh()}"
+            >
+            <androidx.recyclerview.widget.RecyclerView
+                bind:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                android:adapter="@{adapter}"
+                android:id="@+id/rv_recently_viewed"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                tools:listitem="@layout/item_menu_time_stamp"
+                />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <ProgressBar
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{viewModel.dataLoading ? View.VISIBLE : View.GONE, default=gone}"
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
