@@ -12,6 +12,7 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.BestBanchanAdapter
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,7 +69,7 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
                     }
 
                     is BestBanchanViewModel.UiEvent.ShowDetailView -> {
-                        //TODO: startActivity(BanchanDetailActivity.get(requireContext(), it.hash) // or it
+                        startActivity(RecentViewedActivity.get(requireContext())) // or it
                     }
                 }
             }

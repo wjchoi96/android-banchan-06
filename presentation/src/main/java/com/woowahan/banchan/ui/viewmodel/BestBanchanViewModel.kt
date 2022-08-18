@@ -11,10 +11,12 @@ import com.woowahan.domain.model.BestBanchanModel
 import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
+import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +24,7 @@ class BestBanchanViewModel @Inject constructor(
     private val fetchBestBanchanUseCase: FetchBestBanchanUseCase,
     private val insertCartItemUseCase: InsertCartItemUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
@@ -61,12 +63,12 @@ class BestBanchanViewModel @Inject constructor(
         }
     }
 
-    val clickInsertCartButton: (BanchanModel, Boolean)->(Unit) = { banchan, isCartItem ->
+    val clickInsertCartButton: (BanchanModel, Boolean) -> (Unit) = { banchan, isCartItem ->
         viewModelScope.launch {
-            when(isCartItem){
+            when (isCartItem) {
                 true -> removeItemFromCart(banchan)
                 else -> {
-                    val dialog = CartItemInsertBottomSheet(banchan){ item, count ->
+                    val dialog = CartItemInsertBottomSheet(banchan) { item, count ->
                         insertItemsToCart(item, count)
                     }
                     _eventFlow.emit(UiEvent.ShowCartBottomSheet(dialog))
@@ -75,21 +77,23 @@ class BestBanchanViewModel @Inject constructor(
         }
     }
 
-    val itemClickListener: (BanchanModel) -> Unit = {
+    val itemClickListener: (BanchanModel) -> Unit = { banchan ->
         viewModelScope.launch {
-            _eventFlow.emit(UiEvent.ShowDetailView(it))
+            _eventFlow.emit(UiEvent.ShowDetailView(banchan))
         }
     }
 
-    private fun removeItemFromCart(banchanModel: BanchanModel){
+    private fun removeItemFromCart(banchanModel: BanchanModel) {
         viewModelScope.launch {
             _dataLoading.emit(true)
             removeCartItemUseCase.invoke(banchanModel.hash)
                 .onSuccess {
                     _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
-                    _eventFlow.emit(UiEvent.ShowDialog(
-                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
-                    ))
+                    _eventFlow.emit(
+                        UiEvent.ShowDialog(
+                            getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
+                        )
+                    )
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -101,15 +105,17 @@ class BestBanchanViewModel @Inject constructor(
         }
     }
 
-    private fun insertItemsToCart(banchanModel: BaseBanchan, count: Int){
+    private fun insertItemsToCart(banchanModel: BaseBanchan, count: Int) {
         viewModelScope.launch {
             _dataLoading.emit(true)
             insertCartItemUseCase.invoke(banchanModel, count)
                 .onSuccess {
                     _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
-                    _eventFlow.emit(UiEvent.ShowDialog(
-                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
-                    ))
+                    _eventFlow.emit(
+                        UiEvent.ShowDialog(
+                            getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
+                        )
+                    )
                 }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -121,7 +127,7 @@ class BestBanchanViewModel @Inject constructor(
         }
     }
 
-    private fun getCartItemUpdateDialog(content: String): DialogUtil.DialogCustomBuilder{
+    private fun getCartItemUpdateDialog(content: String): DialogUtil.DialogCustomBuilder {
         return DialogUtil.DialogCustomBuilder(
             content,
             "계속 쇼핑하기" to {},
@@ -142,9 +148,9 @@ class BestBanchanViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
-        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
-        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
-        object ShowCartView: UiEvent()
-        data class ShowDetailView(val banchanModel: BanchanModel): UiEvent()
+        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder) : UiEvent()
+        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
+        object ShowCartView : UiEvent()
+        data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }
