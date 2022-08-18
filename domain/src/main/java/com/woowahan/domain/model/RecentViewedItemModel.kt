@@ -1,6 +1,6 @@
 package com.woowahan.domain.model
 
-import com.woowahan.domain.util.BanchanDateConvertUtil
+import java.util.*
 
 data class RecentViewedItemModel(
     val hash: String,
@@ -8,7 +8,5 @@ data class RecentViewedItemModel(
     val imageUrl: String,
     val n_price: Long,
     val s_price: Long,
-    val timeStr: String
-){
-    val time = BanchanDateConvertUtil.convert(timeStr)
-}
+    val time: Date?
+)

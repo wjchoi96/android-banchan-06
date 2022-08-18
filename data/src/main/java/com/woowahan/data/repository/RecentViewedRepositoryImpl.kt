@@ -6,11 +6,13 @@ import com.woowahan.domain.extension.priceStrToLong
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.repository.RecentViewedRepository
+import com.woowahan.domain.util.BanchanDateConvertUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import java.util.*
 import javax.inject.Inject
 
 class RecentViewedRepositoryImpl @Inject constructor(
@@ -20,12 +22,12 @@ class RecentViewedRepositoryImpl @Inject constructor(
 ) : RecentViewedRepository {
     override suspend fun insertRecentViewedItem(
         banchan: BanchanModel,
-        time: String
+        time: Date
     ): Flow<Result<Boolean>> {
         return flow<Result<Boolean>> {
             withContext(coroutineDispatcher) {
                 kotlin.runCatching {
-                    recentViewedDataSource.insertRecentViewed(banchan, time)
+                    recentViewedDataSource.insertRecentViewed(banchan, BanchanDateConvertUtil.convert(time))
                     true
                 }
             }
@@ -54,7 +56,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
                                 imageUrl = detail.data.thumbImages.first(),
                                 n_price = detail.data.prices.first().priceStrToLong(),
                                 s_price = (if (detail.data.prices.size > 1) detail.data.prices[1] else "0").priceStrToLong(),
-                                timeStr = it.time
+                                time = BanchanDateConvertUtil.convert(it.time)
                             )
                         }
                         println("fetchRecentViewed res => $res")

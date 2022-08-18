@@ -10,7 +10,6 @@ class InsertRecentViewedItemUseCase (
     private val recentViewedRepository: RecentViewedRepository,
 ) {
     suspend operator fun invoke(banchan: BanchanModel, time: Date): Flow<Result<Boolean>> {
-        val timeStr= BanchanDateConvertUtil.convert(time)
-        return recentViewedRepository.insertRecentViewedItem(banchan, timeStr)
+        return recentViewedRepository.insertRecentViewedItem(banchan, time)
     }
 }
