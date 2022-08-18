@@ -38,6 +38,4 @@ data class BanchanModel(
             } else
                 0
         }
-
-
 }

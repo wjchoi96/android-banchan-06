@@ -28,6 +28,10 @@ class DefaultCartAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
     private val cartStateChangePayload: String = "changePayload"
+    private val selectAllChangePayload: String = "selectAllPayload"
+    private val selectOneChangePayload: String = "selectOnePayload"
+    private val quantityChangePayload: String = "quantityPayload"
+    private val totalPriceChangePayload: String = "totalPayload"
 
     fun updateList(newList: List<CartListItemModel>) {
         CoroutineScope(Dispatchers.Default).launch {

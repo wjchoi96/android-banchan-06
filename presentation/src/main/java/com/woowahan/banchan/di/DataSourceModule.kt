@@ -18,4 +18,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun provideCartDataSource(impl: CartDataSourceImpl): CartDataSource
+
+    @Binds
+    abstract fun provideRecentViewedDataSource(impl: RecentViewedDataSourceImpl): RecentViewedDataSource
 }
