@@ -13,10 +13,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class RecentlyViewedAdapter(
+class RecentViewedAdapter(
     private val banchanInsertCartListener: (BanchanModel, Boolean) -> Unit,
     private val itemClickListener: (BanchanModel) -> Unit
-) : RecyclerView.Adapter<RecentlyViewedAdapter.RecentlyViewedViewHolder>() {
+) : RecyclerView.Adapter<RecentViewedAdapter.RecentViewedViewHolder>() {
 
     private var banchanList = listOf<BanchanModel>()
 
@@ -29,23 +29,23 @@ class RecentlyViewedAdapter(
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
                 banchanList = newList.toList()
-                diffRes.dispatchUpdatesTo(this@RecentlyViewedAdapter)
+                diffRes.dispatchUpdatesTo(this@RecentViewedAdapter)
             }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentlyViewedViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedViewHolder {
         Timber.d("onCreateViewHolder")
-        return RecentlyViewedViewHolder.from(parent, banchanInsertCartListener, itemClickListener)
+        return RecentViewedViewHolder.from(parent, banchanInsertCartListener, itemClickListener)
     }
 
-    override fun onBindViewHolder(holder: RecentlyViewedViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecentViewedViewHolder, position: Int) {
         Timber.d("onBindViewHolder[$position]")
         holder.bind(banchanList[position])
     }
 
     override fun onBindViewHolder(
-        holder: RecentlyViewedViewHolder,
+        holder: RecentViewedViewHolder,
         position: Int,
         payloads: MutableList<Any>
     ) {
@@ -65,7 +65,7 @@ class RecentlyViewedAdapter(
 
     override fun getItemCount(): Int = banchanList.size
 
-    class RecentlyViewedViewHolder(
+    class RecentViewedViewHolder(
         private val binding: ItemMenuTimeStampBinding,
         val banchanInsertCartListener: (BanchanModel, Boolean) -> Unit,
         val itemClickListener: (BanchanModel) -> Unit
@@ -76,7 +76,7 @@ class RecentlyViewedAdapter(
                 parent: ViewGroup,
                 banchanInsertCartListener: (BanchanModel, Boolean) -> Unit,
                 itemClickListener: (BanchanModel) -> Unit
-            ): RecentlyViewedViewHolder = RecentlyViewedViewHolder(
+            ): RecentViewedViewHolder = RecentViewedViewHolder(
                 ItemMenuTimeStampBinding.inflate(LayoutInflater.from(parent.context)),
                 banchanInsertCartListener,
                 itemClickListener

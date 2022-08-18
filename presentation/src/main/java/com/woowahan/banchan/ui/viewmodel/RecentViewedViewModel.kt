@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecentlyViewedViewModel @Inject constructor(
+class RecentViewedViewModel @Inject constructor(
     private val fetchMainDishBanchanUseCase: FetchMainDishBanchanUseCase,
     private val insertCartItemUseCase: InsertCartItemUseCase,
     private val removeCartItemUseCase: RemoveCartItemUseCase

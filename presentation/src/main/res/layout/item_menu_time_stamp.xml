@@ -9,7 +9,7 @@
 
         <variable
             name="holder"
-            type="com.woowahan.banchan.ui.adapter.RecentlyViewedAdapter.RecentlyViewedViewHolder" />
+            type="com.woowahan.banchan.ui.adapter.RecentViewedAdapter.RecentViewedViewHolder" />
 
         <variable
             name="isCartItem"

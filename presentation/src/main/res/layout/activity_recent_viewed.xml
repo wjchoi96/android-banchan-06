@@ -4,11 +4,11 @@
         <import type="android.view.View"/>
         <variable
             name="viewModel"
-            type="com.woowahan.banchan.ui.viewmodel.RecentlyViewedViewModel" />
+            type="com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel" />
 
         <variable
             name="adapter"
-            type="com.woowahan.banchan.ui.adapter.RecentlyViewedAdapter" />
+            type="com.woowahan.banchan.ui.adapter.RecentViewedAdapter" />
 
         <variable
             name="title"
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/layout_background"
-        tools:context=".ui.recentlyviewed.RecentlyViewedActivity">
+        tools:context=".ui.recentviewed.RecentViewedActivity">
 
         <include
             bind:title="@{title}"
@@ -45,7 +45,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 bind:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 android:adapter="@{adapter}"
-                android:id="@+id/rv_recently_viewed"
+                android:id="@+id/rv_recent_viewed"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 tools:listitem="@layout/item_menu_time_stamp"
