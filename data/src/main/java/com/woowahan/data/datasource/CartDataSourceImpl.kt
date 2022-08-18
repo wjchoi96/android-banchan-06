@@ -16,10 +16,10 @@ class CartDataSourceImpl @Inject constructor(
     override fun getCartSizeFlow(): Flow<Int> = cartDao.fetchCartItemsCount()
 
     // 단순 추가 -> 추가된 항목 리턴
-    override suspend fun insertCartItem(banchan: BanchanModel, count: Int) {
+    override suspend fun insertCartItem(hash: String, title: String, count: Int) {
         cartDao.insertCartItem(
-            BanchanItemTableEntity(banchan.hash, banchan.title),
-            CartTableEntity(banchan.hash, count)
+            BanchanItemTableEntity(hash, title),
+            CartTableEntity(hash, count)
         )
     }
 

@@ -7,6 +7,7 @@ import com.woowahan.banchan.extension.getNewListApplyCartState
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
+import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.usecase.banchan.FetchSoupDishBanchanUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
@@ -99,7 +100,7 @@ class SoupDishBanchanViewModel @Inject constructor(
         }
     }
 
-    private fun insertItemsToCart(banchanModel: BanchanModel, count: Int) {
+    private fun insertItemsToCart(banchanModel: BaseBanchan, count: Int) {
         viewModelScope.launch {
             _dataLoading.emit(true)
             insertCartItemUseCase.invoke(banchanModel, count)

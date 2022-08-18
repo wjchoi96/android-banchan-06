@@ -3,10 +3,10 @@ package com.woowahan.domain.model
 import java.util.*
 
 data class RecentViewedItemModel(
-    val hash: String,
-    val title: String,
-    val imageUrl: String,
-    val n_price: Long,
-    val s_price: Long,
+    override val hash: String,
+    override val title: String,
+    override val imageUrl: String,
+    override val price: Long,
+    override val salePrice: Long,
     val time: Date?
-)
+): BaseBanchan()

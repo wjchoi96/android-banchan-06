@@ -1,9 +1,10 @@
 package com.woowahan.banchan.extension
 
 import com.woowahan.domain.model.BanchanModel
+import com.woowahan.domain.model.BaseBanchan
 import timber.log.Timber
 
-fun List<BanchanModel>.getNewListApplyCartState(banchanModel: BanchanModel, state: Boolean): List<BanchanModel>{
+fun List<BanchanModel>.getNewListApplyCartState(banchanModel: BaseBanchan, state: Boolean): List<BanchanModel>{
     this.indices.find { this[it].hash == banchanModel.hash }?.let { position ->
         val newList = this.toMutableList().apply {
             this[position] = this[position].copy(isCartItem = state)
