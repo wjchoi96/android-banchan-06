@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.root
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -14,6 +15,7 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.bestbanchan.BestBanchanFragment
+import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanFragment
 import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
@@ -68,7 +70,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
 
         binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_cart).actionView.let {
             (it.findViewById(R.id.iv_cart_image) as ImageView).setOnClickListener {
-                showToast("cart action layout")
+                startActivity(CartActivity.get(this))
             }
         }
 

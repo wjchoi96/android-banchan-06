@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="isAllSelected"
+            type="Boolean" />
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartHeaderViewHolder" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="8dp">
+
+        <CheckBox
+            android:id="@+id/cbx_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/sel_checkbox"
+            android:checked="@={isAllSelected}"
+            android:minWidth="36dp"
+            android:buttonTint="@color/black_000000"
+            android:minHeight="36dp"
+            android:onClick="@{()->holder.selectAll.invoke(isAllSelected)}"
+            android:paddingVertical="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@{isAllSelected ? `전체해제` : `전체선택`}"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_remove_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClickListener="@{()->holder.deleteAllSelected.invoke()}"
+            android:paddingVertical="10dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="8dp"
+            android:text="@string/cart_remove_selected"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

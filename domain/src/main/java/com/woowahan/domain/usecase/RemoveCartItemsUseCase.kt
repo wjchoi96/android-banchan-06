@@ -7,7 +7,7 @@ class RemoveCartItemsUseCase (
 ) {
     suspend operator fun invoke(hashes: List<String>): Result<Boolean>{
         return kotlin.runCatching {
-            cartRepository.removeCartItems(hashes).getOrThrow()
+            cartRepository.removeCartItem(*hashes.toTypedArray()).getOrThrow()
         }
     }
 }

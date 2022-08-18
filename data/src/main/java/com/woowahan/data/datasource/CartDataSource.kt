@@ -9,11 +9,11 @@ interface CartDataSource {
 
     suspend fun insertCartItem(banchan: BanchanModel, count: Int)
 
-    suspend fun removeCartItem(hash: String): Int
+    suspend fun removeCartItem(vararg hashes: String): Int
 
-    suspend fun removeCartItems(hashes: List<String>): Int
+    suspend fun updateCartItemCount(hash: String, count: Int): Int
 
-    suspend fun updateCartItem(hash: String, count: Int): Int
+    suspend fun updateCartItemSelect(isSelect: Boolean, vararg hashes: String): Int
 
     suspend fun fetchCartItems(): List<CartEntity>
 

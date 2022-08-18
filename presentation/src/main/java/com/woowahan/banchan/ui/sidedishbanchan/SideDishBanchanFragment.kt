@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.sidedishbanchan
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -12,6 +13,7 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
+import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.SideDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
@@ -86,7 +88,7 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
                     }
 
                     is SideDishBanchanViewModel.UiEvent.ShowCartView -> {
-                        //TODO: startActivity(CartActivity.get(requireContext())
+                        startActivity(CartActivity.get(requireContext()))
                     }
                 }
             }
