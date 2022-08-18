@@ -7,9 +7,9 @@ import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BestBanchanModel
-import com.woowahan.domain.usecase.FetchBestBanchanUseCase
-import com.woowahan.domain.usecase.InsertCartItemUseCase
-import com.woowahan.domain.usecase.RemoveCartItemUseCase
+import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
+import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
+import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

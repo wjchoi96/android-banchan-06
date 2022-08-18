@@ -1,7 +1,8 @@
-package com.woowahan.domain.usecase
+package com.woowahan.domain.usecase.banchan
 
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.repository.BanchanRepository
+import com.woowahan.domain.usecase.cart.FetchCartItemsKeyUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
