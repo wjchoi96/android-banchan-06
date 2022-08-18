@@ -103,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp"
+                android:background="?android:attr/selectableItemBackground"
                 app:srcCompat="@drawable/ic_plus" />
         </androidx.cardview.widget.CardView>
 
@@ -138,6 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="5dp"
+                android:background="?android:attr/selectableItemBackground"
                 app:srcCompat="@drawable/ic_minus" />
         </androidx.cardview.widget.CardView>
 
