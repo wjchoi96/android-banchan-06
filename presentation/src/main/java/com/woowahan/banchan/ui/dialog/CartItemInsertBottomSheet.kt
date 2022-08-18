@@ -23,7 +23,8 @@ class CartItemInsertBottomSheet constructor(
     private var _itemCount: MutableStateFlow<Int> = MutableStateFlow(1)
     val itemCount = _itemCount.asStateFlow()
 
-    private var _cartCost: MutableStateFlow<String> = MutableStateFlow(banchan.salePrice ?: banchan.price)
+    private var _cartCost: MutableStateFlow<Long> =
+        MutableStateFlow(if(banchan.salePrice == 0L) banchan.price else banchan.salePrice)
     var cartCost = _cartCost.asStateFlow()
 
     val countUpListener: (Int) -> (Unit) = {
@@ -44,9 +45,9 @@ class CartItemInsertBottomSheet constructor(
     }
 
     private fun setCartCost(count: Int){
-        _cartCost.value = when(banchan.salePriceRaw){
-            0L -> (banchan.priceRaw * count).toCashString() + "원"
-            else -> (banchan.salePriceRaw * count).toCashString() + "원"
+        _cartCost.value = when(banchan.salePrice){
+            0L -> banchan.price * count
+            else -> banchan.salePrice * count
         }
     }
 
@@ -69,10 +70,6 @@ class CartItemInsertBottomSheet constructor(
 
     override fun getTheme(): Int {
         return R.style.CustomBottomSheetDialog
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroyView() {
