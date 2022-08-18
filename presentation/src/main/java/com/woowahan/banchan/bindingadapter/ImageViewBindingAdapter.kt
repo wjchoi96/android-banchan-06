@@ -21,8 +21,3 @@ fun loadImageUseCoil(imageView: ImageView, imageUrl: String) {
         )
     }
 }
-
-@BindingAdapter("android:priceLongToStr")
-fun priceLongToStr(textView: TextView, priceLong: Long) {
-    textView.text = priceLong.toCashString() + "원"
-}
