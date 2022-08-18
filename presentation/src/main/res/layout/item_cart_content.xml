@@ -11,12 +11,17 @@
         <variable
             name="cartItem"
             type="com.woowahan.domain.model.CartModel" />
+
+        <variable
+            name="isSelected"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layout_constraint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@{isSelected ? @color/white_ffffff : @android:color/transparent}"
         android:padding="16dp">
 
         <CheckBox
@@ -25,7 +30,7 @@
             android:layout_height="wrap_content"
             android:button="@drawable/sel_checkbox"
             android:buttonTint="@color/black_000000"
-            android:checked="@={cartItem.selected}"
+            android:checked="@={isSelected}"
             android:minWidth="33dp"
             android:minHeight="33dp"
             android:onClick="@{()->holder.selectItem.invoke(cartItem, cartItem.selected)}"
@@ -102,8 +107,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="5dp"
                 android:background="?android:attr/selectableItemBackground"
+                android:padding="5dp"
                 app:srcCompat="@drawable/ic_plus" />
         </androidx.cardview.widget.CardView>
 
@@ -138,8 +143,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="5dp"
                 android:background="?android:attr/selectableItemBackground"
+                android:padding="5dp"
                 app:srcCompat="@drawable/ic_minus" />
         </androidx.cardview.widget.CardView>
 

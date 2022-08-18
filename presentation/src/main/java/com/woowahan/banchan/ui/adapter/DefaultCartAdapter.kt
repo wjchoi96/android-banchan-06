@@ -103,6 +103,7 @@ class DefaultCartAdapter(
         fun bind(item: CartModel) {
             binding.cartItem = item
             binding.holder = this
+            binding.isSelected = item.isSelected
         }
     }
 
