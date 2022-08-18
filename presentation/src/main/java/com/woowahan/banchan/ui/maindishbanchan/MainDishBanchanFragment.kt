@@ -13,6 +13,7 @@ import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,11 +64,16 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
 
     private fun setUpGridRecyclerView() {
         (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = spanCount
-        binding.rvMainDish.addItemDecoration(gridItemDecoration)
+        binding.rvMainDish.let {
+            while(it.itemDecorationCount != 0) it.removeItemDecorationAt(it.itemDecorationCount - 1)
+            it.addItemDecoration(gridItemDecoration)
+        }
     }
 
     private fun setUpLinearRecyclerView() {
-        binding.rvMainDish.removeItemDecoration(gridItemDecoration)
+        binding.rvMainDish.let {
+            while (it.itemDecorationCount != 0) it.removeItemDecorationAt(it.itemDecorationCount - 1)
+        }
         (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = 1
     }
 

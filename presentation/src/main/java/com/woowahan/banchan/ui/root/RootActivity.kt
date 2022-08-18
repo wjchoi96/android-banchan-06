@@ -32,8 +32,8 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         listOf(
             getString(R.string.best_banchan_title) to BestBanchanFragment(),
             getString(R.string.main_dish_banchan_title) to MainDishBanchanFragment(),
-            getString(R.string.soup_dish_banchan_title) to SoupDishBanchanFragment(),
-            getString(R.string.side_dish_banchan_title) to SideDishBanchanFragment()
+            getString(R.string.soup_dish_banchan_banner_title) to SoupDishBanchanFragment(),
+            getString(R.string.side_dish_banchan_banner_title) to SideDishBanchanFragment()
         )
     }
     private val pagerAdapter: RootTabPagerAdapter by lazy {
