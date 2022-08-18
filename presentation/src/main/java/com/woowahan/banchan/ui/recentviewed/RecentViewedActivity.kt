@@ -1,4 +1,4 @@
-package com.woowahan.banchan.ui.recentlyviewed
+package com.woowahan.banchan.ui.recentviewed
 
 import android.content.Context
 import android.content.Intent
@@ -9,37 +9,36 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
-import com.woowahan.banchan.databinding.ActivityRecentlyViewedBinding
+import com.woowahan.banchan.databinding.ActivityRecentViewedBinding
 import com.woowahan.banchan.extension.dp
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
-import com.woowahan.banchan.ui.adapter.RecentlyViewedAdapter
-import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
+import com.woowahan.banchan.ui.adapter.RecentViewedAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
-import com.woowahan.banchan.ui.viewmodel.RecentlyViewedViewModel
+import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class RecentlyViewedActivity : BaseActivity<ActivityRecentlyViewedBinding>() {
+class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
 
     companion object {
         fun get(context: Context): Intent {
-            return Intent(context, RecentlyViewedActivity::class.java).apply {
+            return Intent(context, RecentViewedActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
             }
         }
     }
 
     override val layoutResId: Int
-        get() = R.layout.activity_recently_viewed
+        get() = R.layout.activity_recent_viewed
 
-    private val viewModel: RecentlyViewedViewModel by viewModels()
+    private val viewModel: RecentViewedViewModel by viewModels()
     private val spanCount = 2
-    private val adapter: RecentlyViewedAdapter by lazy {
-        RecentlyViewedAdapter(
+    private val adapter: RecentViewedAdapter by lazy {
+        RecentViewedAdapter(
             viewModel.clickInsertCartButton,
             viewModel.itemClickListener
         )
@@ -58,8 +57,8 @@ class RecentlyViewedActivity : BaseActivity<ActivityRecentlyViewedBinding>() {
     }
 
     private fun setUpRecyclerView() {
-        (binding.rvRecentlyViewed.layoutManager as GridLayoutManager).spanCount = spanCount
-        binding.rvRecentlyViewed.addItemDecoration(object : RecyclerView.ItemDecoration() {
+        (binding.rvRecentViewed.layoutManager as GridLayoutManager).spanCount = spanCount
+        binding.rvRecentViewed.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,
                 view: View,
@@ -71,8 +70,8 @@ class RecentlyViewedActivity : BaseActivity<ActivityRecentlyViewedBinding>() {
                 val idx = parent.getChildAdapterPosition(view)
                 if (idx < 0) return
                 val column = idx % spanCount
-                val margin = 16.dp(this@RecentlyViewedActivity)
-                val spacing = 8.dp(this@RecentlyViewedActivity)
+                val margin = 16.dp(this@RecentViewedActivity)
+                val spacing = 8.dp(this@RecentViewedActivity)
                 outRect.left =
                     spacing - column * spacing / spanCount // spacing - column * ((1f / spanCount) * spacing)
                 outRect.right =
@@ -87,8 +86,8 @@ class RecentlyViewedActivity : BaseActivity<ActivityRecentlyViewedBinding>() {
                     }
                 }
 
-                outRect.top = 16.dp(this@RecentlyViewedActivity)
-                outRect.bottom = 16.dp(this@RecentlyViewedActivity)
+                outRect.top = 16.dp(this@RecentViewedActivity)
+                outRect.bottom = 16.dp(this@RecentViewedActivity)
                 Timber.d("idx[$idx] => left[${outRect.left}], right[${outRect.right}]")
             }
         })
@@ -103,23 +102,23 @@ class RecentlyViewedActivity : BaseActivity<ActivityRecentlyViewedBinding>() {
         repeatOnStarted {
             viewModel.eventFlow.collect {
                 when (it) {
-                    is RecentlyViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
+                    is RecentViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
 
-                    is RecentlyViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                    is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
 
-                    is RecentlyViewedViewModel.UiEvent.ShowDialog -> {
-                        DialogUtil.show(this@RecentlyViewedActivity, it.dialogBuilder)
+                    is RecentViewedViewModel.UiEvent.ShowDialog -> {
+                        DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
                     }
 
-                    is RecentlyViewedViewModel.UiEvent.ShowCartBottomSheet -> {
+                    is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {
                         it.bottomSheet.show(supportFragmentManager, "cart_bottom_sheet")
                     }
 
-                    is RecentlyViewedViewModel.UiEvent.ShowCartView -> {
+                    is RecentViewedViewModel.UiEvent.ShowCartView -> {
                         //TODO: startActivity(CartActivity.get(requireContext())
                     }
 
-                    is RecentlyViewedViewModel.UiEvent.ShowDetailView -> {
+                    is RecentViewedViewModel.UiEvent.ShowDetailView -> {
                         //TODO: startActivity(DetailActivity.get(requireContext())
                     }
                 }
