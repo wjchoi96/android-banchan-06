@@ -101,6 +101,7 @@
             <TextView
                 android:visibility="@{banchan.salePrice != 0L ? View.VISIBLE : View.INVISIBLE}"
                 android:setCashString="@{banchan.price}"
+                android:setCancelLine="@{banchan.salePrice != 0L}"
                 android:id="@+id/tv_original_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
