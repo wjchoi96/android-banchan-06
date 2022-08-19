@@ -5,10 +5,7 @@ import com.woowahan.data.apiservice.BestBanchanApiService
 import com.woowahan.data.apiservice.MainDishBanchanApiService
 import com.woowahan.data.apiservice.SideDishBanchanApiService
 import com.woowahan.data.apiservice.SoupDishBanchanApiService
-import com.woowahan.data.entity.BestBanchanEntity
-import com.woowahan.data.entity.MainDishBanchanEntity
-import com.woowahan.data.entity.SideDishBanchanEntity
-import com.woowahan.data.entity.SoupDishBanchanEntity
+import com.woowahan.data.entity.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -21,6 +18,7 @@ import org.junit.Before
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.EOFException
 import java.io.File
 import java.net.HttpURLConnection
 
@@ -77,7 +75,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchBestBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchBestBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("best_fail.json")
         val response = MockResponse().apply {
@@ -92,7 +90,48 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
+    }
+
+    @Test
+    fun fetchBestBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("best_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchBestBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+    }
+
+    @Test
+    fun fetchBestBanchans_mockServerEmptyBody_throwEOFException() {
+        //Given
+        val responseJson = ""
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_OK)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchBestBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(EOFException::class.java)
     }
 
     @Test
@@ -114,7 +153,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchMainDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchMainDishBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("main_dish_fail.json")
         val response = MockResponse().apply {
@@ -129,7 +168,48 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
+    }
+
+    @Test
+    fun fetchMainDishBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("main_dish_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchMainDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+    }
+
+    @Test
+    fun fetchMainBanchans_mockServerEmptyBody_throwEOFException() {
+        //Given
+        val responseJson = ""
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_OK)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchMainDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(EOFException::class.java)
     }
 
 
@@ -152,7 +232,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchSoupDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchSoupDishBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("soup_dish_fail.json")
         val response = MockResponse().apply {
@@ -167,7 +247,48 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
+    }
+
+    @Test
+    fun fetchSoupDishBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("soup_dish_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSoupDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+    }
+
+    @Test
+    fun fetchSoupBanchans_mockServerEmptyBody_throwEOFException() {
+        //Given
+        val responseJson = ""
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_OK)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSoupDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(EOFException::class.java)
     }
 
     @Test
@@ -189,7 +310,7 @@ class BanchansRetrofitDataSourceImplTest{
     }
 
     @Test
-    fun fetchSideDishBanchans_mockServerFailRequest_throwApiResponseMessage() {
+    fun fetchSideDishBanchans_mockServerFailRequest_throwApiStatusCodeNotOk() {
         //Given
         val responseJson = readResponse("side_dish_fail.json")
         val response = MockResponse().apply {
@@ -204,7 +325,48 @@ class BanchansRetrofitDataSourceImplTest{
         }
 
         //Then
-        assertThat(actualResult).isInstanceOf(Throwable::class.java).hasMessageContaining("api response")
+        assertThat(actualResult)
+            .isInstanceOf(ApiStatusCodeNotOk::class.java)
+    }
+
+    @Test
+    fun fetchSideDishBanchans_mockServerResponseCodeNotOk_throwApiIsNotSuccessful() {
+        //Given
+        val responseJson = readResponse("side_dish_success.json")
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_FORBIDDEN)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSideDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(ApiIsNotSuccessful::class.java)
+    }
+
+    @Test
+    fun fetchSideBanchans_mockServerEmptyBody_throwEOFException() {
+        //Given
+        val responseJson = ""
+        val response = MockResponse().apply {
+            setResponseCode(HttpURLConnection.HTTP_OK)
+            setBody(responseJson)
+        }
+        mockServer.enqueue(response)
+
+        //When
+        val actualResult = catchThrowable {
+            runTest { banchansDataSource.fetchSideDishBanchans() }
+        }
+
+        //Then
+        assertThat(actualResult)
+            .isInstanceOf(EOFException::class.java)
     }
 
 

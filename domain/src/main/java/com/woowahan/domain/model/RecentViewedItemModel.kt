@@ -8,5 +8,6 @@ data class RecentViewedItemModel(
     override val imageUrl: String,
     override val price: Long,
     override val salePrice: Long,
-    val time: Date?
-): BaseBanchan()
+    val time: Date?,
+    val isCartItem: Boolean = false
+) : BaseBanchan()

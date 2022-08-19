@@ -1,5 +1,6 @@
 package com.woowahan.data.datasource
 
+import com.woowahan.data.dao.BanchanDao
 import com.woowahan.data.dao.CartDao
 import com.woowahan.data.entity.dto.CartEntity
 import com.woowahan.data.entity.table.BanchanItemTableEntity
@@ -11,21 +12,20 @@ import javax.inject.Singleton
 
 @Singleton
 class CartDataSourceImpl @Inject constructor(
+    private val banchanDao: BanchanDao,
     private val cartDao: CartDao
 ) : CartDataSource {
     override fun getCartSizeFlow(): Flow<Int> = cartDao.fetchCartItemsCount()
 
     // 단순 추가 -> 추가된 항목 리턴
     override suspend fun insertCartItem(hash: String, title: String, count: Int) {
-        cartDao.insertCartItem(
-            BanchanItemTableEntity(hash, title),
-            CartTableEntity(hash, count)
-        )
+        banchanDao.insertBanchanItems(BanchanItemTableEntity(hash, title))
+        cartDao.insertCartItem(CartTableEntity(hash, count))
     }
 
     override suspend fun removeCartItem(vararg hashes: String): Int {
         val res = cartDao.removeCartItem(*hashes)
-        cartDao.removeCartItemInfo(*hashes)
+        banchanDao.removeBanchanItems(*hashes)
         return res
     }
 

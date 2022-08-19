@@ -1,5 +1,6 @@
 package com.woowahan.banchan.di
 
+import com.woowahan.data.dao.BanchanDao
 import com.woowahan.data.dao.CartDao
 import com.woowahan.data.dao.OrderDao
 import com.woowahan.data.dao.RecentViewedDao
@@ -13,7 +14,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DaoModule {
-
     @Provides
     @Singleton
     fun provideCartDao(db: BanchanRoomDatabase): CartDao = db.cartDao()
@@ -25,4 +25,8 @@ object DaoModule {
     @Provides
     @Singleton
     fun provideOrderDao(db: BanchanRoomDatabase): OrderDao = db.orderDao()
+
+    @Provides
+    @Singleton
+    fun provideBanchanDao(db: BanchanRoomDatabase): BanchanDao = db.banchanDao()
 }
