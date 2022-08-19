@@ -32,7 +32,7 @@ object RetrofitResponseConvertUtil {
         val error: Throwable? = when {
             !response.isSuccessful -> ApiIsNotSuccessful(response.message())
             response.body() == null -> ApiBodyIsNull()
-            statusCode == null || statusCode != 200 -> ApiStatusCodeNotOk(statusCode)
+            statusCode == null || statusCode !in 200 until 300 -> ApiStatusCodeNotOk(statusCode)
             else -> null
         }
         return if(error == null){
