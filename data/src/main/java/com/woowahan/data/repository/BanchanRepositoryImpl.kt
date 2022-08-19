@@ -9,6 +9,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -27,15 +28,12 @@ class BanchanRepositoryImpl @Inject constructor(
         }.flowOn(coroutineDispatcher)
     }
 
-    override suspend fun fetchMainDishBanchan(): Flow<Result<List<BanchanModel>>> {
-        return flow {
-            emit(
-                kotlin.runCatching {
-                    remoteDataSource.fetchMainDishBanchans().body.map { it.toDomain() }
-                }
-            )
-        }.flowOn(coroutineDispatcher)
-    }
+    override suspend fun fetchMainDishBanchan(): Flow<List<BanchanModel>> = flow {
+        remoteDataSource.fetchMainDishBanchans()
+            .collect{
+                emit(it.body.map { it.toDomain() })
+            }
+    }.flowOn(coroutineDispatcher)
 
     override suspend fun fetchSoupDishBanchan(): Flow<Result<List<BanchanModel>>> {
         return flow {

@@ -8,7 +8,7 @@ interface BanchanRepository {
 
     suspend fun fetchBestBanchan(): Flow<Result<List<BestBanchanModel>>>
 
-    suspend fun fetchMainDishBanchan(): Flow<Result<List<BanchanModel>>>
+    suspend fun fetchMainDishBanchan(): Flow<List<BanchanModel>>
 
     suspend fun fetchSoupDishBanchan(): Flow<Result<List<BanchanModel>>>
 

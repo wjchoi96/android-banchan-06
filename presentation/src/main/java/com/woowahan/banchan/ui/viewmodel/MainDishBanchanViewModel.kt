@@ -55,10 +55,14 @@ class MainDishBanchanViewModel @Inject constructor(
                     res.onSuccess {
                         defaultBanchans = it
                         filterBanchan(defaultBanchans, filter)
-                    }.onFailure {
+                    }.onFailureWithData { it, list ->
                         it.printStackTrace()
                         it.message?.let { message ->
                             _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
+                        list?.let {
+                            defaultBanchans = it
+                            filterBanchan(defaultBanchans, filter)
                         }
                     }.also {
                         _dataLoading.value = false
