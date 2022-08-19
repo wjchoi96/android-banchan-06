@@ -21,6 +21,8 @@ import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
 import com.woowahan.banchan.ui.viewmodel.RootViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -90,8 +92,16 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
 
     private fun observeData(){
         repeatOnStarted {
-            viewModel.cartItemSize.collect {
-                setupBadge(it)
+            launch {
+                viewModel.cartItemSize.collect {
+                    setupBadge(it)
+                }
+            }
+
+            launch {
+                viewModel.deliveryItemSize.collect {
+                    setOrderBadge(it != 0)
+                }
             }
         }
     }
