@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CartDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertCartItem(art: CartTableEntity)
+    fun insertCartItem(cart: CartTableEntity)
 
     @Query("update ${CartTableEntity.TABLE_NAME} set " +
             "${CartTableEntity.COLUMN_COUNT} = :count " +
