@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.extension.getNewListApplyCartState
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
@@ -35,7 +34,7 @@ class RecentViewedViewModel @Inject constructor(
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun fetchMainDishBanchans() {
+    fun fetchRecentViewedBanchans() {
         if (_dataLoading.value) {
             _refreshDataLoading.value = false
             return
@@ -135,7 +134,7 @@ class RecentViewedViewModel @Inject constructor(
 
     fun onRefresh() {
         _refreshDataLoading.value = true
-        fetchMainDishBanchans()
+        fetchRecentViewedBanchans()
     }
 
     sealed class UiEvent {
