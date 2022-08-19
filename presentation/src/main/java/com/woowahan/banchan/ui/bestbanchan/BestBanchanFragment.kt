@@ -3,7 +3,6 @@ package com.woowahan.banchan.ui.bestbanchan
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentBestBanchanBinding
 import com.woowahan.banchan.extension.repeatOnStarted
@@ -68,7 +67,7 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
                     }
 
                     is BestBanchanViewModel.UiEvent.ShowDetailView -> {
-                        //TODO: startActivity(BanchanDetailActivity.get(requireContext(), it.hash) // or it
+                        //startActivity(DetailActivity.get(requireContext()))
                     }
                 }
             }

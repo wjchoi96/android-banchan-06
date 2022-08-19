@@ -1,9 +1,6 @@
 package com.woowahan.data.entity.table
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(
     tableName = RecentViewedTableEntity.TABLE_NAME,

@@ -95,7 +95,7 @@ class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
 
     override fun onStart() {
         super.onStart()
-        viewModel.fetchMainDishBanchans()
+        viewModel.fetchRecentViewedBanchans()
     }
 
     private fun observeData() {
