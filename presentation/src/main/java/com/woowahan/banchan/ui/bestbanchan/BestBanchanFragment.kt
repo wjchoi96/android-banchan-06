@@ -69,7 +69,7 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
                     }
 
                     is BestBanchanViewModel.UiEvent.ShowDetailView -> {
-                        startActivity(RecentViewedActivity.get(requireContext())) // or it
+                        //startActivity(DetailActivity.get(requireContext())) 
                     }
                 }
             }
