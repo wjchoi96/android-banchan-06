@@ -2,12 +2,14 @@ package com.woowahan.banchan.di
 
 import com.woowahan.domain.repository.BanchanRepository
 import com.woowahan.domain.repository.CartRepository
+import com.woowahan.domain.repository.OrderRepository
 import com.woowahan.domain.repository.RecentViewedRepository
 import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
 import com.woowahan.domain.usecase.banchan.FetchMainDishBanchanUseCase
 import com.woowahan.domain.usecase.banchan.FetchSideDishBanchanUseCase
 import com.woowahan.domain.usecase.banchan.FetchSoupDishBanchanUseCase
 import com.woowahan.domain.usecase.cart.*
+import com.woowahan.domain.usecase.order.*
 import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
 import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.Module
@@ -19,6 +21,9 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 object UseCaseModule {
 
+    /**
+     * Banchan
+     */
     @Provides
     fun provideFetchBestDishBanchanUseCase(
         repo: BanchanRepository,
@@ -43,6 +48,9 @@ object UseCaseModule {
         fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
     ) = FetchSideDishBanchanUseCase(repo, fetchCartItemsKeyUseCase)
 
+    /**
+     * Cart
+     */
     @Provides
     fun provideGetCartSizeUseCase(repo: CartRepository) =
         GetCartItemsSizeFlowUseCase(repo)
@@ -71,6 +79,9 @@ object UseCaseModule {
     fun provideUpdateCartItemSelectUseCase(repo: CartRepository) =
         UpdateCartItemSelectUseCase(repo)
 
+    /**
+     * Recent Viewed
+     */
     @Provides
     fun provideFetchAllRecentViewedItemUseCase(repo: RecentViewedRepository) =
         FetchRecentViewedItemUseCase(repo)
@@ -78,4 +89,27 @@ object UseCaseModule {
     @Provides
     fun provideInsertRecentViewedItemUseCase(repo: RecentViewedRepository) =
         InsertRecentViewedItemUseCase(repo)
+
+    /**
+     * order
+     */
+    @Provides
+    fun provideFetchOrdersUseCase(repo: OrderRepository) =
+        FetchOrdersUseCase(repo)
+
+    @Provides
+    fun provideFetchOrderUseCase(repo: OrderRepository) =
+        FetchOrderUseCase(repo)
+
+    @Provides
+    fun provideGetDeliveryOrderCountUseCase(repo: OrderRepository) =
+        GetDeliveryOrderCountUseCase(repo)
+
+    @Provides
+    fun provideInsertOrderUseCase(repo: OrderRepository) =
+        InsertOrderUseCase(repo)
+
+    @Provides
+    fun provideUpdateOrderUseCase(repo: OrderRepository) =
+        UpdateOrderUseCase(repo)
 }
