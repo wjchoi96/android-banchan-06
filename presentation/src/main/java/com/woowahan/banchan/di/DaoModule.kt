@@ -1,6 +1,7 @@
 package com.woowahan.banchan.di
 
 import com.woowahan.data.dao.CartDao
+import com.woowahan.data.dao.OrderDao
 import com.woowahan.data.dao.RecentViewedDao
 import com.woowahan.data.database.BanchanRoomDatabase
 import dagger.Module
@@ -20,4 +21,8 @@ object DaoModule {
     @Provides
     @Singleton
     fun provideRecentViewedDao(db: BanchanRoomDatabase): RecentViewedDao = db.recentViewedDao()
+
+    @Provides
+    @Singleton
+    fun provideOrderDao(db: BanchanRoomDatabase): OrderDao = db.orderDao()
 }
