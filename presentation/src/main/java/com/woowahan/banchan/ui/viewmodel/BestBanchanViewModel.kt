@@ -11,12 +11,10 @@ import com.woowahan.domain.model.BestBanchanModel
 import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
-import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel

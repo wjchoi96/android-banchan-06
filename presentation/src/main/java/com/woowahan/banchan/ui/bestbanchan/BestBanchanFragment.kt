@@ -3,7 +3,6 @@ package com.woowahan.banchan.ui.bestbanchan
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.FragmentBestBanchanBinding
 import com.woowahan.banchan.extension.repeatOnStarted
@@ -12,7 +11,6 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.BestBanchanAdapter
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
-import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
