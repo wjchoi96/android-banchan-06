@@ -3,6 +3,7 @@ package com.woowahan.banchan
 import androidx.recyclerview.widget.DiffUtil
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.domain.model.CartListItemModel
+import timber.log.Timber
 
 class CartListModelDiffUtilCallback(
     private val oldList: List<CartListItemModel>,
@@ -17,29 +18,33 @@ class CartListModelDiffUtilCallback(
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition] == newList[newItemPosition]
+        return oldList[oldItemPosition] isSameContentWith newList[newItemPosition]
     }
     
     override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
         val oldItem = oldList[oldItemPosition]
         val newItem = newList[newItemPosition]
-
-        if (oldItem is CartListItemModel.Header && newItem is CartListItemModel.Header) {
-            if (!(oldItem isSameIdWith newItem)) {
-                return DefaultCartAdapter.Payload.SelectAllChanged
+        when {
+            oldItem is CartListItemModel.Header && newItem is CartListItemModel.Header -> {
+                if (!(oldItem isSameContentWith newItem)) {
+                    return DefaultCartAdapter.Payload.SelectAllChanged
+                }
             }
-        } else if (oldItem is CartListItemModel.Content && newItem is CartListItemModel.Content) {
-            if (oldItem.cart.isSelected != newItem.cart.isSelected) {
-                return DefaultCartAdapter.Payload.SelectOneChanged
+            oldItem is CartListItemModel.Content && newItem is CartListItemModel.Content -> {
+                if (oldItem.cart.isSelected != newItem.cart.isSelected) {
+                    return DefaultCartAdapter.Payload.SelectOneChanged
+                }
+                if (oldItem.cart.count != newItem.cart.count) {
+                    return DefaultCartAdapter.Payload.quantityChanged
+                }
             }
-            if (oldItem.cart.count != newItem.cart.count) {
-                return DefaultCartAdapter.Payload.quantityChanged
-            }
-        } else if (oldItem is CartListItemModel.Footer && newItem is CartListItemModel.Footer) {
-            if (!(oldItem isSameIdWith newItem)) {
-                return DefaultCartAdapter.Payload.totalPriceChanged
+            oldItem is CartListItemModel.Footer && newItem is CartListItemModel.Footer -> {
+                if (!(oldItem isSameContentWith newItem)) {
+                    return DefaultCartAdapter.Payload.totalPriceChanged
+                }
             }
         }
+
         return super.getChangePayload(oldItemPosition, newItemPosition)
     }
 }
