@@ -37,8 +37,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
             selectAll = viewModel.selectAllItems,
             deleteAllSelected = viewModel.deleteAllSelectedItems,
             deleteItem = viewModel.deleteItem,
-            minusClicked = viewModel.minusClicked,
-            plusClicked = viewModel.plusClicked,
+            updateItem = viewModel.updateItemCount,
             orderClicked = viewModel.orderItems,
             selectItem = viewModel.selectItem
         )

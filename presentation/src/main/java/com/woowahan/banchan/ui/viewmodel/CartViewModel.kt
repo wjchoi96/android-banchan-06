@@ -212,14 +212,8 @@ class CartViewModel @Inject constructor(
         removeCartItem(deleteItem.hash)
     }
 
-    val minusClicked: (CartModel) -> Unit = { minusItem ->
-        if (minusItem.count != 1) {
-            updateCartItemCount(minusItem.hash, minusItem.count - 1)
-        }
-    }
-
-    val plusClicked: (CartModel) -> Unit = { plusItem ->
-        updateCartItemCount(plusItem.hash, plusItem.count + 1)
+    val updateItemCount: (CartModel, Int) -> Unit = { item, cnt ->
+        updateCartItemCount(item.hash, cnt)
     }
 
     val orderItems: () -> Unit = {
@@ -255,7 +249,7 @@ class CartViewModel @Inject constructor(
             .flowOn(Dispatchers.Default)
             .collect { event ->
                 event.onSuccess { isSuccess ->
-                    when(isSuccess){
+                    when (isSuccess) {
                         true -> _eventFlow.emit(UiEvent.GoToOrderList)
                         else -> _eventFlow.emit(UiEvent.ShowToast("Can't order"))
                     }

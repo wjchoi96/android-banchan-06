@@ -1,7 +1,9 @@
 package com.woowahan.banchan.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -23,8 +25,7 @@ class DefaultCartAdapter(
     private val deleteAllSelected: () -> Unit,
     private val selectItem: (CartModel, Boolean) -> Unit,
     private val deleteItem: (CartModel) -> Unit,
-    private val minusClicked: (CartModel) -> Unit,
-    private val plusClicked: (CartModel) -> Unit,
+    private val updateItem: (CartModel, Int) -> Unit,
     private val orderClicked: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
@@ -78,16 +79,23 @@ class DefaultCartAdapter(
         private val binding: ItemCartContentBinding,
         val selectItem: (CartModel, Boolean) -> Unit,
         val deleteItem: (CartModel) -> Unit,
-        val minusClicked: (CartModel) -> Unit,
-        val plusClicked: (CartModel) -> Unit
+        val updateItem: (CartModel, Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val onFocusChange: (CartModel, Boolean) -> Unit = { item, hasFocus ->
+            if (!hasFocus) {
+                if (binding.edtQuantity.text.isEmpty()) {
+                    binding.edtQuantity.setText("1")
+                }
+                updateItem(item, binding.edtQuantity.text.toString().toInt())
+            }
+        }
+
         companion object {
             fun from(
                 parent: ViewGroup,
                 selectItem: (CartModel, Boolean) -> Unit,
                 deleteItem: (CartModel) -> Unit,
-                minusClicked: (CartModel) -> Unit,
-                plusClicked: (CartModel) -> Unit
+                updateItem: (CartModel, Int) -> Unit,
             ): CartItemViewHolder =
                 CartItemViewHolder(
                     binding = ItemCartContentBinding.inflate(
@@ -95,7 +103,7 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
-                    selectItem, deleteItem, minusClicked, plusClicked
+                    selectItem, deleteItem, updateItem
                 )
         }
 
@@ -103,22 +111,32 @@ class DefaultCartAdapter(
             binding.cartItem = item
             binding.holder = this
             binding.isSelected = item.isSelected
-            binding.edtQuantity.doOnTextChanged { text, start, before, count ->
-            }
             binding.itemCount = item.count
             binding.totalPrice = (item.price * item.count)
             binding.isSelected = item.isSelected
+
+            binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
+                onFocusChange(item, hasFocus)
+            }
         }
 
         fun bindQuantityPayload(item: CartListItemModel.Content) {
             binding.cartItem = item.cart
             binding.itemCount = item.cart.count
             binding.totalPrice = (item.cart.price * item.cart.count)
+
+            binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
+                onFocusChange(item.cart, hasFocus)
+            }
         }
 
         fun bindSelectPayload(item: CartListItemModel.Content) {
             binding.isSelected = item.cart.isSelected
             binding.cartItem = item.cart
+
+            binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
+                onFocusChange(item.cart, hasFocus)
+            }
         }
     }
 
@@ -182,8 +200,7 @@ class DefaultCartAdapter(
                 parent,
                 selectItem = selectItem,
                 deleteItem = deleteItem,
-                minusClicked,
-                plusClicked
+                updateItem = updateItem
             )
             else -> CartFooterViewHolder.from(
                 parent,
