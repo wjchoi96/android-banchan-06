@@ -45,7 +45,8 @@ class OrderRepositoryImpl @Inject constructor(
                     OrderModel(
                         orderId = it.orderId,
                         time = BanchanDateConvertUtil.convert(it.time),
-                        items = it.items.map { item -> item.toDomain() }
+                        items = it.items.map { item -> item.toDomain() },
+                        it.deliveryState
                     )
                 )
             }
@@ -59,7 +60,8 @@ class OrderRepositoryImpl @Inject constructor(
                         OrderModel(
                             orderId = item.orderId,
                             time = BanchanDateConvertUtil.convert(item.time),
-                            items = item.items.map { child -> child.toDomain() }
+                            items = item.items.map { child -> child.toDomain() },
+                            item.deliveryState
                         )
                     }
                 )

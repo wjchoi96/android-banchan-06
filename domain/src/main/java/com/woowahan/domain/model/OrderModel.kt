@@ -24,7 +24,8 @@ sealed class OrderItemTypeModel {
 data class OrderModel(
     val orderId: Long,
     val time: Date?,
-    val items: List<OrderItemModel>
+    val items: List<OrderItemModel>,
+    val deliveryState: Boolean
 )
 
 data class OrderItemModel(
