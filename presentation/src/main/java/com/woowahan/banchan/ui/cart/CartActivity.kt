@@ -11,6 +11,7 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.order.OrderItemActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -68,7 +69,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                         binding.layoutBackground
                     )
                     is CartViewModel.UiEvent.GoToOrderList -> {
-                        //TODO: startActivity(OrderItemActivity.get(this))
+                        startActivity(OrderItemActivity.get(this@CartActivity, it.orderId))
                         showToast("주문 완료!")
                     }
                 }
