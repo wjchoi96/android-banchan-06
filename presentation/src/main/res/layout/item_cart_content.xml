@@ -11,6 +11,18 @@
         <variable
             name="cartItem"
             type="com.woowahan.domain.model.CartModel" />
+
+        <variable
+            name="totalPrice"
+            type="Long" />
+
+        <variable
+            name="itemCount"
+            type="Integer" />
+
+        <variable
+            name="isSelected"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,10 +37,10 @@
             android:layout_height="wrap_content"
             android:button="@drawable/sel_checkbox"
             android:buttonTint="@color/black_000000"
-            android:checked="@={cartItem.selected}"
+            android:checked="@={isSelected}"
             android:minWidth="33dp"
             android:minHeight="33dp"
-            android:onClick="@{()->holder.selectItem.invoke(cartItem, cartItem.selected)}"
+            android:onClick="@{()->holder.selectItem.invoke(cartItem, isSelected)}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -114,7 +126,7 @@
             android:gravity="center"
             android:minWidth="44dp"
             android:paddingHorizontal="3dp"
-            android:text="@{Integer.toString(cartItem.count)}"
+            android:text="@{Integer.toString(itemCount)}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"
@@ -148,7 +160,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:setCashString="@{cartItem.price * cartItem.count}"
+            android:setCashString="@{totalPrice}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"

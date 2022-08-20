@@ -11,10 +11,19 @@ sealed class CartListItemModel {
     }
 
     infix fun isSameIdWith(other: Any?): Boolean {
+        return when {
+            this is Header && other is Header -> true
+            this is Content && other is Content -> this.cart.hash == other.cart.hash
+            this is Footer && other is Footer -> true
+            else -> false
+        }
+    }
+
+    infix fun isSameContentWith(other: Any?): Boolean {
         return if (this is Header && other is Header) {
             this.isAllSelected == other.isAllSelected
         } else if (this is Content && other is Content) {
-            this.cart.hash == other.cart.hash
+            this.cart == other.cart
         } else if (this is Footer && other is Footer) {
             this.price == other.price
         } else {

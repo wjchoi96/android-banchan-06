@@ -29,6 +29,18 @@
         <variable
             name="holder"
             type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartFooterViewHolder" />
+
+        <variable
+            name="menuPrice"
+            type="Long" />
+
+        <variable
+            name="totalPrice"
+            type="Long" />
+
+        <variable
+            name="isViewedItemEmpty"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,7 +54,7 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:minWidth="140dp"
-            android:setCashString="@{footerItem.price}"
+            android:setCashString="@{menuPrice}"
             android:textColor="@color/grey_828282"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -101,7 +113,7 @@
             android:layout_marginTop="8dp"
             android:gravity="end"
             android:minWidth="140dp"
-            android:setCashString="@{footerItem.totalPrice}"
+            android:setCashString="@{totalPrice}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -152,39 +164,47 @@
             app:layout_constraintTop_toBottomOf="@id/btn_order"
             tools:text="30000원" />
 
-        <TextView
-            android:id="@+id/tv_recent_viewed"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
-            android:text="@string/cart_recent_viewed"
-            android:textColor="@color/black_000000"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:visibility="@{isViewedItemEmpty ? View.GONE : View.VISIBLE}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_left_price" />
+            app:layout_constraintTop_toBottomOf="@id/tv_left_price">
 
-        <TextView
-            android:id="@+id/tv_view_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/cart_view_all"
-            android:textColor="@color/black_000000"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_recent_viewed"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_recent_viewed" />
+            <TextView
+                android:id="@+id/tv_recent_viewed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cart_recent_viewed"
+                android:textColor="@color/black_000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_recent_viewed"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_recent_viewed"
-            tools:listitem="@layout/item_menu_time_stamp" />
+            <TextView
+                android:id="@+id/tv_view_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cart_view_all"
+                android:textColor="@color/black_000000"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_recent_viewed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_recent_viewed" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recent_viewed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_recent_viewed"
+                tools:listitem="@layout/item_menu_time_stamp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
