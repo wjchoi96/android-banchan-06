@@ -85,21 +85,23 @@ class BestBanchanViewModel @Inject constructor(
         viewModelScope.launch {
             _dataLoading.emit(true)
             removeCartItemUseCase.invoke(banchanModel.hash)
-                .onSuccess {
-                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
-                    _eventFlow.emit(
-                        UiEvent.ShowDialog(
+                .flowOn(Dispatchers.Default)
+                .collect { event ->
+                    event.onSuccess {
+                        _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
+                        _eventFlow.emit(UiEvent.ShowDialog(
                             getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
-                        )
-                    )
-                }.onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
+                        ))
+                    }.onFailure {
+                        it.printStackTrace()
+                        it.message?.let { message ->
+                            _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
+                    }.also {
+                        _dataLoading.emit(false)
                     }
-                }.also {
-                    _dataLoading.emit(false)
                 }
+
         }
     }
 
@@ -107,21 +109,23 @@ class BestBanchanViewModel @Inject constructor(
         viewModelScope.launch {
             _dataLoading.emit(true)
             insertCartItemUseCase.invoke(banchanModel, count)
-                .onSuccess {
-                    _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
-                    _eventFlow.emit(
-                        UiEvent.ShowDialog(
+                .flowOn(Dispatchers.Default)
+                .collect { event ->
+                    event.onSuccess {
+                        _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
+                        _eventFlow.emit(UiEvent.ShowDialog(
                             getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
-                        )
-                    )
-                }.onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowSnackBar(message))
+                        ))
+                    }.onFailure {
+                        it.printStackTrace()
+                        it.message?.let { message ->
+                            _eventFlow.emit(UiEvent.ShowSnackBar(message))
+                        }
+                    }.also {
+                        _dataLoading.emit(false)
                     }
-                }.also {
-                    _dataLoading.emit(false)
                 }
+
         }
     }
 

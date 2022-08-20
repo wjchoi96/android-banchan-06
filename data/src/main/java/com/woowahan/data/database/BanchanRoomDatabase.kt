@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.woowahan.data.dao.BanchanDao
 import com.woowahan.data.dao.CartDao
+import com.woowahan.data.dao.OrderDao
 import com.woowahan.data.dao.RecentViewedDao
 import com.woowahan.data.entity.table.*
 
@@ -46,5 +47,6 @@ abstract class BanchanRoomDatabase: RoomDatabase() {
     abstract fun cartDao(): CartDao
     abstract fun recentViewedDao(): RecentViewedDao
     abstract fun banchanDao(): BanchanDao
+    abstract fun orderDao(): OrderDao
 }
 

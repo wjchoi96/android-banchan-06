@@ -1,4 +1,4 @@
-package com.woowahan.data.entity
+package com.woowahan.domain.model
 
 data class ApiStatusCodeNotOk(
     private val statusCode: Int?

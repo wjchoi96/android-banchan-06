@@ -1,17 +1,8 @@
 package com.woowahan.banchan.di
 
-import com.woowahan.data.datasource.BanchanDetailDataSource
-import com.woowahan.data.datasource.BanchansDataSource
-import com.woowahan.data.datasource.CartDataSource
-import com.woowahan.data.datasource.RecentViewedDataSource
-import com.woowahan.data.repository.BanchanDetailRepositoryImpl
-import com.woowahan.data.repository.BanchanRepositoryImpl
-import com.woowahan.data.repository.CartRepositoryImpl
-import com.woowahan.data.repository.RecentViewedRepositoryImpl
-import com.woowahan.domain.repository.BanchanDetailRepository
-import com.woowahan.domain.repository.BanchanRepository
-import com.woowahan.domain.repository.CartRepository
-import com.woowahan.domain.repository.RecentViewedRepository
+import com.woowahan.data.datasource.*
+import com.woowahan.data.repository.*
+import com.woowahan.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,20 +16,20 @@ object RepositoryModule {
     @Provides
     fun provideBanchanRepository(
         banchansDataSource: BanchansDataSource,
-        @DefaultDispatcher dispatcher: CoroutineDispatcher
+        @IODispatcher dispatcher: CoroutineDispatcher
     ): BanchanRepository = BanchanRepositoryImpl(banchansDataSource, dispatcher)
 
     @Provides
     fun provideBanchanDetailRepository(
         banchansDetailDataSource: BanchanDetailDataSource,
-        @DefaultDispatcher dispatcher: CoroutineDispatcher
+        @IODispatcher dispatcher: CoroutineDispatcher
     ): BanchanDetailRepository = BanchanDetailRepositoryImpl(banchansDetailDataSource, dispatcher)
 
     @Provides
     fun provideCartRepository(
         cartDataSource: CartDataSource,
         banchanDetailDataSource: BanchanDetailDataSource,
-        @DefaultDispatcher dispatcher: CoroutineDispatcher
+        @IODispatcher dispatcher: CoroutineDispatcher
     ): CartRepository = CartRepositoryImpl(cartDataSource, banchanDetailDataSource, dispatcher)
 
 
@@ -46,11 +37,19 @@ object RepositoryModule {
     fun provideRecentViewedRepository(
         recentViewedDataSource: RecentViewedDataSource,
         banchanDetailDataSource: BanchanDetailDataSource,
-        @DefaultDispatcher coroutineDispatcher: CoroutineDispatcher
+        @IODispatcher coroutineDispatcher: CoroutineDispatcher
     ): RecentViewedRepository = RecentViewedRepositoryImpl(
         recentViewedDataSource,
         banchanDetailDataSource,
         coroutineDispatcher
+    )
+
+    @Provides
+    fun provideOrderRepository(
+        orderDataSource: OrderDataSource,
+        @IODispatcher coroutineDispatcher: CoroutineDispatcher
+    ): OrderRepository = OrderRepositoryImpl(
+        orderDataSource, coroutineDispatcher
     )
 
 }

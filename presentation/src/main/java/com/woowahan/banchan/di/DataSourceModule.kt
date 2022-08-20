@@ -21,4 +21,7 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun provideRecentViewedDataSource(impl: RecentViewedDataSourceImpl): RecentViewedDataSource
+
+    @Binds
+    abstract fun provideOrderDataSource(impl: OrderDataSourceImpl) : OrderDataSource
 }

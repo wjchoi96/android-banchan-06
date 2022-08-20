@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
-import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import com.woowahan.banchan.R
@@ -14,12 +13,8 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
-import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
-import com.woowahan.banchan.ui.viewmodel.SideDishBanchanViewModel
-import com.woowahan.domain.model.BanchanModel
-import com.woowahan.domain.model.CartModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -76,6 +71,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                         binding.layoutBackground
                     )
                     is CartViewModel.UiEvent.GoToOrderList -> {
+                        //TODO: startActivity(OrderItemActivity.get(this))
                         showToast("주문 완료!")
                     }
                 }

@@ -7,6 +7,7 @@ import com.woowahan.data.entity.table.BanchanItemTableEntity
 import com.woowahan.data.entity.table.RecentViewedTableEntity
 import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,12 +25,14 @@ class RecentViewedDataSourceImpl @Inject constructor(
         recentViewedDao.insertRecentViewed(RecentViewedTableEntity(banchan.hash, time))
     }
 
-    override suspend fun fetchRecentViewedFlow(fetchItemsCnt: Int?): Flow<List<RecentViewedEntity>> {
-        return (if (fetchItemsCnt == null) {
+    override suspend fun fetchRecentViewedFlow(fetchItemsCnt: Int?): Flow<List<RecentViewedEntity>> = flow {
+        if (fetchItemsCnt == null) {
             recentViewedDao.fetchAllRecentViewedItemsFlow()
         } else {
             recentViewedDao.fetchSeveralRecentViewedItemsFlow(fetchItemsCnt)
-        }).map { it.map { dto -> dto.toEntity() } }
+        }.collect {
+            emit(it.map { dto -> dto.toEntity() })
+        }
     }
 
 }

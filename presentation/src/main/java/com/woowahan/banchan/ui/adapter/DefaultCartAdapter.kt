@@ -3,7 +3,6 @@ package com.woowahan.banchan.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.doOnTextChanged
-import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.CartListModelDiffUtilCallback
@@ -17,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class DefaultCartAdapter(
     private val selectAll: (Boolean) -> Unit,
@@ -28,16 +28,10 @@ class DefaultCartAdapter(
     private val orderClicked: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
-    private val cartStateChangePayload: String = "changePayload"
-    private val selectAllChangePayload: String = "selectAllPayload"
-    private val selectOneChangePayload: String = "selectOnePayload"
-    private val quantityChangePayload: String = "quantityPayload"
-    private val totalPriceChangePayload: String = "totalPayload"
-
     fun updateList(newList: List<CartListItemModel>) {
         CoroutineScope(Dispatchers.Default).launch {
             val diffCallback =
-                CartListModelDiffUtilCallback(cartList, newList, cartStateChangePayload)
+                CartListModelDiffUtilCallback(cartList, newList)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
                 cartList = newList.toList()
@@ -74,6 +68,10 @@ class DefaultCartAdapter(
             binding.holder = this
             binding.isAllSelected = isAllSelected
         }
+
+        fun bindSelectAllPayload(header: CartListItemModel.Header) {
+            binding.isAllSelected = header.isAllSelected
+        }
     }
 
     class CartItemViewHolder(
@@ -105,9 +103,22 @@ class DefaultCartAdapter(
             binding.cartItem = item
             binding.holder = this
             binding.isSelected = item.isSelected
-
             binding.edtQuantity.doOnTextChanged { text, start, before, count ->
             }
+            binding.itemCount = item.count
+            binding.totalPrice = (item.price * item.count)
+            binding.isSelected = item.isSelected
+        }
+
+        fun bindQuantityPayload(item: CartListItemModel.Content) {
+            binding.cartItem = item.cart
+            binding.itemCount = item.cart.count
+            binding.totalPrice = (item.cart.price * item.cart.count)
+        }
+
+        fun bindSelectPayload(item: CartListItemModel.Content) {
+            binding.isSelected = item.cart.isSelected
+            binding.cartItem = item.cart
         }
     }
 
@@ -142,6 +153,21 @@ class DefaultCartAdapter(
             } else {
                 "최소주문금액을 확인해주세요"
             }
+            binding.menuPrice = item.price
+            binding.totalPrice = item.totalPrice
+            binding.isViewedItemEmpty = false
+        }
+
+        fun bindTotalPrice(item: CartListItemModel.Footer) {
+            binding.menuPrice = item.price
+            binding.totalPrice = item.totalPrice
+            binding.btnEnabled = (10000L <= item.price)
+            binding.btnText = if (10000L <= item.price) {
+                "${item.totalPrice.toCashString()}원 주문하기"
+            } else {
+                "최소주문금액을 확인해주세요"
+            }
+            binding.isViewedItemEmpty = false
         }
     }
 
@@ -182,5 +208,51 @@ class DefaultCartAdapter(
         }
     }
 
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            super.onBindViewHolder(holder, position, payloads)
+            return
+        }
+        payloads.firstOrNull()?.let {
+            Timber.d("onBindViewHolder payloads[$position][$it]")
+            when (it) {
+                Payload.SelectAllChanged -> {
+                    if (holder is CartHeaderViewHolder) {
+                        holder.bindSelectAllPayload(cartList[position] as CartListItemModel.Header)
+                    }
+                }
+
+                Payload.quantityChanged -> {
+                    if (holder is CartItemViewHolder) {
+                        holder.bindQuantityPayload(cartList[position] as CartListItemModel.Content)
+                    }
+                }
+
+                Payload.SelectOneChanged -> {
+                    if (holder is CartItemViewHolder) {
+                        holder.bindSelectPayload(cartList[position] as CartListItemModel.Content)
+                    }
+                }
+
+                Payload.totalPriceChanged -> {
+                    if (holder is CartFooterViewHolder) {
+                        holder.bindTotalPrice(cartList[position] as CartListItemModel.Footer)
+                    }
+                }
+            }
+        }
+    }
+
     override fun getItemCount(): Int = cartList.size
+
+    sealed class Payload {
+        object SelectAllChanged : Payload()
+        object SelectOneChanged : Payload()
+        object quantityChanged : Payload()
+        object totalPriceChanged : Payload()
+    }
 }

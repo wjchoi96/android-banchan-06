@@ -3,10 +3,10 @@ package com.woowahan.data.util
 import com.google.gson.Gson
 import com.woowahan.data.apiservice.BanchanDetailApiService
 import com.woowahan.data.apiservice.MainDishBanchanApiService
-import com.woowahan.data.entity.ApiIsNotSuccessful
-import com.woowahan.data.entity.ApiStatusCodeNotOk
 import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.data.entity.MainDishBanchanEntity
+import com.woowahan.domain.model.ApiIsNotSuccessful
+import com.woowahan.domain.model.ApiStatusCodeNotOk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
