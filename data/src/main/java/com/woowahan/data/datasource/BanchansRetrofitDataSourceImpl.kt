@@ -22,9 +22,10 @@ class BanchansRetrofitDataSourceImpl @Inject constructor(
     private val sideDishBanchanApiService: SideDishBanchanApiService,
 ): BanchansDataSource {
 
-    override suspend fun fetchBestBanchans(): BestBanchanEntity {
-        val res = bestBanchanApiService.fetchBestBanchans()
-        return RetrofitResponseConvertUtil.getData(res, res.body()?.statusCode)
+    override suspend fun fetchBestBanchans(): Flow<BestBanchanEntity> = flow {
+        bestBanchanApiService.fetchBestBanchans().let {
+            emit(RetrofitResponseConvertUtil.getData(it, it.body()?.statusCode))
+        }
     }
 
     override suspend fun fetchMainDishBanchans(): Flow<MainDishBanchanEntity> = flow {
@@ -33,13 +34,15 @@ class BanchansRetrofitDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchSoupDishBanchans(): SoupDishBanchanEntity {
-        val res = soupDishBanchanApiService.fetchSoupDishBanchans()
-        return RetrofitResponseConvertUtil.getData(res, res.body()?.statusCode)
+    override suspend fun fetchSoupDishBanchans(): Flow<SoupDishBanchanEntity> = flow {
+        soupDishBanchanApiService.fetchSoupDishBanchans().let {
+            emit(RetrofitResponseConvertUtil.getData(it, it.body()?.statusCode))
+        }
     }
 
-    override suspend fun fetchSideDishBanchans(): SideDishBanchanEntity {
-        val res = sideDishBanchanApiService.fetchSideDishBanchans()
-        return RetrofitResponseConvertUtil.getData(res, res.body()?.statusCode)
+    override suspend fun fetchSideDishBanchans(): Flow<SideDishBanchanEntity> = flow {
+        sideDishBanchanApiService.fetchSideDishBanchans().let {
+            emit(RetrofitResponseConvertUtil.getData(it, it.body()?.statusCode))
+        }
     }
 }

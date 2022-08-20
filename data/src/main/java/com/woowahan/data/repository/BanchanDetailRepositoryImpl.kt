@@ -5,6 +5,7 @@ import com.woowahan.domain.model.BanchanDetailModel
 import com.woowahan.domain.repository.BanchanDetailRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
@@ -15,13 +16,10 @@ class BanchanDetailRepositoryImpl @Inject constructor(
     private val coroutineDispatcher: CoroutineDispatcher
 ): BanchanDetailRepository {
 
-    override suspend fun fetchBanchanDetail(hash: String, title: String): Flow<Result<BanchanDetailModel>> {
-        return flow {
-            emit(
-                kotlin.runCatching {
-                    banchanDetailDataSource.fetchBanchanDetail(hash).toDomain(title)
-                }
-            )
-        }.flowOn(coroutineDispatcher)
-    }
+    override suspend fun fetchBanchanDetail(hash: String, title: String): Flow<BanchanDetailModel> = flow {
+        banchanDetailDataSource.fetchBanchanDetail(hash)
+            .collect {
+                emit(it.toDomain(title))
+            }
+    }.flowOn(coroutineDispatcher)
 }

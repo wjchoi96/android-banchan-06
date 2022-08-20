@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface BanchanRepository {
 
-    suspend fun fetchBestBanchan(): Flow<Result<List<BestBanchanModel>>>
+    suspend fun fetchBestBanchan(): Flow<List<BestBanchanModel>>
 
     suspend fun fetchMainDishBanchan(): Flow<List<BanchanModel>>
 
-    suspend fun fetchSoupDishBanchan(): Flow<Result<List<BanchanModel>>>
+    suspend fun fetchSoupDishBanchan(): Flow<List<BanchanModel>>
 
-    suspend fun fetchSideDishBanchan(): Flow<Result<List<BanchanModel>>>
+    suspend fun fetchSideDishBanchan(): Flow<List<BanchanModel>>
 
 }

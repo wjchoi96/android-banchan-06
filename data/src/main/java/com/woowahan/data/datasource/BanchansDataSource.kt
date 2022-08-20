@@ -8,12 +8,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface BanchansDataSource {
 
-    suspend fun fetchBestBanchans(): BestBanchanEntity
+    suspend fun fetchBestBanchans(): Flow<BestBanchanEntity>
 
     suspend fun fetchMainDishBanchans(): Flow<MainDishBanchanEntity>
 
-    suspend fun fetchSoupDishBanchans(): SoupDishBanchanEntity
+    suspend fun fetchSoupDishBanchans(): Flow<SoupDishBanchanEntity>
 
-    suspend fun fetchSideDishBanchans(): SideDishBanchanEntity
+    suspend fun fetchSideDishBanchans(): Flow<SideDishBanchanEntity>
     
 }
