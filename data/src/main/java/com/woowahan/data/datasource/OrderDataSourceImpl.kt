@@ -5,6 +5,7 @@ import com.woowahan.data.entity.dto.OrderEntity
 import com.woowahan.data.entity.table.OrderItemTableEntity
 import com.woowahan.data.entity.table.OrderTableEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -34,15 +35,24 @@ class OrderDataSourceImpl @Inject constructor(
         emit(orderDao.update(orderId, deliveryState) != 0)
     }
 
-    override suspend fun fetchOrder(orderId: Long): Flow<OrderEntity> {
-        return orderDao.fetchOrder(orderId).map { it.toEntity() }
+    override suspend fun fetchOrder(orderId: Long): Flow<OrderEntity> = flow {
+        orderDao.fetchOrder(orderId)
+            .collect {
+                emit(it.toEntity())
+            }
     }
 
-    override fun fetchOrders(): Flow<List<OrderEntity>> {
-        return orderDao.fetchOrders().map { it.map { item -> item.toEntity() } }
+    override fun fetchOrders(): Flow<List<OrderEntity>> = flow {
+        orderDao.fetchOrders()
+            .collect {
+                emit(it.map { item -> item.toEntity() } )
+            }
     }
 
-    override fun getDeliveryOrderCount(): Flow<Int> {
-        return orderDao.fetchDeliveryOrderCount()
+    override fun getDeliveryOrderCount(): Flow<Int> = flow {
+        orderDao.fetchDeliveryOrderCount()
+            .collect {
+                emit(it)
+            }
     }
 }
