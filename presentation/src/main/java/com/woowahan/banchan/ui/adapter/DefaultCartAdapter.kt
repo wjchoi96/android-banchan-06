@@ -107,12 +107,14 @@ class DefaultCartAdapter(
         }
 
         fun bindQuantityPayload(item: CartListItemModel.Content) {
+            binding.cartItem = item.cart
             binding.itemCount = item.cart.count
             binding.totalPrice = (item.cart.price * item.cart.count)
         }
 
         fun bindSelectPayload(item: CartListItemModel.Content) {
             binding.isSelected = item.cart.isSelected
+            binding.cartItem = item.cart
         }
     }
 
