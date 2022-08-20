@@ -30,12 +30,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@{isSelected ? @color/white_ffffff : @android:color/transparent}"
-        android:padding="16dp">
+        android:paddingTop="16dp">
 
         <CheckBox
             android:id="@+id/cbx_select"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:button="@drawable/sel_checkbox"
             android:buttonTint="@color/black_000000"
             android:checked="@={isSelected}"
@@ -94,6 +95,7 @@
             android:id="@+id/ibtn_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:onClick="@{()->holder.deleteItem.invoke(cartItem)}"
             android:padding="5dp"
@@ -164,12 +166,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
             android:setCashString="@{totalPrice}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_menu_image"
             tools:text="6,000원" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/white_dddddd"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_price" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
