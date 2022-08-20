@@ -1,5 +1,6 @@
 package com.woowahan.domain.usecase.order
 
+import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.repository.OrderRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -10,13 +11,13 @@ class UpdateOrderUseCase(
 ) {
     suspend operator fun invoke(
         orderId: Long, deliveryState: Boolean
-    ): Flow<Result<Boolean>> = flow {
+    ): Flow<DomainEvent<Boolean>> = flow<DomainEvent<Boolean>> {
         orderRepository.updateOrder(
             orderId, deliveryState
         ).collect {
-            emit(Result.success(it))
+            emit(DomainEvent.success(it))
         }
     }.catch {
-        emit(Result.failure(it))
+        emit(DomainEvent.failure(it))
     }
 }

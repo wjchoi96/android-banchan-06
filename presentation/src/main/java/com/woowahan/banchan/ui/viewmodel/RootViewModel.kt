@@ -31,6 +31,7 @@ class RootViewModel @Inject constructor(
                 getCartItemsSizeFlowUseCase()
                     .flowOn(Dispatchers.Default)
                     .collect { flow ->
+                        Timber.d("getCartItemsSizeFlowUseCase on viewModel")
                         flow.onSuccess {
                             _cartItemSize.emit(it)
                         }.onFailureWithData { it, data ->
@@ -46,9 +47,16 @@ class RootViewModel @Inject constructor(
             launch {
                 getDeliveryOrderCountUseCase()
                     .flowOn(Dispatchers.Default)
-                    .collect {
-                        it.onSuccess { count ->
+                    .collect { flow ->
+                        Timber.d("getDeliveryOrderCount on viewModel")
+                        flow.onSuccess { count ->
                             _deliveryItemSize.emit(count)
+                        }.onFailureWithData { it, data ->
+                            it.printStackTrace()
+                            Timber.d("catch debug onFailure $it")
+                            data?.let {
+                                _deliveryItemSize.emit(it)
+                            }
                         }
                 }
             }

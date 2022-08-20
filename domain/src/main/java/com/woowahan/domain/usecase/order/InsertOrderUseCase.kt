@@ -1,6 +1,7 @@
 package com.woowahan.domain.usecase.order
 
 import com.woowahan.domain.model.CartModel
+import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.OrderItemModel
 import com.woowahan.domain.repository.OrderRepository
 import com.woowahan.domain.util.BanchanDateConvertUtil
@@ -15,7 +16,7 @@ class InsertOrderUseCase(
     suspend operator fun invoke(
         time: Date,
         items: List<CartModel>
-    ): Flow<Result<Long>> = flow {
+    ): Flow<DomainEvent<Long>> = flow<DomainEvent<Long>> {
         orderRepository.insertOrder(
             BanchanDateConvertUtil.convert(time),
             items.map { OrderItemModel(
@@ -26,9 +27,9 @@ class InsertOrderUseCase(
                 it.price
             ) }
         ).collect {
-            emit(Result.success(it))
+            emit(DomainEvent.success(it))
         }
     }.catch {
-        emit(Result.failure(it))
+        emit(DomainEvent.failure(it))
     }
 }
