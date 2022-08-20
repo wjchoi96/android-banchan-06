@@ -1,17 +1,8 @@
 package com.woowahan.banchan.di
 
-import com.woowahan.data.datasource.BanchanDetailDataSource
-import com.woowahan.data.datasource.BanchansDataSource
-import com.woowahan.data.datasource.CartDataSource
-import com.woowahan.data.datasource.RecentViewedDataSource
-import com.woowahan.data.repository.BanchanDetailRepositoryImpl
-import com.woowahan.data.repository.BanchanRepositoryImpl
-import com.woowahan.data.repository.CartRepositoryImpl
-import com.woowahan.data.repository.RecentViewedRepositoryImpl
-import com.woowahan.domain.repository.BanchanDetailRepository
-import com.woowahan.domain.repository.BanchanRepository
-import com.woowahan.domain.repository.CartRepository
-import com.woowahan.domain.repository.RecentViewedRepository
+import com.woowahan.data.datasource.*
+import com.woowahan.data.repository.*
+import com.woowahan.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +42,14 @@ object RepositoryModule {
         recentViewedDataSource,
         banchanDetailDataSource,
         coroutineDispatcher
+    )
+
+    @Provides
+    fun provideOrderRepository(
+        orderDataSource: OrderDataSource,
+        @IODispatcher coroutineDispatcher: CoroutineDispatcher
+    ): OrderRepository = OrderRepositoryImpl(
+        orderDataSource, coroutineDispatcher
     )
 
 }

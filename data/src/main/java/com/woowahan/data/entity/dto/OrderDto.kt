@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.woowahan.data.entity.table.OrderItemTableEntity
 import com.woowahan.data.entity.table.OrderTableEntity
+import com.woowahan.domain.model.OrderModel
 
 data class OrderDto(
     @Embedded
@@ -17,12 +18,14 @@ data class OrderDto(
     fun toEntity(): OrderEntity = OrderEntity(
         order.id,
         order.time,
-        orderItemInforms
+        orderItemInforms,
+        order.deliveryState
     )
 }
 
 data class OrderEntity(
-    val orderId: Int,
+    val orderId: Long,
     val time: String,
-    val items: List<OrderItemTableEntity>
+    val items: List<OrderItemTableEntity>,
+    val deliveryState: Boolean
 )

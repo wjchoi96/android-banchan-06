@@ -8,13 +8,15 @@ import androidx.room.PrimaryKey
     tableName = OrderTableEntity.TABLE_NAME
 )
 data class OrderTableEntity(
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = OrderTableEntity.COLUMN_ID) val id: Int,
-    @ColumnInfo(name = OrderTableEntity.COLUMN_TIME)val time: String
+    @ColumnInfo(name = OrderTableEntity.COLUMN_TIME)val time: String,
+    @ColumnInfo(name = OrderTableEntity.COLUMN_STATE)val deliveryState: Boolean = true
 ) {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = OrderTableEntity.COLUMN_ID) var id: Long = 0
     companion object {
         const val TABLE_NAME = "order"
         const val COLUMN_ID = "id"
         const val COLUMN_TIME = "time"
+        const val COLUMN_STATE = "delivery_state"
     }
 }
