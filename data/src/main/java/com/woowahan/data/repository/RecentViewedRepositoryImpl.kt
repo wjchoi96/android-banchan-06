@@ -2,6 +2,7 @@ package com.woowahan.data.repository
 
 import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.RecentViewedDataSource
+import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.domain.extension.priceStrToLong
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
@@ -17,52 +18,54 @@ class RecentViewedRepositoryImpl @Inject constructor(
     private val banchanDetailDataSource: BanchanDetailDataSource,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : RecentViewedRepository {
+
+    private val cacheMap = mutableMapOf<String, BanchanDetailEntity>()
+
     override suspend fun insertRecentViewedItem(
         banchan: BanchanModel,
         time: Date
-    ): Flow<Result<Boolean>> {
-        return flow<Result<Boolean>> {
-            withContext(coroutineDispatcher) {
-                kotlin.runCatching {
-                    recentViewedDataSource.insertRecentViewed(
-                        banchan,
-                        BanchanDateConvertUtil.convert(time)
-                    )
-                    true
-                }
-            }
-        }.flowOn(coroutineDispatcher)
-    }
+    ): Flow<Boolean> = flow {
+        recentViewedDataSource.insertRecentViewed(
+            banchan,
+            BanchanDateConvertUtil.convert(time)
+        )
+        emit(true)
+    }.flowOn(coroutineDispatcher)
 
-    override suspend fun fetchRecentViewedItems(fetchItemsCnt: Int?): Flow<Result<List<RecentViewedItemModel>>> {
-        return recentViewedDataSource.fetchRecentViewedFlow(fetchItemsCnt)
-            .map { list ->
-                kotlin.runCatching {
-                    coroutineScope {
-                        val detailMap = list.map {
-                            async {
-                                println("fetchRecentViewed async run => ${it.hash}")
-                                banchanDetailDataSource.fetchBanchanDetail(it.hash).first()
+    override suspend fun fetchRecentViewedItems(fetchItemsCnt: Int?): Flow<List<RecentViewedItemModel>> = flow {
+        recentViewedDataSource.fetchRecentViewedFlow(fetchItemsCnt)
+            .collect { list ->
+                coroutineScope {
+                    list.map {
+                        async {
+                            when(cacheMap.containsKey(it.hash)){
+                                true -> {
+                                    cacheMap[it.hash]!!
+                                }
+                                else -> {
+                                    println("fetchRecentViewed async run => ${it.hash}")
+                                    banchanDetailDataSource.fetchBanchanDetail(it.hash).first().also {
+                                        cacheMap[it.hash] = it
+                                    }
+                                }
                             }
-                        }.awaitAll().associateBy { item -> item.hash }
-                        println("fetchRecentViewed async list finish")
+                        }
+                    }.awaitAll()
 
-                        val res = list.map {
-                            val detail = detailMap[it.hash]!!
-
+                    val res = list.map {
+                        cacheMap[it.hash]!!.run {
                             RecentViewedItemModel(
                                 hash = it.hash,
                                 title = it.title,
-                                imageUrl = detail.data.thumbImages.first(),
-                                price = detail.data.prices.first().priceStrToLong(),
-                                salePrice = (if (detail.data.prices.size > 1) detail.data.prices[1] else "0").priceStrToLong(),
+                                imageUrl = this.data.thumbImages.first(),
+                                price = this.data.prices.first().priceStrToLong(),
+                                salePrice = (if (this.data.prices.size > 1) this.data.prices[1] else "0").priceStrToLong(),
                                 time = BanchanDateConvertUtil.convert(it.time)
                             )
                         }
-                        println("fetchRecentViewed res => $res")
-                        res
                     }
+                    emit(res)
                 }
-            }.flowOn(coroutineDispatcher)
-    }
+            }
+    }.flowOn(coroutineDispatcher)
 }
