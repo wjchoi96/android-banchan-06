@@ -3,14 +3,11 @@ package com.woowahan.banchan.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemCartContentBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
-import com.woowahan.banchan.extension.addControlHorizontalScrollListener
 import com.woowahan.banchan.extension.toCashString
-import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.CoroutineScope
@@ -208,6 +205,10 @@ class DefaultCartAdapter(
                 binding.footerItem = item
             }
         }
+
+        fun bindRecentViewedItems(item: CartListItemModel.Footer) {
+            recentViewedAdapter.updateList(item.recentViewedItems)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -282,6 +283,12 @@ class DefaultCartAdapter(
                         holder.bindTotalPrice(cartList[position] as CartListItemModel.Footer)
                     }
                 }
+
+                Payload.updateRecentViewed -> {
+                    if (holder is CartFooterViewHolder) {
+                        holder.bindRecentViewedItems(cartList[position] as CartListItemModel.Footer)
+                    }
+                }
             }
         }
     }
@@ -293,6 +300,7 @@ class DefaultCartAdapter(
         object SelectOneChanged : Payload()
         object quantityChanged : Payload()
         object totalPriceChanged : Payload()
+        object updateRecentViewed : Payload()
     }
 
     class CartListModelDiffUtilCallback(
@@ -317,20 +325,23 @@ class DefaultCartAdapter(
             when {
                 oldItem is CartListItemModel.Header && newItem is CartListItemModel.Header -> {
                     if (!(oldItem isSameContentWith newItem)) {
-                        return DefaultCartAdapter.Payload.SelectAllChanged
+                        return Payload.SelectAllChanged
                     }
                 }
                 oldItem is CartListItemModel.Content && newItem is CartListItemModel.Content -> {
                     if (oldItem.cart.isSelected != newItem.cart.isSelected) {
-                        return DefaultCartAdapter.Payload.SelectOneChanged
+                        return Payload.SelectOneChanged
                     }
                     if (oldItem.cart.count != newItem.cart.count) {
-                        return DefaultCartAdapter.Payload.quantityChanged
+                        return Payload.quantityChanged
                     }
                 }
                 oldItem is CartListItemModel.Footer && newItem is CartListItemModel.Footer -> {
-                    if (!(oldItem isSameContentWith newItem)) {
-                        return DefaultCartAdapter.Payload.totalPriceChanged
+                    if (oldItem.recentViewedItems != newItem.recentViewedItems){
+                        return Payload.updateRecentViewed
+                    }
+                    else if (!(oldItem isSameContentWith newItem)) {
+                        return Payload.totalPriceChanged
                     }
                 }
             }
