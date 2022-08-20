@@ -24,15 +24,13 @@ class CartDataSourceImpl @Inject constructor(
 
     // 단순 추가 -> 추가된 항목 리턴
     override suspend fun insertCartItem(hash: String, title: String, count: Int){
-        cartDao.insertCartItem(
-            BanchanItemTableEntity(hash, title),
-            CartTableEntity(hash, count)
-        )
+        banchanDao.insertBanchanItems(BanchanItemTableEntity(hash, title))
+        cartDao.insertCartItem(CartTableEntity(hash, count))
     }
 
     override suspend fun removeCartItem(vararg hashes: String): Flow<Int> = flow {
         val res = cartDao.removeCartItem(*hashes)
-        cartDao.removeCartItemInfo(*hashes)
+        banchanDao.removeBanchanItems(*hashes)
         emit(res)
     }
 
