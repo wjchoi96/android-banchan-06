@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemCartContentBinding
+import com.woowahan.banchan.databinding.ItemCartEmptyBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
@@ -211,6 +212,25 @@ class DefaultCartAdapter(
         }
     }
 
+    class CartItemEmptyViewHolder(
+        private val binding: ItemCartEmptyBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): CartItemEmptyViewHolder =
+                CartItemEmptyViewHolder(
+                    ItemCartEmptyBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+        }
+
+        fun bind() {
+
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             CartModel.ViewType.Header.value -> CartHeaderViewHolder.from(
@@ -224,6 +244,7 @@ class DefaultCartAdapter(
                 deleteItem = deleteItem,
                 updateItem = updateItem
             )
+            CartModel.ViewType.Empty.value -> CartItemEmptyViewHolder.from(parent)
             else -> CartFooterViewHolder.from(
                 parent,
                 orderClicked = orderClicked,
@@ -235,7 +256,13 @@ class DefaultCartAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (cartList[position]) {
             is CartListItemModel.Header -> CartModel.ViewType.Header.value
-            is CartListItemModel.Content -> CartModel.ViewType.Content.value
+            is CartListItemModel.Content -> {
+                if ((cartList[position] as CartListItemModel.Content).cart.isEmpty()) {
+                    CartModel.ViewType.Empty.value
+                } else {
+                    CartModel.ViewType.Content.value
+                }
+            }
             is CartListItemModel.Footer -> CartModel.ViewType.Footer.value
         }
     }
@@ -244,6 +271,7 @@ class DefaultCartAdapter(
         when (holder) {
             is CartHeaderViewHolder -> holder.bind((cartList[position] as CartListItemModel.Header).isAllSelected)
             is CartItemViewHolder -> holder.bind((cartList[position] as CartListItemModel.Content).cart)
+            is CartItemEmptyViewHolder -> holder.bind()
             is CartFooterViewHolder -> holder.bind(cartList[position] as CartListItemModel.Footer)
         }
     }
@@ -337,10 +365,9 @@ class DefaultCartAdapter(
                     }
                 }
                 oldItem is CartListItemModel.Footer && newItem is CartListItemModel.Footer -> {
-                    if (oldItem.recentViewedItems != newItem.recentViewedItems){
+                    if (oldItem.recentViewedItems != newItem.recentViewedItems) {
                         return Payload.updateRecentViewed
-                    }
-                    else if (!(oldItem isSameContentWith newItem)) {
+                    } else if (!(oldItem isSameContentWith newItem)) {
                         return Payload.totalPriceChanged
                     }
                 }

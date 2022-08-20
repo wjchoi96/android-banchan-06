@@ -28,4 +28,5 @@
     <string name="cart_recent_viewed">최근 본 상품</string>
     <string name="cart_view_all">전체보기</string>
     <string name="cart_title">Cart</string>
+    <string name="no_cart_item">상품이 없습니다.</string>
 </resources>

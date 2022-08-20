@@ -41,9 +41,18 @@ data class CartModel(
     val price: Long,
     var isSelected: Boolean = false
 ) {
+    companion object {
+        fun empty() = CartModel("", 0, "", "", 0L, false)
+    }
+
+    fun isEmpty(): Boolean {
+        return (hash.isEmpty() && count == 0 && title.isEmpty() && imageUrl.isEmpty() && price == 0L)
+    }
+
     enum class ViewType(val value: Int) {
         Header(0),
         Content(1),
-        Footer(2)
+        Footer(2),
+        Empty(3)
     }
 }
