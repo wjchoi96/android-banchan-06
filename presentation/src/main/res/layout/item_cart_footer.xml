@@ -41,6 +41,11 @@
         <variable
             name="isViewedItemEmpty"
             type="Boolean" />
+
+
+        <variable
+            name="recentViewedAdapter"
+            type="com.woowahan.banchan.ui.adapter.RecentViewedHorizontalAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -187,6 +192,9 @@
                 android:id="@+id/tv_view_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:onClick="@{()->holder.moveToRecentViewedActivity.invoke()}"
+                android:padding="5dp"
                 android:text="@string/cart_view_all"
                 android:textColor="@color/black_000000"
                 android:textSize="12sp"
@@ -199,6 +207,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:adapter="@{recentViewedAdapter}"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
