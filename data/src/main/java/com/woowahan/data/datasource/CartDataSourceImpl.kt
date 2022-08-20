@@ -13,7 +13,12 @@ import javax.inject.Singleton
 class CartDataSourceImpl @Inject constructor(
     private val cartDao: CartDao
 ) : CartDataSource {
-    override fun getCartSizeFlow(): Flow<Int> = cartDao.fetchCartItemsCount()
+    override fun getCartSizeFlow(): Flow<Int> = flow {
+        cartDao.fetchCartItemsCount()
+            .collect {
+                emit(it)
+            }
+    }
 
     // 단순 추가 -> 추가된 항목 리턴
     override suspend fun insertCartItem(hash: String, title: String, count: Int){
@@ -38,7 +43,10 @@ class CartDataSourceImpl @Inject constructor(
         emit(cartDao.updateCartItemSelect(isSelect, *hashes))
     }
 
-    override suspend fun fetchCartItems(): Flow<List<CartEntity>> {
-        return cartDao.fetchCartItems().map { it.map { dto -> dto.toEntity() } }
+    override suspend fun fetchCartItems(): Flow<List<CartEntity>> = flow {
+        cartDao.fetchCartItems()
+            .collect {
+                emit(it.map { dto -> dto.toEntity() })
+            }
     }
 }
