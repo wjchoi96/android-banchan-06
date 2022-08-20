@@ -1,5 +1,6 @@
 package com.woowahan.data.datasource
 
+import com.woowahan.data.dao.BanchanDao
 import com.woowahan.data.dao.CartDao
 import com.woowahan.data.entity.dto.CartEntity
 import com.woowahan.data.entity.table.BanchanItemTableEntity
@@ -11,6 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class CartDataSourceImpl @Inject constructor(
+    private val banchanDao: BanchanDao,
     private val cartDao: CartDao
 ) : CartDataSource {
     override fun getCartSizeFlow(): Flow<Int> = flow {

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RecentViewedDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertRecentViewed(banchan: BanchanItemTableEntity, recentViewed: RecentViewedTableEntity)
+    fun insertRecentViewed(recentViewed: RecentViewedTableEntity)
 
     @Transaction
     @Query("SELECT * FROM ${RecentViewedTableEntity.TABLE_NAME} ORDER BY ${RecentViewedTableEntity.COLUMN_TIME} DESC")
