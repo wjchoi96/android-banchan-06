@@ -26,20 +26,20 @@ interface OrderDao {
         return id
     }
 
-    @Query("update [${OrderTableEntity.TABLE_NAME}] set " +
+    @Query("update `${OrderTableEntity.TABLE_NAME}` set " +
             "${OrderTableEntity.COLUMN_STATE} = :deliveryState " +
             "where ${OrderTableEntity.COLUMN_ID} = :orderId")
     fun update(orderId: Long, deliveryState: Boolean): Int
 
     @Transaction
-    @Query("select * from [${OrderTableEntity.TABLE_NAME}] where ${OrderTableEntity.COLUMN_ID} = :orderId")
+    @Query("select * from `${OrderTableEntity.TABLE_NAME}` where ${OrderTableEntity.COLUMN_ID} = :orderId")
     fun fetchOrder(orderId: Long): Flow<OrderDto>
 
     @Transaction
-    @Query("SELECT * FROM [${OrderTableEntity.TABLE_NAME}]")
+    @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}`")
     fun fetchOrders(): Flow<List<OrderDto>>
 
     // true => 1
-    @Query("select COUNT(*) FROM [${OrderTableEntity.TABLE_NAME}] where ${OrderTableEntity.COLUMN_STATE} = 1")
+    @Query("select COUNT(*) FROM `${OrderTableEntity.TABLE_NAME}` where ${OrderTableEntity.COLUMN_STATE} = 1")
     fun fetchDeliveryOrderCount(): Flow<Int>
 }
