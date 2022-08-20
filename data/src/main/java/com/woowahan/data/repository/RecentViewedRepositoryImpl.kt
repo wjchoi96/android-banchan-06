@@ -8,10 +8,7 @@ import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.repository.RecentViewedRepository
 import com.woowahan.domain.util.BanchanDateConvertUtil
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import java.util.*
 import javax.inject.Inject
 
@@ -45,7 +42,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
                         val detailMap = list.map {
                             async {
                                 println("fetchRecentViewed async run => ${it.hash}")
-                                banchanDetailDataSource.fetchBanchanDetail(it.hash)
+                                banchanDetailDataSource.fetchBanchanDetail(it.hash).first()
                             }
                         }.awaitAll().associateBy { item -> item.hash }
                         println("fetchRecentViewed async list finish")
