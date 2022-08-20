@@ -56,8 +56,10 @@ object UseCaseModule {
         GetCartItemsSizeFlowUseCase(repo)
 
     @Provides
-    fun provideFetchCartItemsUseCase(repo: CartRepository) =
-        FetchCartItemsUseCase(repo)
+    fun provideFetchCartItemsUseCase(
+        repo: CartRepository,
+        fetchRecentViewedItemUseCase: FetchRecentViewedItemUseCase
+    ) = FetchCartItemsUseCase(repo, fetchRecentViewedItemUseCase)
 
     @Provides
     fun provideFetchCartItemsKeyUseCase(repo: CartRepository) =

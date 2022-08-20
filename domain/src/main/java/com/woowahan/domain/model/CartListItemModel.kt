@@ -5,6 +5,7 @@ sealed class CartListItemModel {
     data class Content(val cart: CartModel) : CartListItemModel()
     data class Footer(
         val price: Long,
+        val recentViewedItems: List<RecentViewedItemModel>,
         val deliveryFee: Long = 2500L,
     ) : CartListItemModel() {
         val totalPrice: Long = price + deliveryFee
