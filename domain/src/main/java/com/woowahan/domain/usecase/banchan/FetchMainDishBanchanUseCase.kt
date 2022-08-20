@@ -11,20 +11,20 @@ class FetchMainDishBanchanUseCase(
     private val fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
 ) {
     suspend operator fun invoke(): Flow<DomainEvent<List<BanchanModel>>> = flow<DomainEvent<List<BanchanModel>>> {
-        val cart = fetchCartItemsKeyUseCase().getOrThrow()
-        banchanRepository.fetchMainDishBanchan()
-            .collect {
-                val list = listOf(
-                    BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
-                    BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),
-                ) + it.map { item ->
-                    if (cart.contains(item.hash))
-                        item.copy(isCartItem = true)
-                    else
-                        item
-                }
-                emit(DomainEvent.success(list))
+        banchanRepository.fetchMainDishBanchan().combine(fetchCartItemsKeyUseCase()) { banchan, key ->
+            val cart = key.getOrThrow()
+            listOf(
+                BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
+                BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),
+            ) + banchan.map { item ->
+                if (cart.contains(item.hash))
+                    item.copy(isCartItem = true)
+                else
+                    item
             }
+        }.collect {
+            emit(DomainEvent.success(it))
+        }
     }.catch {
         print("catch at useCase => ${it.message}")
         emit(DomainEvent.failure(it, listOf(
