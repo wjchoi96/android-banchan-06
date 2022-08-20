@@ -1,17 +1,14 @@
 package com.woowahan.data.datasource
 
 import com.woowahan.data.entity.dto.OrderEntity
+import com.woowahan.domain.model.OrderItemModel
 import kotlinx.coroutines.flow.Flow
 
 interface OrderDataSource {
 
     suspend fun insertOrder(
         time: String,
-        hash: String,
-        imageUrl: String,
-        title: String,
-        count: Int,
-        price: Long,
+        items: List<OrderItemModel>
     ): Flow<Long>
 
     suspend fun updateOrder(orderId: Long, deliveryState: Boolean): Flow<Boolean>

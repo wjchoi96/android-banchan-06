@@ -18,9 +18,11 @@ interface OrderDao {
     fun insertOrderItem(orderItem: OrderItemTableEntity): Long
 
     @Transaction
-    fun insertOrder(order: OrderTableEntity, orderItem: OrderItemTableEntity): Long {
+    fun insertOrder(order: OrderTableEntity, orderItems: List<OrderItemTableEntity>): Long {
         val id = insertOrder(order)
-        insertOrderItem(orderItem.copy(orderId = id))
+        orderItems.forEach {
+            insertOrderItem(it.copy(orderId = id))
+        }
         return id
     }
 

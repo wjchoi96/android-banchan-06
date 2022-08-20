@@ -1,6 +1,8 @@
 package com.woowahan.data.repository
 
 import com.woowahan.data.datasource.OrderDataSource
+import com.woowahan.domain.model.CartModel
+import com.woowahan.domain.model.OrderItemModel
 import com.woowahan.domain.model.OrderModel
 import com.woowahan.domain.repository.OrderRepository
 import com.woowahan.domain.util.BanchanDateConvertUtil
@@ -18,14 +20,10 @@ class OrderRepositoryImpl @Inject constructor(
 
     override suspend fun insertOrder(
         time: String,
-        hash: String,
-        imageUrl: String,
-        title: String,
-        count: Int,
-        price: Long
+        items: List<OrderItemModel>
     ): Flow<Long> = flow {
         orderDataSource.insertOrder(
-            time, hash, imageUrl, title, count, price
+            time, items
         ).collect {
             emit(it)
         }

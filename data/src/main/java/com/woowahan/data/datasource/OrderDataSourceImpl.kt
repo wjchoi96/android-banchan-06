@@ -4,6 +4,7 @@ import com.woowahan.data.dao.OrderDao
 import com.woowahan.data.entity.dto.OrderEntity
 import com.woowahan.data.entity.table.OrderItemTableEntity
 import com.woowahan.data.entity.table.OrderTableEntity
+import com.woowahan.domain.model.OrderItemModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
@@ -18,15 +19,19 @@ class OrderDataSourceImpl @Inject constructor(
 
     override suspend fun insertOrder(
         time: String,
-        hash: String,
-        imageUrl: String,
-        title: String,
-        count: Int,
-        price: Long
+        items: List<OrderItemModel>
     ): Flow<Long> = flow {
         emit(
             orderDao.insertOrder(
-                OrderTableEntity(time), OrderItemTableEntity(0L, hash, imageUrl, title, count, price)
+                OrderTableEntity(time),
+                items.map { OrderItemTableEntity(
+                    0L,
+                    it.hash,
+                    it.imageUrl,
+                    it.title,
+                    it.count,
+                    it.price
+                ) }
             )
         )
     }
