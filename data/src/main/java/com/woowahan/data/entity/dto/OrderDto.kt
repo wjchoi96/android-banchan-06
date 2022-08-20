@@ -18,12 +18,14 @@ data class OrderDto(
     fun toEntity(): OrderEntity = OrderEntity(
         order.id,
         order.time,
-        orderItemInforms
+        orderItemInforms,
+        order.deliveryState
     )
 }
 
 data class OrderEntity(
     val orderId: Long,
     val time: String,
-    val items: List<OrderItemTableEntity>
+    val items: List<OrderItemTableEntity>,
+    val deliveryState: Boolean
 )
