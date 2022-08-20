@@ -16,20 +16,20 @@ object RepositoryModule {
     @Provides
     fun provideBanchanRepository(
         banchansDataSource: BanchansDataSource,
-        @DefaultDispatcher dispatcher: CoroutineDispatcher
+        @IODispatcher dispatcher: CoroutineDispatcher
     ): BanchanRepository = BanchanRepositoryImpl(banchansDataSource, dispatcher)
 
     @Provides
     fun provideBanchanDetailRepository(
         banchansDetailDataSource: BanchanDetailDataSource,
-        @DefaultDispatcher dispatcher: CoroutineDispatcher
+        @IODispatcher dispatcher: CoroutineDispatcher
     ): BanchanDetailRepository = BanchanDetailRepositoryImpl(banchansDetailDataSource, dispatcher)
 
     @Provides
     fun provideCartRepository(
         cartDataSource: CartDataSource,
         banchanDetailDataSource: BanchanDetailDataSource,
-        @DefaultDispatcher dispatcher: CoroutineDispatcher
+        @IODispatcher dispatcher: CoroutineDispatcher
     ): CartRepository = CartRepositoryImpl(cartDataSource, banchanDetailDataSource, dispatcher)
 
 
@@ -37,7 +37,7 @@ object RepositoryModule {
     fun provideRecentViewedRepository(
         recentViewedDataSource: RecentViewedDataSource,
         banchanDetailDataSource: BanchanDetailDataSource,
-        @DefaultDispatcher coroutineDispatcher: CoroutineDispatcher
+        @IODispatcher coroutineDispatcher: CoroutineDispatcher
     ): RecentViewedRepository = RecentViewedRepositoryImpl(
         recentViewedDataSource,
         banchanDetailDataSource,

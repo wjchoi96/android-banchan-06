@@ -5,11 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.domain.usecase.cart.GetCartItemsSizeFlowUseCase
 import com.woowahan.domain.usecase.order.GetDeliveryOrderCountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,16 +28,28 @@ class RootViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                getCartItemsSizeFlowUseCase().collect {
-                    _cartItemSize.emit(it)
+                getCartItemsSizeFlowUseCase()
+                    .flowOn(Dispatchers.Default)
+                    .collect { flow ->
+                        flow.onSuccess {
+                            _cartItemSize.emit(it)
+                        }.onFailureWithData { it, data ->
+                            it.printStackTrace()
+                            Timber.d("catch debug onFailure $it")
+                            data?.let {
+                                _cartItemSize.emit(it)
+                            }
+                        }
                 }
             }
 
             launch {
-                getDeliveryOrderCountUseCase().collect {
-                    it.onSuccess { count ->
-                        _deliveryItemSize.emit(count)
-                    }
+                getDeliveryOrderCountUseCase()
+                    .flowOn(Dispatchers.Default)
+                    .collect {
+                        it.onSuccess { count ->
+                            _deliveryItemSize.emit(count)
+                        }
                 }
             }
         }

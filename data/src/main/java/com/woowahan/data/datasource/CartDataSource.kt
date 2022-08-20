@@ -9,13 +9,11 @@ interface CartDataSource {
 
     suspend fun insertCartItem(hash: String, title: String, count: Int)
 
-    suspend fun removeCartItem(vararg hashes: String): Int
+    suspend fun removeCartItem(vararg hashes: String): Flow<Int>
 
-    suspend fun updateCartItemCount(hash: String, count: Int): Int
+    suspend fun updateCartItemCount(hash: String, count: Int): Flow<Int>
 
-    suspend fun updateCartItemSelect(isSelect: Boolean, vararg hashes: String): Int
+    suspend fun updateCartItemSelect(isSelect: Boolean, vararg hashes: String): Flow<Int>
 
-    suspend fun fetchCartItems(): List<CartEntity>
-
-    suspend fun fetchCartItemsFlow(): Flow<List<CartEntity>>
+    suspend fun fetchCartItems(): Flow<List<CartEntity>>
 }

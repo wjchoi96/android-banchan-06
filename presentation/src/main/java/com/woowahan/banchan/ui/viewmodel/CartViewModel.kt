@@ -48,10 +48,13 @@ class CartViewModel @Inject constructor(
             fetchCartItemsUseCase().collect {
                 it.onSuccess {
                     _cartItems.value = it
-                }.onFailure {
+                }.onFailureWithData { it, data ->
                     it.printStackTrace()
                     it.message?.let { message ->
                         _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                    data?.let {
+                        _cartItems.value = it
                     }
                 }.also {
                     _dataLoading.value = false
@@ -66,60 +69,48 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemUseCase(*(items.map { it.cart.hash }).toTypedArray())
-                .onSuccess { isSuccess ->
-                    if (!isSuccess) {
-                        _eventFlow.emit(UiEvent.ShowToast("Can't delete items"))
+                .flowOn(Dispatchers.Default)
+                .collect { event ->
+                    event.onSuccess { isSuccess ->
+                        if (!isSuccess) {
+                            _eventFlow.emit(UiEvent.ShowToast("Can't delete items"))
+                        }
                     }
-                }
-                .onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                    }
-                }.also {
-                    _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
+                        .onFailure {
+                            it.printStackTrace()
+                            it.message?.let { message ->
+                                _eventFlow.emit(UiEvent.ShowToast(message))
+                            }
+                        }.also {
+                            _dataLoading.value = false
+                            if (_refreshDataLoading.value)
+                                _refreshDataLoading.value = false
+                        }
                 }
         }
-    }
-
-    private suspend inline fun clearCart(items: List<CartModel>, successEvent: (Boolean)->Unit) {
-        _dataLoading.value = true
-        removeCartItemUseCase(*(items.map { it.hash }).toTypedArray())
-            .onSuccess { isSuccess ->
-                successEvent(isSuccess)
-            }
-            .onFailure {
-                it.printStackTrace()
-                it.message?.let { message ->
-                    _eventFlow.emit(UiEvent.ShowToast(message))
-                }
-            }.also {
-                _dataLoading.value = false
-                if (_refreshDataLoading.value)
-                    _refreshDataLoading.value = false
-            }
     }
 
     private fun removeCartItem(hash: String) {
         viewModelScope.launch {
             _dataLoading.value = true
             removeCartItemUseCase(hash)
-                .onSuccess { isSuccess ->
-                    if (!isSuccess) {
-                        _eventFlow.emit(UiEvent.ShowToast("Can't delete item"))
+                .flowOn(Dispatchers.Default)
+                .collect { event ->
+                    event.onSuccess { isSuccess ->
+                        if (!isSuccess) {
+                            _eventFlow.emit(UiEvent.ShowToast("Can't delete item"))
+                        }
                     }
-                }
-                .onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                    }
-                }.also {
-                    _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
+                        .onFailure {
+                            it.printStackTrace()
+                            it.message?.let { message ->
+                                _eventFlow.emit(UiEvent.ShowToast(message))
+                            }
+                        }.also {
+                            _dataLoading.value = false
+                            if (_refreshDataLoading.value)
+                                _refreshDataLoading.value = false
+                        }
                 }
         }
     }
@@ -128,17 +119,20 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             _dataLoading.value = true
             updateCartItemCountUseCase(hash, count)
-                .onSuccess { isSuccess ->
-                }
-                .onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
+                .flowOn(Dispatchers.Default)
+                .collect { event ->
+                    event.onSuccess { isSuccess ->
                     }
-                }.also {
-                    _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
+                        .onFailure {
+                            it.printStackTrace()
+                            it.message?.let { message ->
+                                _eventFlow.emit(UiEvent.ShowToast(message))
+                            }
+                        }.also {
+                            _dataLoading.value = false
+                            if (_refreshDataLoading.value)
+                                _refreshDataLoading.value = false
+                        }
                 }
         }
     }
@@ -150,20 +144,23 @@ class CartViewModel @Inject constructor(
                 isSelect,
                 *(_cartItems.value.filterIsInstance<CartListItemModel.Content>().map { it.cart.hash }).toTypedArray()
             )
-                .onSuccess { isSuccess ->
-                    if (!isSuccess) {
-                        _eventFlow.emit(UiEvent.ShowToast("Can't select all"))
+                .flowOn(Dispatchers.Default)
+                .collect { event ->
+                    event.onSuccess { isSuccess ->
+                        if (!isSuccess) {
+                            _eventFlow.emit(UiEvent.ShowToast("Can't select all"))
+                        }
                     }
-                }
-                .onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                    }
-                }.also {
-                    _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
+                        .onFailure {
+                            it.printStackTrace()
+                            it.message?.let { message ->
+                                _eventFlow.emit(UiEvent.ShowToast(message))
+                            }
+                        }.also {
+                            _dataLoading.value = false
+                            if (_refreshDataLoading.value)
+                                _refreshDataLoading.value = false
+                        }
                 }
         }
     }
@@ -172,20 +169,23 @@ class CartViewModel @Inject constructor(
         viewModelScope.launch {
             _dataLoading.value = true
             updateCartItemSelectUseCase(isSelect, cartModel.hash)
-                .onSuccess { isSuccess ->
-                    if (!isSuccess) {
-                        _eventFlow.emit(UiEvent.ShowToast("Can't select all"))
+                .flowOn(Dispatchers.Default)
+                .collect { event ->
+                    event.onSuccess { isSuccess ->
+                        if (!isSuccess) {
+                            _eventFlow.emit(UiEvent.ShowToast("Can't select all"))
+                        }
                     }
-                }
-                .onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                    }
-                }.also {
-                    _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
+                        .onFailure {
+                            it.printStackTrace()
+                            it.message?.let { message ->
+                                _eventFlow.emit(UiEvent.ShowToast(message))
+                            }
+                        }.also {
+                            _dataLoading.value = false
+                            if (_refreshDataLoading.value)
+                                _refreshDataLoading.value = false
+                        }
                 }
         }
     }
@@ -231,12 +231,7 @@ class CartViewModel @Inject constructor(
             ).flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
-                        clearCart(orderItems){
-                            when(it){
-                                true -> _eventFlow.emit(UiEvent.GoToOrderList)
-                                else -> _eventFlow.emit(UiEvent.ShowToast("Can't order"))
-                            }
-                        }
+                        clearCart(orderItems)
                     }.onFailure {
                         it.message?.let {
                             _eventFlow.emit(UiEvent.ShowToast(it))
@@ -248,6 +243,29 @@ class CartViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    private suspend fun clearCart(items: List<CartModel>) {
+        _dataLoading.value = true
+        removeCartItemUseCase(*(items.map { it.hash }).toTypedArray())
+            .flowOn(Dispatchers.Default)
+            .collect { event ->
+                event.onSuccess { isSuccess ->
+                    when(isSuccess){
+                        true -> _eventFlow.emit(UiEvent.GoToOrderList)
+                        else -> _eventFlow.emit(UiEvent.ShowToast("Can't order"))
+                    }
+                }.onFailure {
+                    it.printStackTrace()
+                    it.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                    }
+                }.also {
+                    _dataLoading.value = false
+                    if (_refreshDataLoading.value)
+                        _refreshDataLoading.value = false
+                }
+            }
     }
 
     fun onRefresh() {
