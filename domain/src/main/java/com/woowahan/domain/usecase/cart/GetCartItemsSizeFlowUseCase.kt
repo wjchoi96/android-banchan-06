@@ -13,10 +13,8 @@ class GetCartItemsSizeFlowUseCase(
         cartRepository.getCartSizeFlow()
             .collect {
                 emit(DomainEvent.success(it))
-                emit(DomainEvent.failure(Throwable("use case test")))
-                throw Throwable("test at UseCase") // 아래 catch 로 들어감
             }
     }.catch {
-        emit(DomainEvent.failure(Throwable(it), 8))
+        emit(DomainEvent.failure(Throwable(it)))
     }
 }
