@@ -1,11 +1,11 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
+import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.FetchCartItemsUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
 import com.woowahan.domain.usecase.cart.UpdateCartItemCountUseCase
@@ -36,6 +36,10 @@ class CartViewModel @Inject constructor(
     private val _cartItems: MutableStateFlow<List<CartListItemModel>> =
         MutableStateFlow(emptyList())
     val cartItems = _cartItems.asStateFlow()
+
+    private val _recentViewedItems: MutableStateFlow<List<RecentViewedItemModel>> =
+        MutableStateFlow(emptyList())
+    val recentViewedItems = _recentViewedItems.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> =
         MutableSharedFlow()

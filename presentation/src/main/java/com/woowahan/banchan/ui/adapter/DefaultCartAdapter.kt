@@ -3,11 +3,14 @@ package com.woowahan.banchan.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemCartContentBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
+import com.woowahan.banchan.extension.addControlHorizontalScrollListener
 import com.woowahan.banchan.extension.toCashString
+import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +25,8 @@ class DefaultCartAdapter(
     private val selectItem: (CartModel, Boolean) -> Unit,
     private val deleteItem: (CartModel) -> Unit,
     private val updateItem: (CartModel, Int) -> Unit,
-    private val orderClicked: () -> Unit
+    private val orderClicked: () -> Unit,
+    private val moveToRecentViewedActivity: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
     fun updateList(newList: List<CartListItemModel>) {
@@ -138,12 +142,17 @@ class DefaultCartAdapter(
 
     class CartFooterViewHolder(
         private val binding: ItemCartFooterBinding,
+        val moveToRecentViewedActivity: () -> Unit,
         val orderClicked: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val recentViewedAdapter: RecentViewedHorizontalAdapter by lazy {
+            RecentViewedHorizontalAdapter(onItemCLick = {})
+        }
 
         companion object {
             fun from(
                 parent: ViewGroup,
+                moveToRecentViewedActivity: () -> Unit,
                 orderClicked: () -> Unit
             ): CartFooterViewHolder =
                 CartFooterViewHolder(
@@ -152,6 +161,7 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
+                    moveToRecentViewedActivity,
                     orderClicked
                 )
         }
@@ -169,7 +179,9 @@ class DefaultCartAdapter(
             }
             binding.menuPrice = item.price
             binding.totalPrice = item.totalPrice
-            binding.isViewedItemEmpty = false
+            binding.recentViewedAdapter = recentViewedAdapter
+            binding.isViewedItemEmpty = item.recentViewedItems.isEmpty()
+            recentViewedAdapter.updateList(item.recentViewedItems)
         }
 
         fun bindTotalPrice(item: CartListItemModel.Footer) {
@@ -181,7 +193,6 @@ class DefaultCartAdapter(
             } else {
                 "최소주문금액을 확인해주세요"
             }
-            binding.isViewedItemEmpty = false
         }
     }
 
@@ -200,7 +211,8 @@ class DefaultCartAdapter(
             )
             else -> CartFooterViewHolder.from(
                 parent,
-                orderClicked = orderClicked
+                orderClicked = orderClicked,
+                moveToRecentViewedActivity = moveToRecentViewedActivity
             )
         }
     }

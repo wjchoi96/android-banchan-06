@@ -14,6 +14,7 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,20 +33,22 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
     override val layoutResId: Int
         get() = R.layout.activity_cart
 
-    private val adapter: DefaultCartAdapter by lazy {
+    private val cartAdapter: DefaultCartAdapter by lazy {
         DefaultCartAdapter(
             selectAll = viewModel.selectAllItems,
             deleteAllSelected = viewModel.deleteAllSelectedItems,
             deleteItem = viewModel.deleteItem,
             updateItem = viewModel.updateItemCount,
             orderClicked = viewModel.orderItems,
-            selectItem = viewModel.selectItem
+            selectItem = viewModel.selectItem,
+            moveToRecentViewedActivity = {
+                startActivity(RecentViewedActivity.get(this))
+            }
         )
     }
 
     override fun onStart() {
         super.onStart()
-
         viewModel.fetchCartItems()
     }
 
@@ -53,7 +56,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
-        binding.adapter = adapter
+        binding.adapter = cartAdapter
         binding.title = getString(R.string.cart_title)
         binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener { onBackPressed() }
 
@@ -79,7 +82,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
 
         repeatOnStarted {
             viewModel.cartItems.collect {
-                adapter.updateList(it)
+                cartAdapter.updateList(it)
             }
         }
     }
