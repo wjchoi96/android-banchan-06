@@ -12,6 +12,13 @@ sealed class DomainEvent<T> {
         fun <T>failure(throwable: Throwable, data: T? = null): Failure<T> = Failure(throwable, data)
     }
 
+    fun getOrThrow(): T {
+        return when(this) {
+            is Success -> this.data
+            is Failure -> throw this.throwable
+        }
+    }
+
     inline fun onSuccess(block: (T) -> Unit): DomainEvent<T> {
         when(this){
             is Success -> block(data)
