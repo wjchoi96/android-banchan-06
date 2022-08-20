@@ -168,9 +168,14 @@ class DefaultCartAdapter(
 
         fun bind(item: CartListItemModel.Footer) {
             binding.holder = this
-            binding.footerItem = item
-            binding.freeDelivery = (40000L - item.price).toCashString()
-            binding.isFreeDelivery = (40000L <= item.price)
+            val freeDelivery = (40000L - item.price)
+            binding.freeDelivery = freeDelivery.toCashString()
+            binding.isFreeDelivery = (freeDelivery <= 0)
+            if (freeDelivery <= 0) {
+                binding.footerItem = item.copy(deliveryFee = 0L)
+            } else {
+                binding.footerItem = item
+            }
             binding.btnEnabled = (10000L <= item.price)
             binding.btnText = if (10000L <= item.price) {
                 "${item.totalPrice.toCashString()}원 주문하기"
@@ -192,6 +197,15 @@ class DefaultCartAdapter(
                 "${item.totalPrice.toCashString()}원 주문하기"
             } else {
                 "최소주문금액을 확인해주세요"
+            }
+
+            val freeDelivery = (40000L - item.price)
+            binding.freeDelivery = freeDelivery.toCashString()
+            binding.isFreeDelivery = (freeDelivery <= 0)
+            if (freeDelivery <= 0) {
+                binding.footerItem = item.copy(deliveryFee = 0L)
+            } else {
+                binding.footerItem = item
             }
         }
     }
