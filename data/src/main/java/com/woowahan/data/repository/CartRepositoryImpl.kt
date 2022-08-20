@@ -2,15 +2,15 @@ package com.woowahan.data.repository
 
 import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.CartDataSource
+import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.domain.extension.priceStrToLong
+import com.woowahan.domain.model.BanchanDetailModel
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
@@ -19,87 +19,87 @@ class CartRepositoryImpl @Inject constructor(
     private val coroutineDispatcher: CoroutineDispatcher
 ) : CartRepository {
 
-    override fun getCartSizeFlow(): Flow<Int> {
-        return cartDataSource.getCartSizeFlow()
-    }
+    private val cacheMap = mutableMapOf<String, BanchanDetailEntity>()
+
+    override fun getCartSizeFlow(): Flow<Int> = flow {
+        cartDataSource.getCartSizeFlow()
+            .collect {
+                emit(it)
+            }
+    }.flowOn(coroutineDispatcher)
 
     override suspend fun insertCartItem(
         banchan: BaseBanchan,
         count: Int
-    ): Result<Boolean> {
-        return withContext(coroutineDispatcher) {
-            kotlin.runCatching {
-                cartDataSource.insertCartItem(banchan.hash, banchan.title, count)
-                true
-            }
-        }
-    }
+    ): Flow<Boolean> = flow {
+        cartDataSource.insertCartItem(banchan.hash, banchan.title, count)
+        emit(true)
+    }.flowOn(coroutineDispatcher)
 
-    override suspend fun removeCartItem(vararg hashes: String): Result<Boolean> {
-        return withContext(coroutineDispatcher) {
-            kotlin.runCatching {
-                cartDataSource.removeCartItem(*hashes) != 0
+    override suspend fun removeCartItem(vararg hashes: String): Flow<Boolean> = flow {
+        cartDataSource.removeCartItem(*hashes)
+            .collect {
+                emit(it != 0)
             }
-        }
-    }
+    }.flowOn(coroutineDispatcher)
 
-    override suspend fun updateCartItemCount(hash: String, count: Int): Result<Boolean> {
-        return withContext(coroutineDispatcher) {
-            kotlin.runCatching {
-                cartDataSource.updateCartItemCount(hash, count) != 0
+    override suspend fun updateCartItemCount(hash: String, count: Int): Flow<Boolean> = flow {
+        cartDataSource.updateCartItemCount(hash, count)
+            .collect {
+                emit(it != 0)
             }
-        }
-    }
+    }.flowOn(coroutineDispatcher)
 
     override suspend fun updateCartItemSelect(
         isSelect: Boolean,
         vararg hashes: String,
-    ): Result<Boolean> {
-        return withContext(coroutineDispatcher) {
-            kotlin.runCatching {
-                cartDataSource.updateCartItemSelect(isSelect, *hashes) != 0
+    ): Flow<Boolean> = flow {
+        cartDataSource.updateCartItemSelect(isSelect, *hashes)
+            .collect {
+                emit(it != 0)
             }
-        }
-    }
+    }.flowOn(coroutineDispatcher)
 
-    override suspend fun fetchCartItemsKey(): Result<Set<String>> {
-        return withContext(coroutineDispatcher) {
-            kotlin.runCatching {
-                cartDataSource.fetchCartItems().groupBy { it.hash }.keys
+    override suspend fun fetchCartItemsKey(): Flow<Set<String>> = flow {
+        cartDataSource.fetchCartItems()
+            .collect {
+                emit(it.groupBy { item -> item.hash }.keys)
             }
-        }
-    }
+    }.flowOn(coroutineDispatcher)
 
-    override suspend fun fetchCartItems(): Flow<Result<List<CartModel>>> {
-        return cartDataSource.fetchCartItemsFlow()
-            .map { list ->
-                kotlin.runCatching {
-                    coroutineScope {
-                        val detailMap = list.map {
-                            async {
-                                println("fetchCartItems async run => ${it.hash}")
-                                banchanDetailDataSource.fetchBanchanDetail(it.hash)
+    override suspend fun fetchCartItems(): Flow<List<CartModel>> = flow<List<CartModel>> {
+        cartDataSource.fetchCartItems()
+            .collect { list ->
+                coroutineScope {
+                    list.map {
+                        async {
+                            when(cacheMap.containsKey(it.hash)){
+                                true -> cacheMap[it.hash]!!
+                                else -> {
+                                    println("fetchCartItems async run => ${it.hash}")
+                                    banchanDetailDataSource.fetchBanchanDetail(it.hash).firstOrNull()?.also {
+                                        cacheMap[it.hash] = it
+                                    }
+                                }
                             }
-                        }.awaitAll().associateBy { item -> item.hash }
-                        println("fetchCartItems async list finish")
+                        }
+                    }.awaitAll()
 
-                        val res = list.map {
-                            val detail = detailMap[it.hash]!!
-
+                    val res = list.map {
+                        cacheMap[it.hash]!!.run {
                             CartModel(
                                 hash = it.hash,
                                 count = it.count,
                                 title = it.title,
-                                imageUrl = detail.data.thumbImages.first(),
-                                price = detail.data.prices.last().priceStrToLong(),
+                                imageUrl = this.data.thumbImages.first(),
+                                price = this.data.prices.last().priceStrToLong(),
                                 isSelected = it.isSelect
                             )
                         }
-                        println("fetchCartItems res => $res")
-                        res
                     }
+                    emit(res)
                 }
-            }.flowOn(coroutineDispatcher)
-    }
+            }
+    }.flowOn(coroutineDispatcher)
 
 }

@@ -29,9 +29,5 @@ interface CartDao {
 
     @Transaction
     @Query("SELECT * FROM ${CartTableEntity.TABLE_NAME}")
-    fun fetchCartItems(): List<CartDto>
-
-    @Transaction
-    @Query("SELECT * FROM ${CartTableEntity.TABLE_NAME}")
-    fun fetchCartItemsFlow(): Flow<List<CartDto>>
+    fun fetchCartItems(): Flow<List<CartDto>>
 }

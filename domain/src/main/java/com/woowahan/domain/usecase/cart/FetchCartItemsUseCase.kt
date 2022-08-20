@@ -1,30 +1,35 @@
 package com.woowahan.domain.usecase.cart
 
 import com.woowahan.domain.model.CartListItemModel
+import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.repository.CartRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 
 class FetchCartItemsUseCase(
     private val cartRepository: CartRepository
 ) {
-    suspend operator fun invoke(): Flow<Result<List<CartListItemModel>>> {
-        return cartRepository.fetchCartItems()
-            .map {
-                kotlin.runCatching {
-                    val list = it.getOrThrow()
-                    val price = list.filter { it.isSelected }.sumOf { it.price * it.count }
-
-                    listOf(
-                        CartListItemModel.Header(
-                            isAllSelected = (list.none { !(it.isSelected) } && list.isNotEmpty())
-                        )
-                    ) + list.map { CartListItemModel.Content(it) } + listOf(
-                        CartListItemModel.Footer(
-                            price = price
-                        )
+    suspend operator fun invoke(): Flow<DomainEvent<List<CartListItemModel>>> = flow<DomainEvent<List<CartListItemModel>>> {
+        cartRepository.fetchCartItems()
+            .collect { list ->
+                val price = list.filter { it.isSelected }.sumOf { it.price * it.count }
+                emit(DomainEvent.success(listOf(
+                    CartListItemModel.Header(
+                        isAllSelected = (list.none { !(it.isSelected) } && list.isNotEmpty())
                     )
-                }
+                ) + list.map { CartListItemModel.Content(it) } + listOf(
+                    CartListItemModel.Footer(
+                        price = price
+                    )
+                )))
             }
+    }.catch {
+        emit(DomainEvent.failure(
+            it, listOf(
+                CartListItemModel.Header(false),
+                CartListItemModel.Footer(
+                    price = 0L
+                )
+            )
+        ))
     }
 }

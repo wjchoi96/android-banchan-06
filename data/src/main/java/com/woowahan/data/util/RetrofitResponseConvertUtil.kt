@@ -1,8 +1,8 @@
 package com.woowahan.data.util
 
-import com.woowahan.data.entity.ApiBodyIsNull
-import com.woowahan.data.entity.ApiIsNotSuccessful
-import com.woowahan.data.entity.ApiStatusCodeNotOk
+import com.woowahan.domain.model.ApiBodyIsNull
+import com.woowahan.domain.model.ApiIsNotSuccessful
+import com.woowahan.domain.model.ApiStatusCodeNotOk
 import retrofit2.Response
 
 object RetrofitResponseConvertUtil {
