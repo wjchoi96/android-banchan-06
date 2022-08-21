@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.order
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
@@ -41,6 +42,11 @@ class OrderItemActivity : BaseActivity<ActivityOrderItemBinding>() {
 
     override val layoutResId: Int
         get() = R.layout.activity_order_item
+
+    override fun onBackPressed() {
+        setResult(Activity.RESULT_OK)
+        super.onBackPressed()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

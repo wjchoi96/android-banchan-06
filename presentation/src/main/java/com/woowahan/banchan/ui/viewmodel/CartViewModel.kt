@@ -38,6 +38,9 @@ class CartViewModel @Inject constructor(
         MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    val isCartItemIsEmpty: Boolean
+        get() = _cartItems.value.size == 2
+
     fun fetchCartItems() {
         if (_dataLoading.value) {
             _refreshDataLoading.value = false
