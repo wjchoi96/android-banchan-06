@@ -47,7 +47,7 @@ class OrderItemViewModel @Inject constructor(
     fun fetchOrder(){
         viewModelScope.launch {
             if(orderId == -1L){
-                _eventFlow.emit(UiEvent.FinishView())
+                _eventFlow.emit(UiEvent.FinishView("잘못된 주문번호입니다"))
                 return@launch
             }
             _dataLoading.value = true

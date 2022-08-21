@@ -109,11 +109,6 @@ class OrderItemActivity : BaseActivity<ActivityOrderItemBinding>() {
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchOrder()
-    }
-
     private fun observeData(){
         repeatOnStarted {
             launch {
@@ -134,6 +129,8 @@ class OrderItemActivity : BaseActivity<ActivityOrderItemBinding>() {
                     adapter.updateList(it)
                 }
             }
+
+            viewModel.fetchOrder()
         }
     }
 }
