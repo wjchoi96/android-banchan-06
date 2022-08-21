@@ -36,4 +36,7 @@
     <string name="order_state_finish_title">배송이 완료되었습니다</string>
     <string name="order_state_time_title">배송까지 남은 시간</string>
     <string name="order_state_count_title">주문한 상품</string>
+    <string name="order_items_title">%1$s 외 %2$d개</string>
+    <string name="order_list_item_state_delivery_title">배송 준비중</string>
+    <string name="order_list_item_state_finish_title">배송완료</string>
 </resources>
