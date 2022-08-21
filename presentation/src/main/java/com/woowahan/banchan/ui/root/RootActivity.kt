@@ -1,8 +1,6 @@
 package com.woowahan.banchan.ui.root
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -12,16 +10,15 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityMainBinding
 import com.woowahan.banchan.extension.repeatOnStarted
-import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.bestbanchan.BestBanchanFragment
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanFragment
+import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
 import com.woowahan.banchan.ui.viewmodel.RootViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -54,16 +51,11 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
     }
 
     private fun setListener(){
-        // use at main tool bar
         binding.layoutIncludeToolBar.toolBar.setOnMenuItemClickListener {
             Timber.d("menu item click => ${it.title}")
             return@setOnMenuItemClickListener when(it.itemId){
-                R.id.menu_main_action_bar_cart -> {
-                    showToast("cart")
-                    true
-                }
                 R.id.menu_main_action_bar_order -> {
-                    showToast("order")
+                    startActivity(OrderListActivity.get(this))
                     true
                 }
                 else -> false
@@ -74,11 +66,6 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
             (it.findViewById(R.id.iv_cart_image) as ImageView).setOnClickListener {
                 startActivity(CartActivity.get(this))
             }
-        }
-
-        // use at sub tool bar
-        binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener {
-            showToast("back")
         }
     }
 
