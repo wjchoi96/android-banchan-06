@@ -36,7 +36,7 @@ interface OrderDao {
     fun fetchOrder(orderId: Long): Flow<OrderDto>
 
     @Transaction
-    @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}`")
+    @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}` ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) DESC")
     fun fetchOrders(): Flow<List<OrderDto>>
 
     // true => 1
