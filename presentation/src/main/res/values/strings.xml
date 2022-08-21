@@ -39,4 +39,6 @@
     <string name="order_items_title">%1$s 외 %2$d개</string>
     <string name="order_list_item_state_delivery_title">배송 준비중</string>
     <string name="order_list_item_state_finish_title">배송완료</string>
+    <string name="order_title">Order List</string>
+
 </resources>
