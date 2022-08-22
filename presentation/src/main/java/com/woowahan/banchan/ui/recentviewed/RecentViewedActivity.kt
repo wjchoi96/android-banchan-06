@@ -16,6 +16,7 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.RecentViewedAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -115,7 +116,7 @@ class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
                     }
 
                     is RecentViewedViewModel.UiEvent.ShowCartView -> {
-                        //TODO: startActivity(CartActivity.get(requireContext())
+                        startActivity(CartActivity.get(this@RecentViewedActivity))
                     }
 
                     is RecentViewedViewModel.UiEvent.ShowDetailView -> {
