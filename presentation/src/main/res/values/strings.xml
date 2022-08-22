@@ -49,4 +49,7 @@
     <string name="banchan_detail_quantity">수량</string>
     <string name="banchan_detail_total_price">총 주문금액</string>
     <string name="banchan_detail_order_text">주문하기</string>
+    <string name="banchan_detail_point_title">적립금</string>
+    <string name="banchan_detail_delivery_info_title">배송정보</string>
+    <string name="banchan_detail_delivery_fee_title">배송비</string>
 </resources>
