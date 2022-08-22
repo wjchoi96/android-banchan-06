@@ -12,7 +12,7 @@ import com.woowahan.banchan.R
 import com.woowahan.banchan.ui.order.OrderItemActivity
 
 object NotificationUtil {
-    private val channelId = "orderChannel"
+    private const val channelId = "orderChannel"
 
     fun createNotification(
         context: Context,
@@ -36,7 +36,7 @@ object NotificationUtil {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(context.getString(R.string.order_complete))
-            .setContentText("${itemName ?: "상품"}의 ${context.getString(R.string.order_complete)}")
+            .setContentText(context.getString(R.string.order_complete_content, itemName ?: context.getString(R.string.order_default_product)))
             .setContentIntent(resultPendingIntent)
             .setAutoCancel(true)
             .setDefaults(Notification.DEFAULT_VIBRATE)
