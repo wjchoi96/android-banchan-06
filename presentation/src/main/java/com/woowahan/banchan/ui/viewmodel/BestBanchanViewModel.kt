@@ -80,7 +80,6 @@ class BestBanchanViewModel @Inject constructor(
 
     val itemClickListener: (BanchanModel) -> Unit = { banchan ->
         viewModelScope.launch {
-            insertRecentViewedItemUseCase(banchan, Date()).collect {}
             _eventFlow.emit(UiEvent.ShowDetailView(banchan))
         }
     }
