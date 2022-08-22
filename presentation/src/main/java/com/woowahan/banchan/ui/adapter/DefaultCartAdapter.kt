@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.adapter
 
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -79,8 +80,8 @@ class DefaultCartAdapter(
         val deleteItem: (CartModel) -> Unit,
         val updateItem: (CartModel, Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private val onFocusChange: (CartModel, Boolean) -> Unit = { item, hasFocus ->
-            if (!hasFocus) {
+        private val onQuantityChange: (CartModel, Boolean) -> Unit = { item, needToChange ->
+            if (needToChange) {
                 if (binding.edtQuantity.text.isEmpty()) {
                     binding.edtQuantity.setText("1")
                 }
@@ -114,7 +115,15 @@ class DefaultCartAdapter(
             binding.isSelected = item.isSelected
 
             binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
-                onFocusChange(item, hasFocus)
+                onQuantityChange(item, !hasFocus)
+            }
+
+            binding.edtQuantity.setOnKeyListener { v, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_ENTER){
+                    onQuantityChange(item, true)
+                    true
+                }
+                false
             }
         }
 
@@ -124,7 +133,7 @@ class DefaultCartAdapter(
             binding.totalPrice = (item.cart.price * item.cart.count)
 
             binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
-                onFocusChange(item.cart, hasFocus)
+                onQuantityChange(item.cart, hasFocus)
             }
         }
 
@@ -133,7 +142,7 @@ class DefaultCartAdapter(
             binding.cartItem = item.cart
 
             binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
-                onFocusChange(item.cart, hasFocus)
+                onQuantityChange(item.cart, hasFocus)
             }
         }
     }
