@@ -28,6 +28,9 @@
     <string name="cart_recent_viewed">최근 본 상품</string>
     <string name="cart_view_all">전체보기</string>
     <string name="cart_title">Cart</string>
+    <string name="no_cart_item">상품이 없습니다.</string>
+    <string name="order_btn_text">%1$s원 주문하기</string>
+    <string name="order_btn_disabled">최소주문금액을 확인해주세요</string>
 
     <string name="count_str">%1$d 개</string>
     <string name="total_count_str">총 %1$d 개</string>
@@ -40,8 +43,6 @@
     <string name="order_list_item_state_delivery_title">배송 준비중</string>
     <string name="order_list_item_state_finish_title">배송완료</string>
     <string name="order_title">Order List</string>
-
-
     <string name="order_default_product">상품</string>
     <string name="order_complete">배송이 완료되었습니다.</string>
     <string name="order_complete_content">%1$s의 배송이 완료되었습니다.</string>

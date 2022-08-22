@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.banchan.CartListModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemCartContentBinding
+import com.woowahan.banchan.databinding.ItemCartEmptyBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
@@ -22,9 +22,9 @@ class DefaultCartAdapter(
     private val deleteAllSelected: () -> Unit,
     private val selectItem: (CartModel, Boolean) -> Unit,
     private val deleteItem: (CartModel) -> Unit,
-    private val minusClicked: (CartModel) -> Unit,
-    private val plusClicked: (CartModel) -> Unit,
-    private val orderClicked: () -> Unit
+    private val updateItem: (CartModel, Int) -> Unit,
+    private val orderClicked: () -> Unit,
+    private val recentViewedAllClicked: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
     fun updateList(newList: List<CartListItemModel>) {
@@ -77,16 +77,23 @@ class DefaultCartAdapter(
         private val binding: ItemCartContentBinding,
         val selectItem: (CartModel, Boolean) -> Unit,
         val deleteItem: (CartModel) -> Unit,
-        val minusClicked: (CartModel) -> Unit,
-        val plusClicked: (CartModel) -> Unit,
+        val updateItem: (CartModel, Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
+        val onQuantityChange: (CartModel, Boolean) -> Unit = { item, needToChange ->
+            if (needToChange) {
+                if (binding.edtQuantity.text.isEmpty()) {
+                    binding.edtQuantity.setText("1")
+                }
+                updateItem(item, binding.edtQuantity.text.toString().toInt())
+            }
+        }
+
         companion object {
             fun from(
                 parent: ViewGroup,
                 selectItem: (CartModel, Boolean) -> Unit,
                 deleteItem: (CartModel) -> Unit,
-                minusClicked: (CartModel) -> Unit,
-                plusClicked: (CartModel) -> Unit,
+                updateItem: (CartModel, Int) -> Unit,
             ): CartItemViewHolder =
                 CartItemViewHolder(
                     binding = ItemCartContentBinding.inflate(
@@ -94,13 +101,14 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
-                    selectItem, deleteItem, minusClicked, plusClicked
+                    selectItem, deleteItem, updateItem
                 )
         }
 
         fun bind(item: CartModel) {
             binding.cartItem = item
             binding.holder = this
+            binding.isSelected = item.isSelected
             binding.itemCount = item.count
             binding.totalPrice = (item.price * item.count)
             binding.isSelected = item.isSelected
@@ -120,12 +128,17 @@ class DefaultCartAdapter(
 
     class CartFooterViewHolder(
         private val binding: ItemCartFooterBinding,
+        val moveToRecentViewedActivity: () -> Unit,
         val orderClicked: () -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val recentViewedAdapter: RecentViewedHorizontalAdapter by lazy {
+            RecentViewedHorizontalAdapter(onItemCLick = {})
+        }
 
         companion object {
             fun from(
                 parent: ViewGroup,
+                moveToRecentViewedActivity: () -> Unit,
                 orderClicked: () -> Unit
             ): CartFooterViewHolder =
                 CartFooterViewHolder(
@@ -134,36 +147,56 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
+                    moveToRecentViewedActivity,
                     orderClicked
                 )
         }
 
         fun bind(item: CartListItemModel.Footer) {
+            bindTotalPrice(item)
             binding.holder = this
-            binding.footerItem = item
-            binding.freeDelivery = (40000L - item.price).toCashString()
-            binding.isFreeDelivery = (40000L <= item.price)
-            binding.btnEnabled = (10000L <= item.price)
-            binding.btnText = if (10000L <= item.price) {
-                "${item.totalPrice.toCashString()}원 주문하기"
-            } else {
-                "최소주문금액을 확인해주세요"
-            }
-            binding.menuPrice = item.price
-            binding.totalPrice = item.totalPrice
-            binding.isViewedItemEmpty = false
+            binding.recentViewedAdapter = recentViewedAdapter
+            binding.isViewedItemEmpty = item.recentViewedItems.isEmpty()
+            recentViewedAdapter.updateList(item.recentViewedItems)
         }
 
         fun bindTotalPrice(item: CartListItemModel.Footer) {
+            binding.showPrice = item.showPriceInfo
             binding.menuPrice = item.price
             binding.totalPrice = item.totalPrice
             binding.btnEnabled = (10000L <= item.price)
-            binding.btnText = if (10000L <= item.price) {
-                "${item.totalPrice.toCashString()}원 주문하기"
+            val freeDelivery = (40000L - item.price)
+            binding.freeDelivery = freeDelivery.toCashString()
+            binding.isFreeDelivery = (freeDelivery <= 0)
+            if (freeDelivery <= 0) {
+                binding.footerItem = item.copy(deliveryFee = 0L)
             } else {
-                "최소주문금액을 확인해주세요"
+                binding.footerItem = item
             }
-            binding.isViewedItemEmpty = false
+            binding.menuPriceStr = item.price.toCashString()
+        }
+
+        fun bindRecentViewedItems(item: CartListItemModel.Footer) {
+            recentViewedAdapter.updateList(item.recentViewedItems)
+        }
+    }
+
+    class CartItemEmptyViewHolder(
+        private val binding: ItemCartEmptyBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        companion object {
+            fun from(parent: ViewGroup): CartItemEmptyViewHolder =
+                CartItemEmptyViewHolder(
+                    ItemCartEmptyBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+        }
+
+        fun bind() {
+
         }
     }
 
@@ -178,12 +211,13 @@ class DefaultCartAdapter(
                 parent,
                 selectItem = selectItem,
                 deleteItem = deleteItem,
-                minusClicked,
-                plusClicked
+                updateItem = updateItem
             )
+            CartModel.ViewType.Empty.value -> CartItemEmptyViewHolder.from(parent)
             else -> CartFooterViewHolder.from(
                 parent,
-                orderClicked = orderClicked
+                orderClicked = orderClicked,
+                moveToRecentViewedActivity = recentViewedAllClicked
             )
         }
     }
@@ -191,7 +225,13 @@ class DefaultCartAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (cartList[position]) {
             is CartListItemModel.Header -> CartModel.ViewType.Header.value
-            is CartListItemModel.Content -> CartModel.ViewType.Content.value
+            is CartListItemModel.Content -> {
+                if ((cartList[position] as CartListItemModel.Content).cart.isEmpty()) {
+                    CartModel.ViewType.Empty.value
+                } else {
+                    CartModel.ViewType.Content.value
+                }
+            }
             is CartListItemModel.Footer -> CartModel.ViewType.Footer.value
         }
     }
@@ -200,6 +240,7 @@ class DefaultCartAdapter(
         when (holder) {
             is CartHeaderViewHolder -> holder.bind((cartList[position] as CartListItemModel.Header).isAllSelected)
             is CartItemViewHolder -> holder.bind((cartList[position] as CartListItemModel.Content).cart)
+            is CartItemEmptyViewHolder -> holder.bind()
             is CartFooterViewHolder -> holder.bind(cartList[position] as CartListItemModel.Footer)
         }
     }
@@ -222,7 +263,7 @@ class DefaultCartAdapter(
                     }
                 }
 
-                Payload.quantityChanged -> {
+                Payload.QuantityChanged -> {
                     if (holder is CartItemViewHolder) {
                         holder.bindQuantityPayload(cartList[position] as CartListItemModel.Content)
                     }
@@ -234,9 +275,15 @@ class DefaultCartAdapter(
                     }
                 }
 
-                Payload.totalPriceChanged -> {
+                Payload.TotalPriceChanged -> {
                     if (holder is CartFooterViewHolder) {
                         holder.bindTotalPrice(cartList[position] as CartListItemModel.Footer)
+                    }
+                }
+
+                Payload.UpdateRecentViewed -> {
+                    if (holder is CartFooterViewHolder) {
+                        holder.bindRecentViewedItems(cartList[position] as CartListItemModel.Footer)
                     }
                 }
             }
@@ -248,7 +295,54 @@ class DefaultCartAdapter(
     sealed class Payload {
         object SelectAllChanged : Payload()
         object SelectOneChanged : Payload()
-        object quantityChanged : Payload()
-        object totalPriceChanged : Payload()
+        object QuantityChanged : Payload()
+        object TotalPriceChanged : Payload()
+        object UpdateRecentViewed : Payload()
+    }
+
+    class CartListModelDiffUtilCallback(
+        private val oldList: List<CartListItemModel>,
+        private val newList: List<CartListItemModel>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] isSameIdWith newList[newItemPosition]
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] isSameContentWith newList[newItemPosition]
+        }
+
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            when {
+                oldItem is CartListItemModel.Header && newItem is CartListItemModel.Header -> {
+                    if (!(oldItem isSameContentWith newItem)) {
+                        return Payload.SelectAllChanged
+                    }
+                }
+                oldItem is CartListItemModel.Content && newItem is CartListItemModel.Content -> {
+                    if (oldItem.cart.isSelected != newItem.cart.isSelected) {
+                        return Payload.SelectOneChanged
+                    }
+                    if (oldItem.cart.count != newItem.cart.count) {
+                        return Payload.QuantityChanged
+                    }
+                }
+                oldItem is CartListItemModel.Footer && newItem is CartListItemModel.Footer -> {
+                    if (oldItem.recentViewedItems != newItem.recentViewedItems) {
+                        return Payload.UpdateRecentViewed
+                    } else if (!(oldItem isSameContentWith newItem)) {
+                        return Payload.TotalPriceChanged
+                    }
+                }
+            }
+
+            return super.getChangePayload(oldItemPosition, newItemPosition)
+        }
     }
 }

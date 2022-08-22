@@ -99,6 +99,4 @@ class HorizontalBanchanListAdapter(
             binding.isCartItem = item.isCartItem
         }
     }
-
-
 }

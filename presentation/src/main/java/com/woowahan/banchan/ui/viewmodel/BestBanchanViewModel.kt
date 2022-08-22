@@ -11,6 +11,7 @@ import com.woowahan.domain.model.BestBanchanModel
 import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
+import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class BestBanchanViewModel @Inject constructor(
     private val fetchBestBanchanUseCase: FetchBestBanchanUseCase,
     private val insertCartItemUseCase: InsertCartItemUseCase,
-    private val removeCartItemUseCase: RemoveCartItemUseCase
+    private val removeCartItemUseCase: RemoveCartItemUseCase,
+    private val insertRecentViewedItemUseCase: InsertRecentViewedItemUseCase
 ) : ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -88,10 +90,13 @@ class BestBanchanViewModel @Inject constructor(
                 .flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
-                        _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
-                        _eventFlow.emit(UiEvent.ShowDialog(
-                            getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
-                        ))
+                        _banchans.value =
+                            _banchans.value.getNewListApplyCartState(banchanModel, false)
+                        _eventFlow.emit(
+                            UiEvent.ShowDialog(
+                                getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
+                            )
+                        )
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
@@ -112,10 +117,13 @@ class BestBanchanViewModel @Inject constructor(
                 .flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
-                        _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
-                        _eventFlow.emit(UiEvent.ShowDialog(
-                            getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
-                        ))
+                        _banchans.value =
+                            _banchans.value.getNewListApplyCartState(banchanModel, true)
+                        _eventFlow.emit(
+                            UiEvent.ShowDialog(
+                                getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
+                            )
+                        )
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
