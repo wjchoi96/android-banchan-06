@@ -25,9 +25,12 @@ class FetchOrderUseCase(
                 ) + it.items.map { item ->
                     OrderItemTypeModel.Order(item)
                 } + listOf(
-                    OrderItemTypeModel.Footer(
-                        it.items.sumOf { item -> item.price }
-                    )
+                    it.items.sumOf { item -> item.price * item.count }.run {
+                        OrderItemTypeModel.Footer(
+                            this,
+                            if(this >= DeliveryConstant.FreeDeliveryFeePrice) 0 else DeliveryConstant.DeliveryFee
+                        )
+                    }
                 )
                 emit(DomainEvent.success(list))
             }
