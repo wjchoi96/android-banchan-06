@@ -80,7 +80,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                         )
                         is CartViewModel.UiEvent.GoToOrderList -> {
                             orderNavigateLauncher.launch(OrderItemActivity.get(this@CartActivity, it.orderId))
-                            showToast("주문 완료!")
                         }
                         is CartViewModel.UiEvent.DeliveryAlarmSetting -> {
                             setDeliveryAlarm(it.orderId, it.orderTitle, it.orderItemCount, it.minute)
@@ -114,7 +113,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
         val alarmManager = getSystemService(AlarmManager::class.java)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            Calendar.getInstance().time.time + 1000*10,//Calendar.getInstance().time.time + (minute*60)*1000,
+            Calendar.getInstance().time.time + (minute*60)*1000,
             PendingIntent.getBroadcast(
                 this,
                 orderId.toInt(),
