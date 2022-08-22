@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="detail"
+            type="com.woowahan.domain.model.BanchanDetailModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/layout_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.detail.BanchanDetailActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/layout_include_tool_bar"
+                layout="@layout/item_toolbar_main"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/vp_menu_images"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H, 1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_include_tool_bar" />
+
+            <TextView
+                android:id="@+id/tv_menu_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:paddingVertical="5dp"
+                android:textColor="@color/black_000000"
+                android:textSize="32sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/vp_menu_images"
+                tools:text="오리 주물럭" />
+
+            <TextView
+                android:id="@+id/tv_menu_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:paddingVertical="3dp"
+                android:textColor="@color/grey_828282"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_name"
+                tools:text="오리 주물럭 설명" />
+
+            <TextView
+                android:id="@+id/tv_discount_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/orange_f46700"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_description"
+                app:layout_goneMarginEnd="14dp"
+                tools:text="10%" />
+
+            <TextView
+                android:id="@+id/tv_final_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/black_000000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_discount_rate"
+                app:layout_constraintStart_toEndOf="@id/tv_discount_rate"
+                app:layout_goneMarginEnd="14dp"
+                tools:text="18,000원" />
+
+            <TextView
+                android:id="@+id/tv_sale_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/grey_828282"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_discount_rate"
+                app:layout_constraintLeft_toRightOf="@id/tv_final_price"
+                tools:text="15,000" />
+
+            <View
+                android:id="@+id/view_line1"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white_f8f7f7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_discount_rate" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_plus"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="@dimen/round_btn_elevation"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_line1">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="12dp"
+                    app:srcCompat="@drawable/ic_plus" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/tv_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:minWidth="44dp"
+                android:paddingHorizontal="3dp"
+                android:textColor="@color/black_000000"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_plus"
+                app:layout_constraintEnd_toStartOf="@id/btn_plus"
+                app:layout_constraintTop_toTopOf="@id/btn_plus"
+                app:layout_constraintVertical_bias="0.6"
+                tools:text="1" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btn_minus"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="@dimen/round_btn_elevation"
+                app:layout_constraintEnd_toStartOf="@id/tv_quantity"
+                app:layout_constraintTop_toTopOf="@id/btn_plus">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="12dp"
+                    app:srcCompat="@drawable/ic_minus" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="@string/banchan_detail_quantity"
+                android:textColor="@color/grey_828282"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_plus"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btn_plus" />
+
+            <View
+                android:id="@+id/view_line2"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/white_f8f7f7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_plus" />
+
+            <TextView
+                android:id="@+id/tv_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/black_000000"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/view_line2"
+                tools:text="12,300원" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:text="@string/banchan_detail_total_price"
+                android:textColor="@color/grey_828282"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_total_price"
+                app:layout_constraintRight_toLeftOf="@id/tv_total_price"
+                app:layout_constraintTop_toTopOf="@id/tv_total_price" />
+
+            <Button
+                android:id="@+id/btn_order"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/yellow_f9ba70"
+                android:minHeight="56dp"
+                android:text="@string/banchan_detail_order_text"
+                android:textColor="@color/white_ffffff"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_total_price"
+                tools:text="n개 담기" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_detail_images"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="64dp"
+                android:layout_marginEnd="16dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btn_order" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</layout>

@@ -46,4 +46,7 @@
     <string name="order_default_product">상품</string>
     <string name="order_complete">배송이 완료되었습니다.</string>
     <string name="order_complete_content">%1$s의 배송이 완료되었습니다.</string>
+    <string name="banchan_detail_quantity">수량</string>
+    <string name="banchan_detail_total_price">총 주문금액</string>
+    <string name="banchan_detail_order_text">주문하기</string>
 </resources>
