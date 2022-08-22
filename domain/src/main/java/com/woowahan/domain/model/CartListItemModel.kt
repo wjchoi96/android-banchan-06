@@ -7,6 +7,7 @@ sealed class CartListItemModel {
         val price: Long,
         val recentViewedItems: List<RecentViewedItemModel>,
         val deliveryFee: Long = 2500L,
+        val showPriceInfo: Boolean
     ) : CartListItemModel() {
         val totalPrice: Long = price + deliveryFee
     }

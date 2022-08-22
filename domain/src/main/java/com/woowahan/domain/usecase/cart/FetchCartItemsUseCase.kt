@@ -21,7 +21,8 @@ class FetchCartItemsUseCase(
                                 CartListItemModel.Content(CartModel.empty()),
                                 CartListItemModel.Footer(
                                     price = 0L,
-                                    recentViewedItems = recentViewedList.getOrThrow()
+                                    recentViewedItems = recentViewedList.getOrThrow(),
+                                    showPriceInfo = cartList.isEmpty()
                                 )
                             )
                         )
@@ -34,7 +35,8 @@ class FetchCartItemsUseCase(
                         ) + cartList.map { CartListItemModel.Content(it) } + listOf(
                             CartListItemModel.Footer(
                                 price = price,
-                                recentViewedItems = recentViewedList.getOrThrow()
+                                recentViewedItems = recentViewedList.getOrThrow(),
+                                showPriceInfo = cartList.isEmpty()
                             )
                         ))
                     }
@@ -45,10 +47,11 @@ class FetchCartItemsUseCase(
             emit(
                 DomainEvent.failure(
                     it, listOf(
-                        CartListItemModel.Header(false),
+                        CartListItemModel.Content(CartModel.empty()),
                         CartListItemModel.Footer(
                             price = 0L,
-                            recentViewedItems = emptyList()
+                            recentViewedItems = emptyList(),
+                            showPriceInfo = false
                         )
                     )
                 )
