@@ -41,7 +41,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
             updateItem = viewModel.updateItemCount,
             orderClicked = viewModel.orderItems,
             selectItem = viewModel.selectItem,
-            moveToRecentViewedActivity = {
+            recentViewedAllClicked = {
                 startActivity(RecentViewedActivity.get(this))
             }
         )

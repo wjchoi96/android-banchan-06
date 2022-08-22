@@ -24,7 +24,7 @@ class DefaultCartAdapter(
     private val deleteItem: (CartModel) -> Unit,
     private val updateItem: (CartModel, Int) -> Unit,
     private val orderClicked: () -> Unit,
-    private val moveToRecentViewedActivity: () -> Unit,
+    private val recentViewedAllClicked: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
     fun updateList(newList: List<CartListItemModel>) {
@@ -248,7 +248,7 @@ class DefaultCartAdapter(
             else -> CartFooterViewHolder.from(
                 parent,
                 orderClicked = orderClicked,
-                moveToRecentViewedActivity = moveToRecentViewedActivity
+                moveToRecentViewedActivity = recentViewedAllClicked
             )
         }
     }
