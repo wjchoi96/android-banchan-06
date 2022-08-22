@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClickListener="@{()->holder.deleteAllSelected.invoke()}"
             android:paddingVertical="10dp"
             android:paddingStart="8dp"
