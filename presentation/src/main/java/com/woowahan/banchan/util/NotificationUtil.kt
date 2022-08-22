@@ -34,7 +34,7 @@ object NotificationUtil {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(context.getString(R.string.order_complete))
-            .setContentText("${itemName}의 ${context.getString(R.string.order_complete)}")
+            .setContentText("${itemName ?: "상품"}의 ${context.getString(R.string.order_complete)}")
             .setContentIntent(resultPendingIntent)
             .setAutoCancel(true)
             .setDefaults(Notification.DEFAULT_VIBRATE)
