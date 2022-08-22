@@ -19,7 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MenuDetailActivity"
+            android:name=".ui.detail.BanchanDetailActivity"
             android:exported="false" />
 
         <receiver android:name=".background.DeliveryAlarmReceiver" />
