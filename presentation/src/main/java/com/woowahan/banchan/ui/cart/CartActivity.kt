@@ -1,11 +1,14 @@
 package com.woowahan.banchan.ui.cart
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityCartBinding
@@ -15,6 +18,8 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
+import com.woowahan.banchan.ui.order.OrderItemActivity
+import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -73,7 +78,12 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                         binding.layoutBackground
                     )
                     is CartViewModel.UiEvent.GoToOrderList -> {
-                        //TODO: startActivity(OrderItemActivity.get(this))
+                        orderNavigateLauncher.launch(
+                            OrderItemActivity.get(
+                                this@CartActivity,
+                                it.orderId
+                            )
+                        )
                         showToast("주문 완료!")
                     }
                 }
@@ -106,5 +116,19 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
             }
         }
         return super.dispatchTouchEvent(ev)
+
     }
+
+    private val orderNavigateLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                when (viewModel.isCartItemIsEmpty) {
+                    true -> {
+                        startActivity(OrderListActivity.get(this))
+                        finish()
+                    }
+                    else -> {}
+                }
+            }
+        }
 }

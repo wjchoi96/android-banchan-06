@@ -18,6 +18,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.order.OrderListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.order.OrderItemActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.recentviewed.RecentViewedActivity"
             android:exported="false" />
         <activity

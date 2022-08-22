@@ -2,7 +2,6 @@ package com.woowahan.banchan.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.model.RecentViewedItemModel
@@ -44,6 +43,9 @@ class CartViewModel @Inject constructor(
     private val _eventFlow: MutableSharedFlow<UiEvent> =
         MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    val isCartItemIsEmpty: Boolean
+        get() = _cartItems.value.size == 2
 
     fun fetchCartItems() {
         if (_dataLoading.value) {
@@ -233,7 +235,7 @@ class CartViewModel @Inject constructor(
             ).flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
-                        clearCart(orderItems)
+                        clearCart(orderItems, it)
                     }.onFailure {
                         it.message?.let {
                             _eventFlow.emit(UiEvent.ShowToast(it))
@@ -247,14 +249,14 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    private suspend fun clearCart(items: List<CartModel>) {
+    private suspend fun clearCart(items: List<CartModel>, orderId: Long? = null) {
         _dataLoading.value = true
         removeCartItemUseCase(*(items.map { it.hash }).toTypedArray())
             .flowOn(Dispatchers.Default)
             .collect { event ->
                 event.onSuccess { isSuccess ->
                     when (isSuccess) {
-                        true -> _eventFlow.emit(UiEvent.GoToOrderList)
+                        true -> orderId?.let { _eventFlow.emit(UiEvent.GoToOrderList(it)) }
                         else -> _eventFlow.emit(UiEvent.ShowToast("Can't order"))
                     }
                 }.onFailure {
@@ -278,7 +280,6 @@ class CartViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
-        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
-        object GoToOrderList : UiEvent()
+        data class GoToOrderList(val orderId: Long) : UiEvent()
     }
 }
