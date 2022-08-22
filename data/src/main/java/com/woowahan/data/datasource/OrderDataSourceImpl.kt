@@ -6,13 +6,9 @@ import com.woowahan.data.entity.table.OrderItemTableEntity
 import com.woowahan.data.entity.table.OrderTableEntity
 import com.woowahan.domain.model.OrderItemModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class OrderDataSourceImpl @Inject constructor(
     private val orderDao: OrderDao
 ): OrderDataSource {

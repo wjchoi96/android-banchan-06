@@ -18,12 +18,13 @@ import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.sidedishbanchan.SideDishBanchanFragment
 import com.woowahan.banchan.ui.soupdishbanchan.SoupDishBanchanFragment
 import com.woowahan.banchan.ui.viewmodel.RootViewModel
+import com.woowahan.banchan.util.NotificationUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class RootActivity: BaseActivity<ActivityMainBinding>() {
+class RootActivity : BaseActivity<ActivityMainBinding>() {
 
     private val viewModel: RootViewModel by viewModels()
 
@@ -45,15 +46,16 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        NotificationUtil.createNotificationChannel(this)
         setUpViewPager()
         setListener()
         observeData()
     }
 
-    private fun setListener(){
+    private fun setListener() {
         binding.layoutIncludeToolBar.toolBar.setOnMenuItemClickListener {
             Timber.d("menu item click => ${it.title}")
-            return@setOnMenuItemClickListener when(it.itemId){
+            return@setOnMenuItemClickListener when (it.itemId) {
                 R.id.menu_main_action_bar_order -> {
                     startActivity(OrderListActivity.get(this))
                     true
@@ -69,7 +71,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         }
     }
 
-    private fun setUpViewPager(){
+    private fun setUpViewPager() {
         binding.vpContent.adapter = pagerAdapter
         binding.vpContent.offscreenPageLimit = 1
         TabLayoutMediator(binding.layoutTab, binding.vpContent) { tab, position ->
@@ -77,7 +79,7 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         }.attach()
     }
 
-    private fun observeData(){
+    private fun observeData() {
         repeatOnStarted {
             launch {
                 viewModel.cartItemSize.collect {
@@ -97,18 +99,17 @@ class RootActivity: BaseActivity<ActivityMainBinding>() {
         binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_cart).actionView.let {
             (it.findViewById(R.id.cart_badge) as TextView).let { tv ->
                 tv.isVisible = count != 0
-                tv.text = if(count <= 10) count.toString() else "10+"
+                tv.text = if (count <= 10) count.toString() else "10+"
             }
         }
     }
 
-    private fun setOrderBadge(on: Boolean){
-        val iconRes = when(on){
+    private fun setOrderBadge(on: Boolean) {
+        val iconRes = when (on) {
             true -> R.drawable.ic_mypage_badge
             else -> R.drawable.ic_mypage
         }
-        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_order).setIcon(iconRes)
+        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_order)
+            .setIcon(iconRes)
     }
-
-
 }

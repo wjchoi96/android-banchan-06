@@ -1,6 +1,5 @@
 package com.woowahan.banchan.ui.adapter
 
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil

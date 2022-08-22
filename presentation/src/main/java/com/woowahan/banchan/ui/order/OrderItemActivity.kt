@@ -5,11 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Rect
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityOrderItemBinding
@@ -20,9 +18,7 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.viewmodel.OrderItemViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class OrderItemActivity : BaseActivity<ActivityOrderItemBinding>() {

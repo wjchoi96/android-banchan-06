@@ -5,15 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.RecentViewedModelDiffUtilCallback
-import com.woowahan.banchan.databinding.ItemMenuBestHorizontalChildBinding
 import com.woowahan.banchan.databinding.ItemMenuSmallBinding
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 class RecentViewedHorizontalAdapter(
     private val onItemCLick: (item: RecentViewedItemModel) -> Unit

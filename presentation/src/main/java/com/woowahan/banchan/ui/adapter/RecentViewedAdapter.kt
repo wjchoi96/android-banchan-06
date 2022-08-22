@@ -4,11 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.banchan.BanchanModelDiffUtilCallback
 import com.woowahan.banchan.RecentViewedModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemMenuTimeStampBinding
-import com.woowahan.domain.model.BanchanModel
-import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.RecentViewedItemModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

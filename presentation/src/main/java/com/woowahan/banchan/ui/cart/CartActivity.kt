@@ -1,6 +1,8 @@
 package com.woowahan.banchan.ui.cart
 
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
@@ -11,17 +13,20 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import com.woowahan.banchan.R
+import com.woowahan.banchan.background.DeliveryAlarmReceiver
 import com.woowahan.banchan.databinding.ActivityCartBinding
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
-import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.order.OrderItemActivity
 import com.woowahan.banchan.ui.order.OrderListActivity
+import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import java.util.*
 
 @AndroidEntryPoint
 class CartActivity : BaseActivity<ActivityCartBinding>() {
@@ -70,29 +75,38 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
 
     private fun observeData() {
         repeatOnStarted {
-            viewModel.eventFlow.collect {
-                when (it) {
-                    is CartViewModel.UiEvent.ShowToast -> showToast(it.message)
-                    is CartViewModel.UiEvent.ShowSnackBar -> showSnackBar(
-                        it.message,
-                        binding.layoutBackground
-                    )
-                    is CartViewModel.UiEvent.GoToOrderList -> {
-                        orderNavigateLauncher.launch(
-                            OrderItemActivity.get(
-                                this@CartActivity,
-                                it.orderId
-                            )
+            launch {
+                viewModel.eventFlow.collect {
+                    when (it) {
+                        is CartViewModel.UiEvent.ShowToast -> showToast(it.message)
+                        is CartViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
                         )
-                        showToast("주문 완료!")
+                        is CartViewModel.UiEvent.GoToOrderList -> {
+                            orderNavigateLauncher.launch(
+                                OrderItemActivity.get(
+                                    this@CartActivity,
+                                    it.orderId
+                                )
+                            )
+                        }
+                        is CartViewModel.UiEvent.DeliveryAlarmSetting -> {
+                            setDeliveryAlarm(
+                                it.orderId,
+                                it.orderTitle,
+                                it.orderItemCount,
+                                it.minute
+                            )
+                        }
                     }
                 }
             }
-        }
 
-        repeatOnStarted {
-            viewModel.cartItems.collect {
-                cartAdapter.updateList(it)
+            repeatOnStarted {
+                viewModel.cartItems.collect {
+                    cartAdapter.updateList(it)
+                }
             }
         }
     }
@@ -117,6 +131,26 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
         }
         return super.dispatchTouchEvent(ev)
 
+    }
+
+    private fun setDeliveryAlarm(
+        orderId: Long,
+        orderTitle: String?,
+        orderItemCount: Int,
+        minute: Int
+    ) {
+        val title = getString(R.string.order_items_title, orderTitle ?: "상품", orderItemCount)
+        val alarmManager = getSystemService(AlarmManager::class.java)
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            Calendar.getInstance().time.time + (minute * 60) * 1000,
+            PendingIntent.getBroadcast(
+                this,
+                orderId.toInt(),
+                DeliveryAlarmReceiver.get(this, orderId, title),
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        )
     }
 
     private val orderNavigateLauncher: ActivityResultLauncher<Intent> =

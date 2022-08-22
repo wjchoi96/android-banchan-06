@@ -5,7 +5,10 @@ import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.repository.CartRepository
 import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
 
 class FetchCartItemsUseCase(
     private val cartRepository: CartRepository,

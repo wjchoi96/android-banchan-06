@@ -1,6 +1,5 @@
 package com.woowahan.banchan.ui.soupdishbanchan
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -14,7 +13,6 @@ import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
-import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.SoupDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel

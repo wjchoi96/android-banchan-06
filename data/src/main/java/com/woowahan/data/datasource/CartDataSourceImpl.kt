@@ -5,12 +5,10 @@ import com.woowahan.data.dao.CartDao
 import com.woowahan.data.entity.dto.CartEntity
 import com.woowahan.data.entity.table.BanchanItemTableEntity
 import com.woowahan.data.entity.table.CartTableEntity
-import com.woowahan.domain.model.BanchanModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class CartDataSourceImpl @Inject constructor(
     private val banchanDao: BanchanDao,
     private val cartDao: CartDao

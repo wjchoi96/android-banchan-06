@@ -7,7 +7,6 @@ import com.woowahan.data.apiservice.SideDishBanchanApiService
 import com.woowahan.data.apiservice.SoupDishBanchanApiService
 import com.woowahan.data.entity.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

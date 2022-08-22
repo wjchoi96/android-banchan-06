@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemOrderHorizontalBinding
 import com.woowahan.banchan.databinding.ItemOrderStateFooterBinding
 import com.woowahan.banchan.databinding.ItemOrderStateHeaderBinding
-import com.woowahan.banchan.ui.adapter.BestBanchanAdapter
+import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.OrderItemModel
 import com.woowahan.domain.model.OrderItemTypeModel
 import kotlinx.coroutines.CoroutineScope
@@ -133,10 +133,10 @@ class OrderItemAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val start = deliveryStartTime.time
             val lastTimeSinceStartMinute = (((current-start)/1000)/60).toInt() // 배송 시작하고 지난 분
             Timber.d("lastTimeSinceStartMinute => $lastTimeSinceStartMinute => ${(current-start)/1000}")
-            val remainingMinute = if(lastTimeSinceStartMinute >= 20)
+            val remainingMinute = if(lastTimeSinceStartMinute >= DeliveryConstant.DeliveryMinute)
                 0
             else
-                20 - lastTimeSinceStartMinute
+                DeliveryConstant.DeliveryMinute - lastTimeSinceStartMinute
             binding.deliveryTime = remainingMinute
         }
 

@@ -4,7 +4,6 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.woowahan.data.entity.table.OrderItemTableEntity
 import com.woowahan.data.entity.table.OrderTableEntity
-import com.woowahan.domain.model.OrderModel
 
 data class OrderDto(
     @Embedded
