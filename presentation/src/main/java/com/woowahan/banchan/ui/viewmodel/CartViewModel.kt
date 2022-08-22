@@ -2,9 +2,9 @@ package com.woowahan.banchan.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
+import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.FetchCartItemsUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
 import com.woowahan.domain.usecase.cart.UpdateCartItemCountUseCase
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
+
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
@@ -31,8 +32,13 @@ class CartViewModel @Inject constructor(
     private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val refreshDataLoading = _refreshDataLoading.asStateFlow()
 
-    private val _cartItems: MutableStateFlow<List<CartListItemModel>> = MutableStateFlow(emptyList())
+    private val _cartItems: MutableStateFlow<List<CartListItemModel>> =
+        MutableStateFlow(emptyList())
     val cartItems = _cartItems.asStateFlow()
+
+    private val _recentViewedItems: MutableStateFlow<List<RecentViewedItemModel>> =
+        MutableStateFlow(emptyList())
+    val recentViewedItems = _recentViewedItems.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> =
         MutableSharedFlow()
@@ -145,7 +151,8 @@ class CartViewModel @Inject constructor(
             _dataLoading.value = true
             updateCartItemSelectUseCase(
                 isSelect,
-                *(_cartItems.value.filterIsInstance<CartListItemModel.Content>().map { it.cart.hash }).toTypedArray()
+                *(_cartItems.value.filterIsInstance<CartListItemModel.Content>()
+                    .map { it.cart.hash }).toTypedArray()
             )
                 .flowOn(Dispatchers.Default)
                 .collect { event ->
@@ -211,14 +218,8 @@ class CartViewModel @Inject constructor(
         removeCartItem(deleteItem.hash)
     }
 
-    val minusClicked: (CartModel) -> Unit = { minusItem ->
-        if (minusItem.count != 1) {
-            updateCartItemCount(minusItem.hash, minusItem.count - 1)
-        }
-    }
-
-    val plusClicked: (CartModel) -> Unit = { plusItem ->
-        updateCartItemCount(plusItem.hash, plusItem.count + 1)
+    val updateItemCount: (CartModel, Int) -> Unit = { item, cnt ->
+        updateCartItemCount(item.hash, cnt)
     }
 
     val orderItems: () -> Unit = {
@@ -254,7 +255,7 @@ class CartViewModel @Inject constructor(
             .flowOn(Dispatchers.Default)
             .collect { event ->
                 event.onSuccess { isSuccess ->
-                    when(isSuccess){
+                    when (isSuccess) {
                         true -> orderId?.let { _eventFlow.emit(UiEvent.GoToOrderList(it)) }
                         else -> _eventFlow.emit(UiEvent.ShowToast("Can't order"))
                     }

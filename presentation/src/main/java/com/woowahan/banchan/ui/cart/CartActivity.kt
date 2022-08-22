@@ -3,7 +3,10 @@ package com.woowahan.banchan.ui.cart
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -14,6 +17,7 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.order.OrderItemActivity
 import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
@@ -34,21 +38,22 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
     override val layoutResId: Int
         get() = R.layout.activity_cart
 
-    private val adapter: DefaultCartAdapter by lazy {
+    private val cartAdapter: DefaultCartAdapter by lazy {
         DefaultCartAdapter(
             selectAll = viewModel.selectAllItems,
             deleteAllSelected = viewModel.deleteAllSelectedItems,
             deleteItem = viewModel.deleteItem,
-            minusClicked = viewModel.minusClicked,
-            plusClicked = viewModel.plusClicked,
+            updateItem = viewModel.updateItemCount,
             orderClicked = viewModel.orderItems,
-            selectItem = viewModel.selectItem
+            selectItem = viewModel.selectItem,
+            recentViewedAllClicked = {
+                startActivity(RecentViewedActivity.get(this))
+            }
         )
     }
 
     override fun onStart() {
         super.onStart()
-
         viewModel.fetchCartItems()
     }
 
@@ -56,7 +61,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
         super.onCreate(savedInstanceState)
 
         binding.viewModel = viewModel
-        binding.adapter = adapter
+        binding.adapter = cartAdapter
         binding.title = getString(R.string.cart_title)
         binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener { onBackPressed() }
 
@@ -73,7 +78,12 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                         binding.layoutBackground
                     )
                     is CartViewModel.UiEvent.GoToOrderList -> {
-                        orderNavigateLauncher.launch(OrderItemActivity.get(this@CartActivity, it.orderId))
+                        orderNavigateLauncher.launch(
+                            OrderItemActivity.get(
+                                this@CartActivity,
+                                it.orderId
+                            )
+                        )
                         showToast("주문 완료!")
                     }
                 }
@@ -82,20 +92,43 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
 
         repeatOnStarted {
             viewModel.cartItems.collect {
-                adapter.updateList(it)
+                cartAdapter.updateList(it)
             }
         }
     }
 
-    private val orderNavigateLauncher : ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-        if(it.resultCode == Activity.RESULT_OK){
-            when(viewModel.isCartItemIsEmpty){
-                true -> {
-                    startActivity(OrderListActivity.get(this))
-                    finish()
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        val view = currentFocus
+        view?.let {
+            val rect = Rect()
+            val x = ev?.x
+            val y = ev?.y
+
+            if (x != null && y != null) {
+                view.getGlobalVisibleRect(rect)
+                if (!rect.contains(x.toInt(), y.toInt())) {
+                    val imm = (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
+                    imm.let {
+                        imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    }
+                    view.clearFocus()
                 }
-                else -> {}
             }
         }
+        return super.dispatchTouchEvent(ev)
+
     }
+
+    private val orderNavigateLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                when (viewModel.isCartItemIsEmpty) {
+                    true -> {
+                        startActivity(OrderListActivity.get(this))
+                        finish()
+                    }
+                    else -> {}
+                }
+            }
+        }
 }

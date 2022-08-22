@@ -60,7 +60,8 @@ class RecentViewedRepositoryImpl @Inject constructor(
                                 imageUrl = this.data.thumbImages.first(),
                                 price = this.data.prices.first().priceStrToLong(),
                                 salePrice = (if (this.data.prices.size > 1) this.data.prices[1] else "0").priceStrToLong(),
-                                time = BanchanDateConvertUtil.convert(it.time)
+                                time = BanchanDateConvertUtil.convert(it.time),
+                                description = cacheMap[it.hash]!!.data.productDescription
                             )
                         }
                     }

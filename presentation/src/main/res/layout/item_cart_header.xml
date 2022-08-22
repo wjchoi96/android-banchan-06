@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+
         <variable
             name="isAllSelected"
             type="Boolean" />
@@ -15,18 +16,17 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="8dp">
+        android:paddingTop="4dp">
 
         <CheckBox
             android:id="@+id/cbx_select_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:button="@drawable/sel_checkbox"
+            android:buttonTint="@color/black_000000"
             android:checked="@={isAllSelected}"
             android:minWidth="36dp"
-            android:buttonTint="@color/black_000000"
             android:minHeight="36dp"
             android:onClick="@{()->holder.selectAll.invoke(isAllSelected)}"
             android:paddingVertical="10dp"
@@ -44,16 +44,26 @@
             android:id="@+id/tv_remove_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:onClickListener="@{()->holder.deleteAllSelected.invoke()}"
             android:paddingVertical="10dp"
-            android:paddingStart="16dp"
+            android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            android:gravity="center"
             android:text="@string/cart_remove_selected"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white_dddddd"
+            app:layout_constraintTop_toBottomOf="@id/tv_remove_all" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
