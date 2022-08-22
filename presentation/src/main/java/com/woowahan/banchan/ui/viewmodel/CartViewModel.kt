@@ -2,7 +2,7 @@ package com.woowahan.banchan.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
+import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.usecase.cart.FetchCartItemsUseCase
@@ -234,7 +234,14 @@ class CartViewModel @Inject constructor(
             ).flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
-                        clearCart(orderItems, it)
+                        clearCart(orderItems)
+                        _eventFlow.emit(UiEvent.DeliveryAlarmSetting(
+                            it,
+                            orderItems.firstOrNull()?.title,
+                            orderItems.size,
+                            DeliveryConstant.DeliveryMinute)
+                        )
+                       _eventFlow.emit(UiEvent.GoToOrderList(it))
                     }.onFailure {
                         it.message?.let {
                             _eventFlow.emit(UiEvent.ShowToast(it))
@@ -248,15 +255,15 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    private suspend fun clearCart(items: List<CartModel>, orderId: Long? = null) {
+    private suspend fun clearCart(items: List<CartModel>) {
         _dataLoading.value = true
         removeCartItemUseCase(*(items.map { it.hash }).toTypedArray())
             .flowOn(Dispatchers.Default)
             .collect { event ->
                 event.onSuccess { isSuccess ->
                     when(isSuccess){
-                        true -> orderId?.let { _eventFlow.emit(UiEvent.GoToOrderList(it)) }
-                        else -> _eventFlow.emit(UiEvent.ShowToast("Can't order"))
+                        true -> {}
+                        else -> _eventFlow.emit(UiEvent.ShowToast("Can't Clear Cart"))
                     }
                 }.onFailure {
                     it.printStackTrace()
@@ -280,5 +287,11 @@ class CartViewModel @Inject constructor(
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
         data class GoToOrderList(val orderId: Long) : UiEvent()
+        data class DeliveryAlarmSetting(
+            val orderId: Long,
+            val orderTitle: String?,
+            val orderItemCount: Int,
+            val minute: Int
+        ): UiEvent()
     }
 }
