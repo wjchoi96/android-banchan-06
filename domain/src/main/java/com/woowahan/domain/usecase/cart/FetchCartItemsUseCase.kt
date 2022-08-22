@@ -1,5 +1,6 @@
 package com.woowahan.domain.usecase.cart
 
+import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.model.DomainEvent
@@ -25,7 +26,10 @@ class FetchCartItemsUseCase(
                                 CartListItemModel.Footer(
                                     price = 0L,
                                     recentViewedItems = recentViewedList.getOrThrow(),
-                                    showPriceInfo = cartList.isEmpty()
+                                    showPriceInfo = cartList.isEmpty(),
+                                    deliveryFee = DeliveryConstant.DeliveryFee,
+                                    minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                                    freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
                                 )
                             )
                         )
@@ -39,7 +43,10 @@ class FetchCartItemsUseCase(
                             CartListItemModel.Footer(
                                 price = price,
                                 recentViewedItems = recentViewedList.getOrThrow(),
-                                showPriceInfo = cartList.isEmpty()
+                                showPriceInfo = cartList.isEmpty(),
+                                deliveryFee = if (price < DeliveryConstant.FreeDeliveryFeePrice) DeliveryConstant.DeliveryFee else DeliveryConstant.FreeDeliveryFee,
+                                minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                                freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
                             )
                         ))
                     }
@@ -54,7 +61,10 @@ class FetchCartItemsUseCase(
                         CartListItemModel.Footer(
                             price = 0L,
                             recentViewedItems = emptyList(),
-                            showPriceInfo = false
+                            showPriceInfo = false,
+                            deliveryFee = DeliveryConstant.DeliveryFee,
+                            minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                            freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice
                         )
                     )
                 )
