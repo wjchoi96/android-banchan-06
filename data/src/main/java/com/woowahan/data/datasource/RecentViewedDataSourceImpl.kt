@@ -8,11 +8,8 @@ import com.woowahan.data.entity.table.RecentViewedTableEntity
 import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class RecentViewedDataSourceImpl @Inject constructor(
     private val banchanDao: BanchanDao,
     private val recentViewedDao: RecentViewedDao
