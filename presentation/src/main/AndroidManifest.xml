@@ -4,6 +4,7 @@
     package="com.woowahan.banchan">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:name=".application.BanchanOrderApplication"
@@ -22,6 +23,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.order.OrderItemActivity"
+            android:parentActivityName=".ui.root.RootActivity"
             android:exported="false" />
         <activity
             android:name=".ui.recentviewed.RecentViewedActivity"
