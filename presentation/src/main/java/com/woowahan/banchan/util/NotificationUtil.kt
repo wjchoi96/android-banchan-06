@@ -44,7 +44,7 @@ object NotificationUtil {
         notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
     }
 
-    private fun createNotificationChannel(application: Application) {
+    fun createNotificationChannel(application: Application) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(channelId, channelId, importance).apply {
