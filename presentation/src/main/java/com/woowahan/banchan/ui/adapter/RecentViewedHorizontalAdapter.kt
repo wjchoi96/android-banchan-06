@@ -24,7 +24,7 @@ class RecentViewedHorizontalAdapter(
     fun updateList(newList: List<RecentViewedItemModel>) {
         CoroutineScope(Dispatchers.Default).launch {
             val diffCallback =
-                RecentViewedModelDiffUtilCallback(banchanList, newList, "")
+                RecentViewedModelDiffUtilCallback(banchanList, newList, "Not need payload")
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
                 banchanList = newList.toList()
