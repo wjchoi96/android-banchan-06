@@ -29,4 +29,6 @@
     <string name="cart_view_all">전체보기</string>
     <string name="cart_title">Cart</string>
     <string name="no_cart_item">상품이 없습니다.</string>
+    <string name="order_btn_text">%1$s원 주문하기</string>
+    <string name="order_btn_disabled">최소주문금액을 확인해주세요</string>
 </resources>

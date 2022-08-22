@@ -19,10 +19,6 @@
             type="Boolean" />
 
         <variable
-            name="btnText"
-            type="String" />
-
-        <variable
             name="btnEnabled"
             type="Boolean" />
 
@@ -42,6 +38,9 @@
             name="isViewedItemEmpty"
             type="Boolean" />
 
+        <variable
+            name="menuPriceStr"
+            type="String" />
 
         <variable
             name="recentViewedAdapter"
@@ -154,7 +153,7 @@
                 android:elevation="10dp"
                 android:enabled="@{btnEnabled}"
                 android:onClick="@{()->holder.orderClicked.invoke()}"
-                android:text="@{btnText}"
+                android:text="@{btnEnabled ? @string/order_btn_text(menuPriceStr) : @string/order_btn_disabled}"
                 android:textColor="@color/white_ffffff"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"

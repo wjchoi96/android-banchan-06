@@ -119,7 +119,7 @@ class DefaultCartAdapter(
             }
 
             binding.edtQuantity.setOnKeyListener { v, keyCode, event ->
-                if (keyCode == KeyEvent.KEYCODE_ENTER){
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
                     onQuantityChange(item, true)
                     true
                 }
@@ -174,23 +174,8 @@ class DefaultCartAdapter(
         }
 
         fun bind(item: CartListItemModel.Footer) {
+            bindTotalPrice(item)
             binding.holder = this
-            val freeDelivery = (40000L - item.price)
-            binding.freeDelivery = freeDelivery.toCashString()
-            binding.isFreeDelivery = (freeDelivery <= 0)
-            if (freeDelivery <= 0) {
-                binding.footerItem = item.copy(deliveryFee = 0L)
-            } else {
-                binding.footerItem = item
-            }
-            binding.btnEnabled = (10000L <= item.price)
-            binding.btnText = if (10000L <= item.price) {
-                "${item.totalPrice.toCashString()}원 주문하기"
-            } else {
-                "최소주문금액을 확인해주세요"
-            }
-            binding.menuPrice = item.price
-            binding.totalPrice = item.totalPrice
             binding.recentViewedAdapter = recentViewedAdapter
             binding.isViewedItemEmpty = item.recentViewedItems.isEmpty()
             recentViewedAdapter.updateList(item.recentViewedItems)
@@ -200,12 +185,6 @@ class DefaultCartAdapter(
             binding.menuPrice = item.price
             binding.totalPrice = item.totalPrice
             binding.btnEnabled = (10000L <= item.price)
-            binding.btnText = if (10000L <= item.price) {
-                "${item.totalPrice.toCashString()}원 주문하기"
-            } else {
-                "최소주문금액을 확인해주세요"
-            }
-
             val freeDelivery = (40000L - item.price)
             binding.freeDelivery = freeDelivery.toCashString()
             binding.isFreeDelivery = (freeDelivery <= 0)
@@ -214,6 +193,7 @@ class DefaultCartAdapter(
             } else {
                 binding.footerItem = item
             }
+            binding.menuPriceStr = item.price.toCashString()
         }
 
         fun bindRecentViewedItems(item: CartListItemModel.Footer) {
