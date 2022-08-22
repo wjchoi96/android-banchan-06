@@ -6,6 +6,7 @@ import com.woowahan.domain.repository.OrderRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import java.util.*
 
 class FetchOrderUseCase(
     private val orderRepository: OrderRepository
@@ -15,7 +16,10 @@ class FetchOrderUseCase(
             .collect {
                 val list = listOf(
                     OrderItemTypeModel.Header(
-                        "20분", // test
+                        it.deliveryState,
+                        it.time,
+                        Calendar.getInstance().time, // flow 는 주소값이 달라도 내부값이 동일하면 emit 되지않는데, 그걸 방지하기 위함
+                        20, // test
                         it.items.size
                     )
                 ) + it.items.map { item ->

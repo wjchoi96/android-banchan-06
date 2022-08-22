@@ -14,10 +14,10 @@
     <string name="main_dish_banchan_banner_title">모두가 좋아하는\n든든한 메인 요리</string>
     <string name="soup_dish_banchan_banner_title">정성이 담긴\n뜨끈뜨근 국물 요리</string>
     <string name="side_dish_banchan_banner_title">식탁을 풍성하게 하는\n정갈한 밑반찬</string>
-    
+
     <!-- recent viewed -->
     <string name="recent_viewed_title">Recently viewed products</string>
-  
+
     <!-- use at cart -->
     <string name="cart_unselect">선택 해제₩</string>
     <string name="cart_select_all">전체 선택</string>
@@ -28,4 +28,17 @@
     <string name="cart_recent_viewed">최근 본 상품</string>
     <string name="cart_view_all">전체보기</string>
     <string name="cart_title">Cart</string>
+
+    <string name="count_str">%1$d 개</string>
+    <string name="total_count_str">총 %1$d 개</string>
+    <string name="minute_str">%1$d분</string>
+    <string name="order_state_delivery_title">주문이 접수되었습니다</string>
+    <string name="order_state_finish_title">배송이 완료되었습니다</string>
+    <string name="order_state_time_title">배송까지 남은 시간</string>
+    <string name="order_state_count_title">주문한 상품</string>
+    <string name="order_items_title">%1$s 외 %2$d개</string>
+    <string name="order_list_item_state_delivery_title">배송 준비중</string>
+    <string name="order_list_item_state_finish_title">배송완료</string>
+    <string name="order_title">Order List</string>
+
 </resources>
