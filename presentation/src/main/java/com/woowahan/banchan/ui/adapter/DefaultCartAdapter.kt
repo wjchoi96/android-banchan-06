@@ -162,6 +162,7 @@ class DefaultCartAdapter(
         }
 
         fun bindTotalPrice(item: CartListItemModel.Footer) {
+            binding.showPrice = item.showPriceInfo
             binding.menuPrice = item.price
             binding.totalPrice = item.totalPrice
             binding.btnEnabled = (10000L <= item.price)

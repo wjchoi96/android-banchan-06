@@ -43,6 +43,10 @@
             type="String" />
 
         <variable
+            name="showPrice"
+            type="Boolean" />
+
+        <variable
             name="recentViewedAdapter"
             type="com.woowahan.banchan.ui.adapter.RecentViewedHorizontalAdapter" />
     </data>
@@ -56,7 +60,7 @@
             android:id="@+id/layout_upper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{menuPrice == 0 ? View.GONE : View.VISIBLE}"
+            android:visibility="@{showPrice ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
