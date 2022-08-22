@@ -27,7 +27,9 @@ class FetchCartItemsUseCase(
                                     price = 0L,
                                     recentViewedItems = recentViewedList.getOrThrow(),
                                     showPriceInfo = cartList.isEmpty(),
-                                    deliveryFee = DeliveryConstant.FreeDeliveryFee
+                                    deliveryFee = DeliveryConstant.DeliveryFee,
+                                    minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                                    freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
                                 )
                             )
                         )
@@ -42,7 +44,9 @@ class FetchCartItemsUseCase(
                                 price = price,
                                 recentViewedItems = recentViewedList.getOrThrow(),
                                 showPriceInfo = cartList.isEmpty(),
-                                deliveryFee = if (price < DeliveryConstant.FreeDeliveryFeePrice) DeliveryConstant.DeliveryFee else DeliveryConstant.FreeDeliveryFee
+                                deliveryFee = if (price < DeliveryConstant.FreeDeliveryFeePrice) DeliveryConstant.DeliveryFee else DeliveryConstant.FreeDeliveryFee,
+                                minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                                freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
                             )
                         ))
                     }
@@ -58,7 +62,9 @@ class FetchCartItemsUseCase(
                             price = 0L,
                             recentViewedItems = emptyList(),
                             showPriceInfo = false,
-                            deliveryFee = DeliveryConstant.FreeDeliveryFee
+                            deliveryFee = DeliveryConstant.DeliveryFee,
+                            minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                            freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice
                         )
                     )
                 )

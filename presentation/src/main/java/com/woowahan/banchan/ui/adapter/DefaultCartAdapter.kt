@@ -165,12 +165,12 @@ class DefaultCartAdapter(
             binding.showPrice = item.showPriceInfo
             binding.menuPrice = item.price
             binding.totalPrice = item.totalPrice
-            binding.btnEnabled = (DeliveryConstant.MinimumOrderPrice <= item.price)
-            val freeDelivery = (DeliveryConstant.FreeDeliveryFeePrice - item.price)
+            binding.btnEnabled = (item.minimumOrderPrice <= item.price)
+            val freeDelivery = (item.freeDeliveryFeePrice - item.price)
             binding.freeDelivery = freeDelivery.toCashString()
             binding.isFreeDelivery = (freeDelivery <= 0)
             if (freeDelivery <= 0) {
-                binding.footerItem = item.copy(deliveryFee = DeliveryConstant.FreeDeliveryFee)
+                binding.footerItem = item.copy(deliveryFee = 0L)
             } else {
                 binding.footerItem = item
             }

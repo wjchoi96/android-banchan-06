@@ -29,12 +29,17 @@ data class BanchanDetailEntity(
         val topImage: String
     )
 
-    fun toDomain(title: String): BanchanDetailModel = BanchanDetailModel(
+    fun toDomain(
+        title: String,
+        deliveryFee: Long,
+        freeDeliveryFeePrice: Long
+    ): BanchanDetailModel = BanchanDetailModel(
         hash = hash,
         title = title,
         imageUrl = data.thumbImages.first(),
         price = priceStrToLong(data.prices.last()),
-        2500L //deliveryFee
+        deliveryFee,
+        freeDeliveryFeePrice
     )
 
     private fun priceStrToLong(priceStr: String): Long {
