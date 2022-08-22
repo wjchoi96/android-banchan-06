@@ -29,7 +29,7 @@ class FetchOrderUseCase(
                     it.items.sumOf { item -> item.price * item.count }.run {
                         OrderItemTypeModel.Footer(
                             this,
-                            if(this >= DeliveryConstant.FreeDeliveryFeePrice) 0 else DeliveryConstant.DeliveryFee
+                            if(this >= DeliveryConstant.FreeDeliveryFeePrice) DeliveryConstant.FreeDeliveryFeePrice else DeliveryConstant.DeliveryFee
                         )
                     }
                 )
