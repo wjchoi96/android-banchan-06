@@ -1,13 +1,7 @@
 package com.woowahan.banchan.di
 
-import com.woowahan.domain.repository.BanchanRepository
-import com.woowahan.domain.repository.CartRepository
-import com.woowahan.domain.repository.OrderRepository
-import com.woowahan.domain.repository.RecentViewedRepository
-import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
-import com.woowahan.domain.usecase.banchan.FetchMainDishBanchanUseCase
-import com.woowahan.domain.usecase.banchan.FetchSideDishBanchanUseCase
-import com.woowahan.domain.usecase.banchan.FetchSoupDishBanchanUseCase
+import com.woowahan.domain.repository.*
+import com.woowahan.domain.usecase.banchan.*
 import com.woowahan.domain.usecase.cart.*
 import com.woowahan.domain.usecase.order.*
 import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
@@ -114,4 +108,11 @@ object UseCaseModule {
     @Provides
     fun provideUpdateOrderUseCase(repo: OrderRepository) =
         UpdateOrderUseCase(repo)
+
+    /**
+     * detail
+     */
+    @Provides
+    fun provideFetchBanchanDetailUseCase(repo: BanchanDetailRepository) =
+        FetchBanchanDetailUseCase(repo)
 }
