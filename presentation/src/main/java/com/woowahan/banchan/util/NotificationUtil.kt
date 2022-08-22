@@ -13,7 +13,6 @@ object NotificationUtil {
     private val channelId = "orderChannel"
 
     fun createNotification(
-        application: Application,
         context: Context,
         itemName: String,
         orderId: Long,
@@ -39,19 +38,17 @@ object NotificationUtil {
             .setAutoCancel(true)
             .setDefaults(Notification.DEFAULT_VIBRATE)
 
-        val notificationManager =
-            application.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.notify(System.currentTimeMillis().toInt(), builder.build())
     }
 
-    fun createNotificationChannel(application: Application) {
+    fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel(channelId, channelId, importance).apply {
                 description = channelId
             }
-            val notificationManager: NotificationManager =
-                application.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager: NotificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
     }

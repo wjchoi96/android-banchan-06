@@ -46,7 +46,7 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        NotificationUtil.createNotificationChannel(application)
+        NotificationUtil.createNotificationChannel(this)
         setUpViewPager()
         setListener()
         observeData()
