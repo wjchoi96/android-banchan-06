@@ -41,4 +41,5 @@
     <string name="order_list_item_state_finish_title">배송완료</string>
     <string name="order_title">Order List</string>
 
+    <string name="order_complete">배송이 완료되었습니다.</string>
 </resources>
