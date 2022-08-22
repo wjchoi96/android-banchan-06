@@ -135,6 +135,8 @@
             android:text="@{Integer.toString(itemCount)}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
+            android:updateItem="@{cartItem}"
+            android:updateQuantityMethod="@{holder.onQuantityChange}"
             app:layout_constraintBottom_toBottomOf="@id/btn_minus"
             app:layout_constraintStart_toEndOf="@id/btn_minus"
             app:layout_constraintTop_toTopOf="@id/btn_minus"

@@ -80,7 +80,7 @@ class DefaultCartAdapter(
         val deleteItem: (CartModel) -> Unit,
         val updateItem: (CartModel, Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private val onQuantityChange: (CartModel, Boolean) -> Unit = { item, needToChange ->
+        val onQuantityChange: (CartModel, Boolean) -> Unit = { item, needToChange ->
             if (needToChange) {
                 if (binding.edtQuantity.text.isEmpty()) {
                     binding.edtQuantity.setText("1")
@@ -113,37 +113,17 @@ class DefaultCartAdapter(
             binding.itemCount = item.count
             binding.totalPrice = (item.price * item.count)
             binding.isSelected = item.isSelected
-
-            binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
-                onQuantityChange(item, !hasFocus)
-            }
-
-            binding.edtQuantity.setOnKeyListener { v, keyCode, event ->
-                if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                    onQuantityChange(item, true)
-                    true
-                }
-                false
-            }
         }
 
         fun bindQuantityPayload(item: CartListItemModel.Content) {
             binding.cartItem = item.cart
             binding.itemCount = item.cart.count
             binding.totalPrice = (item.cart.price * item.cart.count)
-
-            binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
-                onQuantityChange(item.cart, hasFocus)
-            }
         }
 
         fun bindSelectPayload(item: CartListItemModel.Content) {
             binding.isSelected = item.cart.isSelected
             binding.cartItem = item.cart
-
-            binding.edtQuantity.setOnFocusChangeListener { v, hasFocus ->
-                onQuantityChange(item.cart, hasFocus)
-            }
         }
     }
 
