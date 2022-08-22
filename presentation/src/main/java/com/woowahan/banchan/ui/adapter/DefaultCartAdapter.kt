@@ -283,7 +283,7 @@ class DefaultCartAdapter(
                     }
                 }
 
-                Payload.quantityChanged -> {
+                Payload.QuantityChanged -> {
                     if (holder is CartItemViewHolder) {
                         holder.bindQuantityPayload(cartList[position] as CartListItemModel.Content)
                     }
@@ -295,13 +295,13 @@ class DefaultCartAdapter(
                     }
                 }
 
-                Payload.totalPriceChanged -> {
+                Payload.TotalPriceChanged -> {
                     if (holder is CartFooterViewHolder) {
                         holder.bindTotalPrice(cartList[position] as CartListItemModel.Footer)
                     }
                 }
 
-                Payload.updateRecentViewed -> {
+                Payload.UpdateRecentViewed -> {
                     if (holder is CartFooterViewHolder) {
                         holder.bindRecentViewedItems(cartList[position] as CartListItemModel.Footer)
                     }
@@ -315,9 +315,9 @@ class DefaultCartAdapter(
     sealed class Payload {
         object SelectAllChanged : Payload()
         object SelectOneChanged : Payload()
-        object quantityChanged : Payload()
-        object totalPriceChanged : Payload()
-        object updateRecentViewed : Payload()
+        object QuantityChanged : Payload()
+        object TotalPriceChanged : Payload()
+        object UpdateRecentViewed : Payload()
     }
 
     class CartListModelDiffUtilCallback(
@@ -350,14 +350,14 @@ class DefaultCartAdapter(
                         return Payload.SelectOneChanged
                     }
                     if (oldItem.cart.count != newItem.cart.count) {
-                        return Payload.quantityChanged
+                        return Payload.QuantityChanged
                     }
                 }
                 oldItem is CartListItemModel.Footer && newItem is CartListItemModel.Footer -> {
                     if (oldItem.recentViewedItems != newItem.recentViewedItems) {
-                        return Payload.updateRecentViewed
+                        return Payload.UpdateRecentViewed
                     } else if (!(oldItem isSameContentWith newItem)) {
-                        return Payload.totalPriceChanged
+                        return Payload.TotalPriceChanged
                     }
                 }
             }
