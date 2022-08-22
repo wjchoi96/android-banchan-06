@@ -1,6 +1,5 @@
 package com.woowahan.banchan.extension
 
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.BestBanchanModel
 import timber.log.Timber

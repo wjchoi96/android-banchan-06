@@ -5,7 +5,6 @@ import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 
 class InsertCartItemUseCase(

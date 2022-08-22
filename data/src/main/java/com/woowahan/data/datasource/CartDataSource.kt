@@ -1,7 +1,6 @@
 package com.woowahan.data.datasource
 
 import com.woowahan.data.entity.dto.CartEntity
-import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.flow.Flow
 
 interface CartDataSource {

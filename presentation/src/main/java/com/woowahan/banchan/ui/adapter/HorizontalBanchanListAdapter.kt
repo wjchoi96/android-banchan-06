@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.BanchanModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemMenuBestHorizontalChildBinding
-import com.woowahan.banchan.ui.adapter.viewHolder.MenuHorizontalViewHolder
-import com.woowahan.banchan.ui.adapter.viewHolder.MenuVerticalViewHolder
 import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

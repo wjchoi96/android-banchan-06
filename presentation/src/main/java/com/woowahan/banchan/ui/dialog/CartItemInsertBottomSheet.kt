@@ -7,8 +7,6 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.DialogCartAddBinding
-import com.woowahan.banchan.extension.toCashString
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

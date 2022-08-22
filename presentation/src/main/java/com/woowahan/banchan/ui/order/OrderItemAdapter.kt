@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemOrderHorizontalBinding
 import com.woowahan.banchan.databinding.ItemOrderStateFooterBinding
 import com.woowahan.banchan.databinding.ItemOrderStateHeaderBinding
-import com.woowahan.banchan.ui.adapter.BestBanchanAdapter
 import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.OrderItemModel
 import com.woowahan.domain.model.OrderItemTypeModel

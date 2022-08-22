@@ -2,7 +2,6 @@ package com.woowahan.banchan
 
 import androidx.recyclerview.widget.DiffUtil
 import com.woowahan.domain.model.BanchanModel
-import timber.log.Timber
 
 class BanchanModelDiffUtilCallback(
     private val oldList: List<BanchanModel>,

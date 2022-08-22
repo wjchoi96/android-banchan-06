@@ -1,9 +1,7 @@
 package com.woowahan.banchan
 
 import androidx.recyclerview.widget.DiffUtil
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
-import timber.log.Timber
 
 class RecentViewedModelDiffUtilCallback(
     private val oldList: List<RecentViewedItemModel>,

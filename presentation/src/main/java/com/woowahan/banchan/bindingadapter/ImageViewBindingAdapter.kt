@@ -1,11 +1,9 @@
 package com.woowahan.banchan.bindingadapter
 
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import coil.load
 import com.woowahan.banchan.R
-import com.woowahan.banchan.extension.toCashString
 import timber.log.Timber
 
 @BindingAdapter("android:loadImageUseCoil")

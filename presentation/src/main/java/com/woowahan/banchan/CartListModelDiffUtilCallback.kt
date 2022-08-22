@@ -3,7 +3,6 @@ package com.woowahan.banchan
 import androidx.recyclerview.widget.DiffUtil
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.domain.model.CartListItemModel
-import timber.log.Timber
 
 class CartListModelDiffUtilCallback(
     private val oldList: List<CartListItemModel>,
