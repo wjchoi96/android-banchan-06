@@ -18,7 +18,11 @@ fun Date.getTimeString(): String {
                 "${hour}시간전"
             else{
                 val min = TimeUnit.MILLISECONDS.toMinutes(lastDateMill)
-                "${min}분전"
+                if (min == 0L){
+                    "방금전"
+                }else {
+                    "${min}분전"
+                }
             }
         }
         year>0 -> {
