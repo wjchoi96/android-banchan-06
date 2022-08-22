@@ -32,6 +32,7 @@ object NotificationUtil {
 
         val builder = NotificationCompat.Builder(context, channelId)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(context.getString(R.string.order_complete))
             .setContentText("${itemName}의 ${context.getString(R.string.order_complete)}")
             .setContentIntent(resultPendingIntent)
@@ -45,10 +46,9 @@ object NotificationUtil {
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(channelId, channelId, importance).apply {
-                description = channelId
-            }
-            val notificationManager: NotificationManager = context.getSystemService(NotificationManager::class.java)
+            val channel = NotificationChannel(channelId, channelId, importance)
+            val notificationManager: NotificationManager =
+                context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)
         }
     }
