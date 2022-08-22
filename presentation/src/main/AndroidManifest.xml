@@ -25,6 +25,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.order.OrderItemActivity"
+            android:parentActivityName=".ui.root.RootActivity"
             android:exported="false" />
         <activity
             android:name=".ui.recentviewed.RecentViewedActivity"
