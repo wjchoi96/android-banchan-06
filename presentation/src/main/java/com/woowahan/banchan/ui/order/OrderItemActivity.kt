@@ -36,9 +36,7 @@ class OrderItemActivity : BaseActivity<ActivityOrderItemBinding>() {
     }
 
     private val viewModel: OrderItemViewModel by viewModels()
-    private val adapter: OrderItemAdapter by lazy {
-        OrderItemAdapter()
-    }
+    private val adapter: OrderItemAdapter = OrderItemAdapter()
 
     override val layoutResId: Int
         get() = R.layout.activity_order_item
