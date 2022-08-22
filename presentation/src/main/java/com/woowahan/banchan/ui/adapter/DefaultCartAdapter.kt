@@ -164,8 +164,8 @@ class DefaultCartAdapter(
             binding.showPrice = item.showPriceInfo
             binding.menuPrice = item.price
             binding.totalPrice = item.totalPrice
-            binding.btnEnabled = (10000L <= item.price)
-            val freeDelivery = (40000L - item.price)
+            binding.btnEnabled = (item.minimumOrderPrice <= item.price)
+            val freeDelivery = (item.freeDeliveryFeePrice - item.price)
             binding.freeDelivery = freeDelivery.toCashString()
             binding.isFreeDelivery = (freeDelivery <= 0)
             if (freeDelivery <= 0) {

@@ -26,8 +26,10 @@ class FetchCartItemsUseCase(
                                 CartListItemModel.Footer(
                                     price = 0L,
                                     recentViewedItems = recentViewedList.getOrThrow(),
+                                    deliveryFee = DeliveryConstant.DeliveryFee,
+                                    minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                                    freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
                                     showPriceInfo = cartList.isEmpty(),
-                                    deliveryFee = DeliveryConstant.DeliveryFee
                                 )
                             )
                         )
@@ -41,8 +43,10 @@ class FetchCartItemsUseCase(
                             CartListItemModel.Footer(
                                 price = price,
                                 recentViewedItems = recentViewedList.getOrThrow(),
-                                showPriceInfo = cartList.isEmpty(),
-                                deliveryFee = DeliveryConstant.DeliveryFee
+                                deliveryFee = DeliveryConstant.DeliveryFee,
+                                minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                                freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
+                                showPriceInfo = cartList.isEmpty()
                             )
                         ))
                     }
@@ -57,8 +61,10 @@ class FetchCartItemsUseCase(
                         CartListItemModel.Footer(
                             price = 0L,
                             recentViewedItems = emptyList(),
-                            showPriceInfo = false,
-                            deliveryFee = DeliveryConstant.DeliveryFee
+                            deliveryFee = DeliveryConstant.DeliveryFee,
+                            minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
+                            freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
+                            showPriceInfo = false
                         )
                     )
                 )
