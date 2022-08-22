@@ -14,7 +14,7 @@ object NotificationUtil {
 
     fun createNotification(
         context: Context,
-        itemName: String,
+        itemName: String?,
         orderId: Long,
     ) {
         val navigateIntent = OrderItemActivity.get(context, orderId = orderId)
