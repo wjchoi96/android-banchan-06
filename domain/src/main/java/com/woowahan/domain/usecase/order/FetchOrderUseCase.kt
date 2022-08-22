@@ -1,5 +1,6 @@
 package com.woowahan.domain.usecase.order
 
+import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.OrderItemTypeModel
 import com.woowahan.domain.repository.OrderRepository
@@ -19,7 +20,7 @@ class FetchOrderUseCase(
                         it.deliveryState,
                         it.time,
                         Calendar.getInstance().time, // flow 는 주소값이 달라도 내부값이 동일하면 emit 되지않는데, 그걸 방지하기 위함
-                        20, // test
+                        DeliveryConstant.DeliveryMinute,
                         it.items.size
                     )
                 ) + it.items.map { item ->

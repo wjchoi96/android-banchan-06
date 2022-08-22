@@ -67,7 +67,9 @@ class OrderItemAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 headerTimePayload -> {
                     when (holder) {
                         is OrderStateHeaderViewHolder -> {
-                            holder.bindDeliveryRemainingTime((orderItems[position] as OrderItemTypeModel.Header).deliveryStartDate)
+                            (orderItems[position] as OrderItemTypeModel.Header).let { item ->
+                                holder.bindDeliveryRemainingTime(item.deliveryStartDate, item.deliveryTimeMinute)
+                            }
                         }
                     }
                 }
@@ -122,18 +124,18 @@ class OrderItemAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
         fun bind(item: OrderItemTypeModel.Header){
-            bindDeliveryRemainingTime(item.deliveryStartDate)
+            bindDeliveryRemainingTime(item.deliveryStartDate, item.deliveryTimeMinute)
             bindDeliveryState(item.deliveryState)
             binding.deliveryCount = item.deliveryCount
         }
 
-        fun bindDeliveryRemainingTime(deliveryStartTime: Date?){
+        fun bindDeliveryRemainingTime(deliveryStartTime: Date?, deliveryMinute: Int){
             if(deliveryStartTime == null) return
             val current = Calendar.getInstance().time.time
             val start = deliveryStartTime.time
             val lastTimeSinceStartMinute = (((current-start)/1000)/60).toInt() // 배송 시작하고 지난 분
             Timber.d("lastTimeSinceStartMinute => $lastTimeSinceStartMinute => ${(current-start)/1000}")
-            val remainingMinute = if(lastTimeSinceStartMinute >= DeliveryConstant.DeliveryMinute)
+            val remainingMinute = if(lastTimeSinceStartMinute >= deliveryMinute)
                 0
             else
                 DeliveryConstant.DeliveryMinute - lastTimeSinceStartMinute
