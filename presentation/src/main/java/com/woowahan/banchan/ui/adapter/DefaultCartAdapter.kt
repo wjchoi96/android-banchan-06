@@ -9,6 +9,7 @@ import com.woowahan.banchan.databinding.ItemCartEmptyBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
+import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.CoroutineScope
@@ -164,12 +165,12 @@ class DefaultCartAdapter(
             binding.showPrice = item.showPriceInfo
             binding.menuPrice = item.price
             binding.totalPrice = item.totalPrice
-            binding.btnEnabled = (10000L <= item.price)
-            val freeDelivery = (40000L - item.price)
+            binding.btnEnabled = (DeliveryConstant.MinimumOrderPrice <= item.price)
+            val freeDelivery = (DeliveryConstant.FreeDeliveryFeePrice - item.price)
             binding.freeDelivery = freeDelivery.toCashString()
             binding.isFreeDelivery = (freeDelivery <= 0)
             if (freeDelivery <= 0) {
-                binding.footerItem = item.copy(deliveryFee = 0L)
+                binding.footerItem = item.copy(deliveryFee = DeliveryConstant.FreeDeliveryFee)
             } else {
                 binding.footerItem = item
             }
