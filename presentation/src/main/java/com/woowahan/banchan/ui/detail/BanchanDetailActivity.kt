@@ -3,6 +3,7 @@ package com.woowahan.banchan.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityBanchanDetailBinding
@@ -11,14 +12,19 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.viewmodel.DetailViewModel
 import com.woowahan.banchan.ui.viewmodel.OrderItemViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
+class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>() {
     private val viewModel: DetailViewModel by viewModels()
+
+    override val snackBarView: View by lazy {
+        binding.layoutBackground
+    }
 
     companion object {
         private const val HASH = "hash"
