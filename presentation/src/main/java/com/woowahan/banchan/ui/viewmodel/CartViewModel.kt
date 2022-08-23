@@ -37,10 +37,6 @@ class CartViewModel @Inject constructor(
         MutableStateFlow(emptyList())
     val cartItems = _cartItems.asStateFlow()
 
-    private val _recentViewedItems: MutableStateFlow<List<RecentViewedItemModel>> =
-        MutableStateFlow(emptyList())
-    val recentViewedItems = _recentViewedItems.asStateFlow()
-
     private val _eventFlow: MutableSharedFlow<UiEvent> =
         MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -57,7 +53,7 @@ class CartViewModel @Inject constructor(
             _dataLoading.value = true
             fetchCartItemsUseCase().collect {
                 it.onSuccess {
-                    _cartItems.value = it
+                    _cartItems.value = it.toList()
                 }.onFailureWithData { it, data ->
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -237,13 +233,15 @@ class CartViewModel @Inject constructor(
                 .collect { event ->
                     event.onSuccess {
                         clearCart(orderItems)
-                        _eventFlow.emit(UiEvent.DeliveryAlarmSetting(
-                            it,
-                            orderItems.firstOrNull()?.title,
-                            orderItems.size,
-                            DeliveryConstant.DeliveryMinute)
+                        _eventFlow.emit(
+                            UiEvent.DeliveryAlarmSetting(
+                                it,
+                                orderItems.firstOrNull()?.title,
+                                orderItems.size,
+                                DeliveryConstant.DeliveryMinute
+                            )
                         )
-                       _eventFlow.emit(UiEvent.GoToOrderList(it))
+                        _eventFlow.emit(UiEvent.GoToOrderList(it))
                     }.onFailure {
                         it.message?.let {
                             _eventFlow.emit(UiEvent.ShowToast(it))
@@ -263,7 +261,7 @@ class CartViewModel @Inject constructor(
             .flowOn(Dispatchers.Default)
             .collect { event ->
                 event.onSuccess { isSuccess ->
-                    when(isSuccess){
+                    when (isSuccess) {
                         true -> {}
                         else -> _eventFlow.emit(UiEvent.ShowToast("Can't Clear Cart"))
                     }
@@ -294,6 +292,6 @@ class CartViewModel @Inject constructor(
             val orderTitle: String?,
             val orderItemCount: Int,
             val minute: Int
-        ): UiEvent()
+        ) : UiEvent()
     }
 }
