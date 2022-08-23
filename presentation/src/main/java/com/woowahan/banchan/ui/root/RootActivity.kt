@@ -1,13 +1,17 @@
 package com.woowahan.banchan.ui.root
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityMainBinding
@@ -62,6 +66,15 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
                 }
             }
         )
+
+        splashScreen.setOnExitAnimationListener{ splashView ->
+            ObjectAnimator.ofFloat(splashView.iconView, View.TRANSLATION_X, splashView.view.width.toFloat()).apply {
+                duration = 2000
+                doOnEnd {
+                    splashView.remove()
+                }
+            }.start()
+        }
 
         NotificationUtil.createNotificationChannel(this)
         setUpViewPager()

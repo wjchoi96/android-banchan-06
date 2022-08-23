@@ -66,7 +66,7 @@ class RootViewModel @Inject constructor(
             }
         }
 
-        Handler(Looper.myLooper()!!).postDelayed({ _isReady = true }, 3000)
+        Handler(Looper.myLooper()!!).postDelayed({ _isReady = true }, 2000)
     }
 
 }
