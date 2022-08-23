@@ -10,7 +10,7 @@ import timber.log.Timber
 fun loadImageUseCoil(imageView: ImageView, imageUrl: String) {
     imageView.load(imageUrl) {
         placeholder(R.drawable.bg_image_placeholder)
-        error(R.drawable.bg_error)
+        error(R.drawable.bg_image_default)
         listener(
             onError = { _, error ->
                 Timber.d("loadImageUseCoil onError => $imageUrl")
