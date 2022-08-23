@@ -54,7 +54,6 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
         get() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Timber.d("splash debug => showSplash[$showSplash]")
         if (!showSplash) {
             splashScreen = installSplashScreen()
         }else{
@@ -77,7 +76,6 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
 
         if (!showSplash) {
             showSplash = true
-            Timber.d("splash debug => showSplash2[$showSplash]")
             splashScreen.setOnExitAnimationListener { splashView ->
                 ObjectAnimator.ofFloat(
                     splashView.iconView,
@@ -86,7 +84,6 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
                 ).apply {
                     duration = 1000
                     doOnEnd {
-                        Timber.d("splash debug => splash animation end")
                         splashView.remove()
                     }
                 }.start()
