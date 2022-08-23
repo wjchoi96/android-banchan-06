@@ -4,7 +4,7 @@
     package="com.woowahan.banchan">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:name=".application.BanchanOrderApplication"
@@ -18,20 +18,24 @@
         android:theme="@style/Theme.Banchan"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <receiver android:name=".background.DeliveryAlarmReceiver"/>
+        <activity
+            android:name=".ui.detail.BanchanDetailActivity"
+            android:exported="false" />
+
+        <receiver android:name=".background.DeliveryAlarmReceiver" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
-            tools:node="remove">
-        </provider>
+            tools:node="remove"></provider>
 
         <activity
             android:name=".ui.order.OrderListActivity"
             android:exported="false" />
         <activity
             android:name=".ui.order.OrderItemActivity"
-            android:parentActivityName=".ui.root.RootActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".ui.root.RootActivity" />
         <activity
             android:name=".ui.recentviewed.RecentViewedActivity"
             android:exported="false" />

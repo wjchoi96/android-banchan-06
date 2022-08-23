@@ -8,4 +8,7 @@ data class BanchanDetailModel(
     val deliveryFee: Long,
     val freeDeliveryFeePrice: Long
 ) {
+    companion object{
+        fun empty() = BanchanDetailModel("", "", "", 0L, 0L)
+    }
 }

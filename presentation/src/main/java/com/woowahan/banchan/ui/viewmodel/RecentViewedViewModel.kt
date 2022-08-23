@@ -138,5 +138,4 @@ class RecentViewedViewModel @Inject constructor(
         object ShowCartView: UiEvent()
         data class ShowDetailView(val banchan: BaseBanchan): UiEvent()
     }
-
 }
