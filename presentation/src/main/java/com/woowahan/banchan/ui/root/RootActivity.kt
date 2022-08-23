@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -31,8 +32,11 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class RootActivity : BaseActivity<ActivityMainBinding>() {
-
+    companion object {
+        private var showSplash = false
+    }
     private val viewModel: RootViewModel by viewModels()
+    private lateinit var splashScreen: SplashScreen
 
     private val fragmentList: List<Pair<String, Fragment>> by lazy {
         listOf(
@@ -50,8 +54,12 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
         get() = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val splashScreen = installSplashScreen()
-
+        Timber.d("splash debug => showSplash[$showSplash]")
+        if (!showSplash) {
+            splashScreen = installSplashScreen()
+        }else{
+            this.setTheme(R.style.Theme_Banchan)
+        }
         super.onCreate(savedInstanceState)
 
         binding.root.viewTreeObserver.addOnPreDrawListener(
@@ -67,13 +75,22 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
             }
         )
 
-        splashScreen.setOnExitAnimationListener{ splashView ->
-            ObjectAnimator.ofFloat(splashView.iconView, View.TRANSLATION_X, splashView.view.width.toFloat()).apply {
-                duration = 1000
-                doOnEnd {
-                    splashView.remove()
-                }
-            }.start()
+        if (!showSplash) {
+            showSplash = true
+            Timber.d("splash debug => showSplash2[$showSplash]")
+            splashScreen.setOnExitAnimationListener { splashView ->
+                ObjectAnimator.ofFloat(
+                    splashView.iconView,
+                    View.TRANSLATION_X,
+                    splashView.view.width.toFloat()
+                ).apply {
+                    duration = 1000
+                    doOnEnd {
+                        Timber.d("splash debug => splash animation end")
+                        splashView.remove()
+                    }
+                }.start()
+            }
         }
 
         NotificationUtil.createNotificationChannel(this)
