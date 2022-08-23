@@ -69,7 +69,7 @@ class RootActivity : BaseActivity<ActivityMainBinding>() {
 
         splashScreen.setOnExitAnimationListener{ splashView ->
             ObjectAnimator.ofFloat(splashView.iconView, View.TRANSLATION_X, splashView.view.width.toFloat()).apply {
-                duration = 2000
+                duration = 1000
                 doOnEnd {
                     splashView.remove()
                 }
