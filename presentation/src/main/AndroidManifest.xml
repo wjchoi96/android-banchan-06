@@ -44,7 +44,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.root.RootActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
