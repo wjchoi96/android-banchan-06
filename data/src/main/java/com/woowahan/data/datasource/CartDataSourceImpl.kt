@@ -6,6 +6,7 @@ import com.woowahan.data.entity.dto.CartEntity
 import com.woowahan.data.entity.table.BanchanItemTableEntity
 import com.woowahan.data.entity.table.CartTableEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -30,6 +31,17 @@ class CartDataSourceImpl @Inject constructor(
         val res = cartDao.removeCartItem(*hashes)
         banchanDao.removeBanchanItems(*hashes)
         emit(res)
+    }.catch {
+        when(it){
+            is android.database.sqlite.SQLiteConstraintException -> {
+                println("SQLiteConstraintException debug => ${it.message}, ${it.message?.contains("1811")}")
+                it.printStackTrace()
+                if(it.message?.contains("1811") == true)
+                    emit(hashes.size)
+                else
+                    throw it
+            }
+        }
     }
 
     // 항목 개수 업데이트 -> 이때 기존에 없는 항목을 업데이트 시도한다면 null 을 리턴받을것
