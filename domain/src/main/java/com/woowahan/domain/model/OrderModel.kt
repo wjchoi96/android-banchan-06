@@ -17,7 +17,7 @@ sealed class OrderItemTypeModel {
 
     data class Footer(
         val price: Long,
-        val deliveryFee: Long,
+        val deliveryFee: Long
     ) : OrderItemTypeModel() {
         val totalPrice: Long = price + deliveryFee
     }

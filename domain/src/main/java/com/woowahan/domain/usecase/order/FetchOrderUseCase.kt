@@ -12,30 +12,30 @@ import java.util.*
 class FetchOrderUseCase(
     private val orderRepository: OrderRepository
 ) {
-    suspend operator fun invoke(orderId: Long): Flow<DomainEvent<List<OrderItemTypeModel>>> =
-        flow<DomainEvent<List<OrderItemTypeModel>>> {
-            orderRepository.fetchOrder(orderId)
-                .collect {
-                    val totalMenuPrice = it.items.sumOf { item -> (item.price * item.count) }
-                    val list = listOf(
-                        OrderItemTypeModel.Header(
-                            it.deliveryState,
-                            it.time,
-                            Calendar.getInstance().time, // flow 는 주소값이 달라도 내부값이 동일하면 emit 되지않는데, 그걸 방지하기 위함
-                            20, // test
-                            it.items.size
-                        )
-                    ) + it.items.map { item ->
-                        OrderItemTypeModel.Order(item)
-                    } + listOf(
-                        OrderItemTypeModel.Footer(
-                            price = totalMenuPrice,
-                            deliveryFee = if (totalMenuPrice < DeliveryConstant.FreeDeliveryFeePrice) DeliveryConstant.DeliveryFee else DeliveryConstant.FreeDeliveryFee
-                        )
+    suspend operator fun invoke(orderId: Long): Flow<DomainEvent<List<OrderItemTypeModel>>> = flow<DomainEvent<List<OrderItemTypeModel>>> {
+        orderRepository.fetchOrder(orderId)
+            .collect {
+                val list = listOf(
+                    OrderItemTypeModel.Header(
+                        it.deliveryState,
+                        it.time,
+                        Calendar.getInstance().time, // flow 는 주소값이 달라도 내부값이 동일하면 emit 되지않는데, 그걸 방지하기 위함
+                        DeliveryConstant.DeliveryMinute,
+                        it.items.size
                     )
-                    emit(DomainEvent.success(list))
-                }
-        }.catch {
-            emit(DomainEvent.failure(it))
-        }
+                ) + it.items.map { item ->
+                    OrderItemTypeModel.Order(item)
+                } + listOf(
+                    it.items.sumOf { item -> item.price * item.count }.run {
+                        OrderItemTypeModel.Footer(
+                            this,
+                            if(this >= DeliveryConstant.FreeDeliveryFeePrice) DeliveryConstant.FreeDeliveryFeePrice else DeliveryConstant.DeliveryFee
+                        )
+                    }
+                )
+                emit(DomainEvent.success(list))
+            }
+    }.catch {
+        emit(DomainEvent.failure(it))
+    }
 }
