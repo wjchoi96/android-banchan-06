@@ -1,9 +1,6 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.woowahan.banchan.extension.filterType
-import com.woowahan.banchan.extension.getNewListApplyCartState
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
@@ -20,10 +17,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SideDishBanchanViewModel @Inject constructor(
     private val fetchSideBanchanUseCase: FetchSideDishBanchanUseCase,
-    private val insertCartItemUseCase: InsertCartItemUseCase,
-    private val removeCartItemUseCase: RemoveCartItemUseCase
-) : ViewModel() {
-    private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    override val insertCartItemUseCase: InsertCartItemUseCase,
+    override val removeCartItemUseCase: RemoveCartItemUseCase
+) : BaseCartUpdateViewModel() {
+    override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
     private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -79,53 +76,51 @@ class SideDishBanchanViewModel @Inject constructor(
         }
     }
 
-    private fun removeItemFromCart(banchanModel: BanchanModel) {
-        viewModelScope.launch {
-            _dataLoading.emit(true)
-            removeCartItemUseCase.invoke(banchanModel.hash)
-                .flowOn(Dispatchers.Default)
-                .collect{ event ->
-                    event.onSuccess {
-                        defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, false)
-                        _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, false)
-                        _eventFlow.emit(UiEvent.ShowDialog(
-                            getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다")
-                        ))
-                    }.onFailure {
-                        it.printStackTrace()
-                        it.message?.let { message ->
-                            _eventFlow.emit(UiEvent.ShowToast(message))
+    override val insertCartResultEvent: (BaseBanchan, Boolean) -> Unit
+        get() = { _, _ ->
+            viewModelScope.launch {
+                _eventFlow.emit(
+                    UiEvent.ShowDialog(
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다"){
+                            viewModelScope.launch {
+                                _eventFlow.emit(UiEvent.ShowCartView)
+                            }
                         }
-                    }.also {
-                        _dataLoading.emit(false)
-                    }
-                }
+                    ))
+            }
         }
-    }
+    override val insertCartThrowableEvent: (Throwable) -> Unit
+        get() = {
+            viewModelScope.launch {
+                it.printStackTrace()
+                it.message?.let { message ->
+                    _eventFlow.emit(UiEvent.ShowSnackBar(message))
+                }
+            }
+        }
 
-    private fun insertItemsToCart(banchanModel: BaseBanchan, count: Int) {
-        viewModelScope.launch {
-            _dataLoading.emit(true)
-            insertCartItemUseCase.invoke(banchanModel, count)
-                .flowOn(Dispatchers.Default)
-                .collect{ event ->
-                    event.onSuccess {
-                        defaultBanchans = defaultBanchans.getNewListApplyCartState(banchanModel, true)
-                        _banchans.value = _banchans.value.getNewListApplyCartState(banchanModel, true)
-                        _eventFlow.emit(UiEvent.ShowDialog(
-                            getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다")
-                        ))
-                    }.onFailure {
-                        it.printStackTrace()
-                        it.message?.let { message ->
-                            _eventFlow.emit(UiEvent.ShowSnackBar(message))
+    override val removeCartResultEvent: (BaseBanchan, Boolean) -> Unit
+        get() = { _, _ ->
+            viewModelScope.launch {
+                _eventFlow.emit(
+                    UiEvent.ShowDialog(
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다"){
+                            viewModelScope.launch {
+                                _eventFlow.emit(UiEvent.ShowCartView)
+                            }
                         }
-                    }.also {
-                        _dataLoading.emit(false)
-                    }
-                }
+                    ))
+            }
         }
-    }
+    override val removeCartThrowableEvent: (Throwable) -> Unit
+        get() = {
+            viewModelScope.launch{
+                it.printStackTrace()
+                it.message?.let { message ->
+                    _eventFlow.emit(UiEvent.ShowToast(message))
+                }
+            }
+        }
 
     private fun filterBanchan(filterType: BanchanModel.FilterType) {
         viewModelScope.launch {
@@ -144,18 +139,6 @@ class SideDishBanchanViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun getCartItemUpdateDialog(content: String): DialogUtil.DialogCustomBuilder{
-        return DialogUtil.DialogCustomBuilder(
-            content,
-            "계속 쇼핑하기" to {},
-            "장바구니 확인" to {
-                viewModelScope.launch {
-                    _eventFlow.emit(SideDishBanchanViewModel.UiEvent.ShowCartView)
-                }
-            }
-        )
     }
 
     val filterItemSelect: (Int) -> Unit = {

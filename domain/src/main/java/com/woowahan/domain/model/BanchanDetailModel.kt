@@ -5,6 +5,10 @@ data class BanchanDetailModel(
     val title: String,
     val imageUrl: String,
     val price: Long,
-    val deliveryFee: Long
+    val deliveryFee: Long,
+    val freeDeliveryFeePrice: Long
 ) {
+    companion object{
+        fun empty() = BanchanDetailModel("", "", "", 0L, 0L, 0L)
+    }
 }

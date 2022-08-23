@@ -16,7 +16,7 @@ abstract class BaseFragment<T: ViewDataBinding>: Fragment() {
 
     private var _binding: T? = null
     protected val binding get() = _binding ?: error("Binding not Initialized")
-    abstract val layoutResId: Int
+    protected abstract val layoutResId: Int
 
     private val logLifecycleObserver = LifeCycleLogObserver(TAG)
 

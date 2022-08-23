@@ -1,6 +1,7 @@
 package com.woowahan.domain.constant
 
 object DeliveryConstant {
+    const val FreeDeliveryFee:Long = 0L
     const val DeliveryFee: Long = 2500L
     const val MinimumOrderPrice: Long = 10000L
     const val FreeDeliveryFeePrice: Long = 40000L
