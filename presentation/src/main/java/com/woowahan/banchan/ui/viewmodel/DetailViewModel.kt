@@ -58,9 +58,9 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    fun initDate(hash: String, title: String) {
-        this.hash = hash
-        this.title = title
+    fun initDate(hash: String?, title: String?) {
+        this.hash = hash ?: ""
+        this.title = title ?: ""
     }
 
     sealed class UiEvent {

@@ -38,7 +38,7 @@ class BanchanDetailActivity : BaseActivity<ActivityCartBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.initDate(intent.getStringExtra(HASH)!!, intent.getStringExtra(TITLE)!!)
+        viewModel.initDate(intent.getStringExtra(HASH), intent.getStringExtra(TITLE))
         viewModel.fetchBanchanDetail()
         observeData()
     }
