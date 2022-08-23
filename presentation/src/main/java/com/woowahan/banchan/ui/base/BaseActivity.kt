@@ -10,7 +10,7 @@ abstract class BaseActivity<T: ViewDataBinding>: AppCompatActivity() {
     protected val TAG: String = this::class.java.simpleName
 
     protected lateinit var binding: T
-    abstract val layoutResId: Int
+    protected abstract val layoutResId: Int
 
     private val logLifecycleObserver = LifeCycleLogObserver(TAG)
 

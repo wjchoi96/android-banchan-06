@@ -85,8 +85,10 @@ object UseCaseModule {
      * Recent Viewed
      */
     @Provides
-    fun provideFetchAllRecentViewedItemUseCase(repo: RecentViewedRepository) =
-        FetchRecentViewedItemUseCase(repo)
+    fun provideFetchAllRecentViewedItemUseCase(
+        repo: RecentViewedRepository,
+        fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
+    ) = FetchRecentViewedItemUseCase(repo, fetchCartItemsKeyUseCase)
 
     @Provides
     fun provideInsertRecentViewedItemUseCase(repo: RecentViewedRepository) =
