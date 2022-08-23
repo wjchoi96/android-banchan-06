@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import com.woowahan.banchan.R
+import com.woowahan.banchan.databinding.ActivityBanchanDetailBinding
 import com.woowahan.banchan.databinding.ActivityCartBinding
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BanchanDetailActivity : BaseActivity<ActivityCartBinding>() {
+class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
     private val viewModel: DetailViewModel by viewModels()
 
     companion object {
