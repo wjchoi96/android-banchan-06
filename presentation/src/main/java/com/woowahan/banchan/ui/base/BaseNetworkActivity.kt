@@ -27,7 +27,7 @@ abstract class BaseNetworkActivity<T: ViewDataBinding>: BaseActivity<T>(){
             Timber.d("networkCallback => onAvailable")
             if(!networkState){
                 networkState = true
-                showTopSnackBar(getString(R.string.network_available_state), snackBarView)
+                showNetworkSnackBar(networkState)
             }
         }
 
@@ -36,7 +36,7 @@ abstract class BaseNetworkActivity<T: ViewDataBinding>: BaseActivity<T>(){
             Timber.d("networkCallback => onLost")
             if(networkState){
                 networkState = false
-                showTopSnackBar(getString(R.string.network_lost_state), snackBarView)
+                showNetworkSnackBar(networkState)
             }
         }
     }
@@ -49,6 +49,10 @@ abstract class BaseNetworkActivity<T: ViewDataBinding>: BaseActivity<T>(){
 
     override fun onStart() {
         super.onStart()
+        networkState = isNetworkAvailable()
+        showNetworkSnackBar(networkState)
+        Timber.d("networkCallback => $networkState")
+
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N -> {
                 connectivityManager.registerDefaultNetworkCallback(networkCallback)
@@ -64,4 +68,20 @@ abstract class BaseNetworkActivity<T: ViewDataBinding>: BaseActivity<T>(){
         connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 
+    private fun showNetworkSnackBar(networkConnect: Boolean){
+        when(networkConnect){
+            true -> showTopSnackBar(getString(R.string.network_available_state), snackBarView)
+            else -> showTopSnackBar(getString(R.string.network_lost_state), snackBarView)
+        }
+    }
+
+    private fun isNetworkAvailable(): Boolean {
+        val nw = connectivityManager.activeNetwork
+        val actNw = connectivityManager.getNetworkCapabilities(nw) ?: return false
+        return when {
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            else -> false
+        }
+    }
 }
