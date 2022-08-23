@@ -1,5 +1,7 @@
 package com.woowahan.banchan.ui.viewmodel
 
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.domain.usecase.cart.GetCartItemsSizeFlowUseCase
@@ -17,8 +19,10 @@ import javax.inject.Inject
 class RootViewModel @Inject constructor(
     private val getCartItemsSizeFlowUseCase: GetCartItemsSizeFlowUseCase,
     private val getDeliveryOrderCountUseCase: GetDeliveryOrderCountUseCase
-): ViewModel() {
-
+) : ViewModel() {
+    private var _isReady = false
+    val isReady: Boolean
+        get() = _isReady
     private val _cartItemSize: MutableStateFlow<Int> = MutableStateFlow(0)
     val cartItemSize = _cartItemSize.asStateFlow()
 
@@ -41,7 +45,7 @@ class RootViewModel @Inject constructor(
                                 _cartItemSize.emit(it)
                             }
                         }
-                }
+                    }
             }
 
             launch {
@@ -58,9 +62,11 @@ class RootViewModel @Inject constructor(
                                 _deliveryItemSize.emit(it)
                             }
                         }
-                }
+                    }
             }
         }
+
+        Handler(Looper.myLooper()!!).postDelayed({ _isReady = true }, 3000)
     }
 
 }
