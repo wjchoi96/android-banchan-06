@@ -67,7 +67,7 @@
 
         <TextView
             android:textStyle="bold"
-            android:text="@{@string/order_items_title(title, itemSize)}"
+            android:text="@{itemSize>1 ? @string/order_items_title(title, itemSize) : title}"
             android:id="@+id/tv_title"
             app:layout_constraintStart_toEndOf="@id/iv_image"
             app:layout_constraintBottom_toTopOf="@id/tv_price"
