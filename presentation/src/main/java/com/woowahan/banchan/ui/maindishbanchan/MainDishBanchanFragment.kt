@@ -17,6 +17,7 @@ import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -78,10 +79,6 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = 1
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchMainDishBanchans()
-    }
     private fun observeData() {
         repeatOnStarted {
             launch {
