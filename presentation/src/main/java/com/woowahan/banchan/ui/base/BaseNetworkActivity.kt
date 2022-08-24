@@ -49,8 +49,12 @@ abstract class BaseNetworkActivity<T: ViewDataBinding>: BaseActivity<T>(){
 
     override fun onStart() {
         super.onStart()
-        networkState = isNetworkAvailable()
-        showNetworkSnackBar(networkState)
+        isNetworkAvailable().let {
+            if(it != networkState) {
+                networkState = it
+                showNetworkSnackBar(networkState)
+            }
+        }
         Timber.d("networkCallback => $networkState")
 
         when {
