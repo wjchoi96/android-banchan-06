@@ -5,8 +5,14 @@ import com.woowahan.data.apiservice.BestBanchanApiService
 import com.woowahan.data.apiservice.MainDishBanchanApiService
 import com.woowahan.data.apiservice.SideDishBanchanApiService
 import com.woowahan.data.apiservice.SoupDishBanchanApiService
-import com.woowahan.data.entity.*
+import com.woowahan.data.entity.BestBanchanEntity
+import com.woowahan.data.entity.MainDishBanchanEntity
+import com.woowahan.data.entity.SideDishBanchanEntity
+import com.woowahan.data.entity.SoupDishBanchanEntity
+import com.woowahan.domain.model.ApiIsNotSuccessful
+import com.woowahan.domain.model.ApiStatusCodeNotOk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -66,7 +72,7 @@ class BanchansRetrofitDataSourceImplTest{
         mockServer.enqueue(response)
 
         //When
-        val actualResult = banchansDataSource.fetchBestBanchans()
+        val actualResult = banchansDataSource.fetchBestBanchans().first()
 
         //Then
         val expected = Gson().fromJson(responseJson, BestBanchanEntity::class.java)
@@ -85,7 +91,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchBestBanchans() }
+            runTest { banchansDataSource.fetchBestBanchans().first() }
         }
 
         //Then
@@ -105,7 +111,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchBestBanchans() }
+            runTest { banchansDataSource.fetchBestBanchans().first() }
         }
 
         //Then
@@ -125,7 +131,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchBestBanchans() }
+            runTest { banchansDataSource.fetchBestBanchans().first() }
         }
 
         //Then
@@ -144,7 +150,7 @@ class BanchansRetrofitDataSourceImplTest{
         mockServer.enqueue(response)
 
         //When
-        val actualResult = banchansDataSource.fetchMainDishBanchans()
+        val actualResult = banchansDataSource.fetchMainDishBanchans().first()
 
         //Then
         val expected = Gson().fromJson(responseJson, MainDishBanchanEntity::class.java)
@@ -163,7 +169,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchMainDishBanchans() }
+            runTest { banchansDataSource.fetchMainDishBanchans().first() }
         }
 
         //Then
@@ -183,7 +189,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchMainDishBanchans() }
+            runTest { banchansDataSource.fetchMainDishBanchans().first() }
         }
 
         //Then
@@ -203,7 +209,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchMainDishBanchans() }
+            runTest { banchansDataSource.fetchMainDishBanchans().first() }
         }
 
         //Then
@@ -223,7 +229,7 @@ class BanchansRetrofitDataSourceImplTest{
         mockServer.enqueue(response)
 
         //When
-        val actualResult = banchansDataSource.fetchSoupDishBanchans()
+        val actualResult = banchansDataSource.fetchSoupDishBanchans().first()
 
         //Then
         val expected = Gson().fromJson(responseJson, SoupDishBanchanEntity::class.java)
@@ -242,7 +248,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchSoupDishBanchans() }
+            runTest { banchansDataSource.fetchSoupDishBanchans().first() }
         }
 
         //Then
@@ -262,7 +268,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchSoupDishBanchans() }
+            runTest { banchansDataSource.fetchSoupDishBanchans().first() }
         }
 
         //Then
@@ -282,7 +288,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchSoupDishBanchans() }
+            runTest { banchansDataSource.fetchSoupDishBanchans().first() }
         }
 
         //Then
@@ -301,7 +307,7 @@ class BanchansRetrofitDataSourceImplTest{
         mockServer.enqueue(response)
 
         //When
-        val actualResult = banchansDataSource.fetchSideDishBanchans()
+        val actualResult = banchansDataSource.fetchSideDishBanchans().first()
 
         //Then
         val expected = Gson().fromJson(responseJson, SideDishBanchanEntity::class.java)
@@ -320,7 +326,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchSideDishBanchans() }
+            runTest { banchansDataSource.fetchSideDishBanchans().first() }
         }
 
         //Then
@@ -340,7 +346,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchSideDishBanchans() }
+            runTest { banchansDataSource.fetchSideDishBanchans().first() }
         }
 
         //Then
@@ -360,7 +366,7 @@ class BanchansRetrofitDataSourceImplTest{
 
         //When
         val actualResult = catchThrowable {
-            runTest { banchansDataSource.fetchSideDishBanchans() }
+            runTest { banchansDataSource.fetchSideDishBanchans().first() }
         }
 
         //Then
