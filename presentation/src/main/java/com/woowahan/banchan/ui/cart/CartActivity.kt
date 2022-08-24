@@ -57,11 +57,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
         )
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchCartItems()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
