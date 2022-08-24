@@ -20,6 +20,7 @@ import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -125,7 +126,7 @@ class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
             }
 
             launch {
-                viewModel.banchans.collect {
+                viewModel.banchans.collectLatest {
                     adapter.updateList(it)
                 }
             }
