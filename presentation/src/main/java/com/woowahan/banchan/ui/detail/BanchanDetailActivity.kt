@@ -12,8 +12,11 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.ImageAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.DetailViewModel
 import com.woowahan.banchan.ui.viewmodel.OrderItemViewModel
+import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -55,6 +58,12 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
                             it.message,
                             binding.layoutBackground
                         )
+                        is DetailViewModel.UiEvent.ShowDialog -> {
+                            DialogUtil.show(this@BanchanDetailActivity, it.dialogBuilder)
+                        }
+                        is DetailViewModel.UiEvent.ShowCartView -> {
+                            startActivity(CartActivity.get(this@BanchanDetailActivity))
+                        }
                     }
                 }
             }

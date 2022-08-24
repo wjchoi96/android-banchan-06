@@ -341,6 +341,7 @@
                 android:minHeight="56dp"
                 android:text="@string/banchan_detail_order_text"
                 android:textColor="@color/white_ffffff"
+                android:onClickListener="@{()->vm.insertItemsToCart(banchanDetail)}"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
