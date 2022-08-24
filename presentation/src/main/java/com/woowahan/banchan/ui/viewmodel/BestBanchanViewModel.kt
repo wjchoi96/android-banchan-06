@@ -27,20 +27,17 @@ class BestBanchanViewModel @Inject constructor(
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val refreshDataLoading = _refreshDataLoading.asStateFlow()
-
     private val _banchans: MutableStateFlow<List<BestBanchanModel>> = MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun fetchBestBanchans() {
-        if (_dataLoading.value) {
-            _refreshDataLoading.value = false
-            return
-        }
+    init {
+        fetchBestBanchans()
+    }
+
+    private fun fetchBestBanchans() {
         viewModelScope.launch {
             _dataLoading.value = true
             fetchBestBanchanUseCase.invoke()
@@ -55,8 +52,6 @@ class BestBanchanViewModel @Inject constructor(
                         }
                     }.also {
                         _dataLoading.value = false
-                        if (_refreshDataLoading.value)
-                            _refreshDataLoading.value = false
                     }
                 }
         }
@@ -130,12 +125,6 @@ class BestBanchanViewModel @Inject constructor(
                 }
             }
         }
-
-
-    fun onRefresh() {
-        _refreshDataLoading.value = true
-        fetchBestBanchans()
-    }
 
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
