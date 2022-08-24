@@ -15,6 +15,7 @@ import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
@@ -46,38 +47,45 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
 
     private fun observeData() {
         repeatOnStarted {
-            viewModel.eventFlow.collect {
-                when (it) {
-                    is BestBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+            launch {
+                viewModel.eventFlow.collect {
+                    when (it) {
+                        is BestBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
 
-                    is BestBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
-                        it.message,
-                        binding.layoutBackground
-                    )
+                        is BestBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
 
-                    is BestBanchanViewModel.UiEvent.ShowDialog -> {
-                        DialogUtil.show(requireContext(), it.dialogBuilder)
-                    }
+                        is BestBanchanViewModel.UiEvent.ShowDialog -> {
+                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                        }
 
-                    is BestBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
-                        it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
-                    }
+                        is BestBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
+                            it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                        }
 
-                    is BestBanchanViewModel.UiEvent.ShowCartView -> {
-                        startActivity(CartActivity.get(requireContext()))
-                    }
+                        is BestBanchanViewModel.UiEvent.ShowCartView -> {
+                            startActivity(CartActivity.get(requireContext()))
+                        }
 
-                    is BestBanchanViewModel.UiEvent.ShowDetailView -> {
-                        startActivity(BanchanDetailActivity.get(requireContext(), it.banchanModel.hash, it.banchanModel.title))
+                        is BestBanchanViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(
+                                BanchanDetailActivity.get(
+                                    requireContext(),
+                                    it.banchanModel.hash,
+                                    it.banchanModel.title
+                                )
+                            )
+                        }
                     }
                 }
             }
-        }
 
-
-        repeatOnStarted {
-            viewModel.banchans.collect {
-                adapter.updateList(it)
+            launch {
+                viewModel.banchans.collect {
+                    adapter.updateList(it)
+                }
             }
         }
     }
