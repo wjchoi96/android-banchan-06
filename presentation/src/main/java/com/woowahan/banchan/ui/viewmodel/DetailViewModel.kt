@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanDetailModel
+import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.usecase.banchan.FetchBanchanDetailUseCase
+import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val fetchBanchanDetailUseCase: FetchBanchanDetailUseCase
+    private val fetchBanchanDetailUseCase: FetchBanchanDetailUseCase,
+    private val insertRecentViewedItemUseCase: InsertRecentViewedItemUseCase
 ) : ViewModel() {
     private var hash = ""
     private var title = ""
@@ -34,6 +37,14 @@ class DetailViewModel @Inject constructor(
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    fun insertRecentViewedItem(banchan: BanchanModel) {
+        viewModelScope.launch {
+            insertRecentViewedItemUseCase(banchan = banchan, Calendar.getInstance().time)
+                .flowOn(Dispatchers.IO)
+                .collect()
+        }
+    }
 
     fun fetchBanchanDetail() {
         if (_dataLoading.value) {

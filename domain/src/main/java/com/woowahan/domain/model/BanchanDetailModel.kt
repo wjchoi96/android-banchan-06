@@ -28,4 +28,21 @@ data class BanchanDetailModel(
             } else
                 0
         }
+
+    fun toBanchanModel(): BanchanModel {
+        return BanchanModel(
+            this.hash,
+            this.title,
+            this.description,
+            this.imageUrl,
+            this.price,
+            this.salePrice,
+            BanchanModel.ViewType.Item,
+            false
+        )
+    }
+
+    fun isNotEmpty(): Boolean {
+        return this != empty()
+    }
 }

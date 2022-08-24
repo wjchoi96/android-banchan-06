@@ -45,13 +45,16 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
         observeData()
     }
 
-    private fun observeData(){
+    private fun observeData() {
         repeatOnStarted {
             launch {
                 viewModel.eventFlow.collect {
-                    when(it){
+                    when (it) {
                         is DetailViewModel.UiEvent.ShowToast -> showToast(it.message)
-                        is DetailViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                        is DetailViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
                     }
                 }
             }
@@ -60,8 +63,14 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
                 viewModel.detail.collect {
                     binding.banchanDetail = it
                     binding.vm = viewModel
-                    binding.viewPagerAdapter = ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
-                    binding.imageAdapter = ImageAdapter(it.detailImages, ImageAdapter.ImageType.DETAIL)
+                    binding.viewPagerAdapter =
+                        ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
+                    binding.imageAdapter =
+                        ImageAdapter(it.detailImages, ImageAdapter.ImageType.DETAIL)
+
+                    if (it.isNotEmpty()) {
+                        viewModel.insertRecentViewedItem(it.toBanchanModel())
+                    }
                 }
             }
         }
