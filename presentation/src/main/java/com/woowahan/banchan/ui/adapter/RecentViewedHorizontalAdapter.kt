@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.RecentViewedModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemMenuSmallBinding
+import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RecentViewedHorizontalAdapter(
-    private val onItemCLick: (item: RecentViewedItemModel) -> Unit
+    private val itemClickListener: (String, String) -> Unit
 ) :
     RecyclerView.Adapter<RecentViewedHorizontalAdapter.RecentViewedHorizontalViewHolder>() {
     private var banchanList = listOf<RecentViewedItemModel>()
@@ -36,7 +37,7 @@ class RecentViewedHorizontalAdapter(
     ): RecentViewedHorizontalViewHolder {
         return RecentViewedHorizontalViewHolder.from(
             parent,
-            onItemCLick
+            itemClickListener
         )
     }
 
@@ -48,12 +49,12 @@ class RecentViewedHorizontalAdapter(
 
     class RecentViewedHorizontalViewHolder(
         private val binding: ItemMenuSmallBinding,
-        val itemClickListener: (RecentViewedItemModel) -> Unit
+        val itemClickListener: (String, String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                itemClickListener: (RecentViewedItemModel) -> Unit
+                itemClickListener: (String, String) -> Unit
             ): RecentViewedHorizontalViewHolder =
                 RecentViewedHorizontalViewHolder(
                     ItemMenuSmallBinding.inflate(
@@ -67,6 +68,7 @@ class RecentViewedHorizontalAdapter(
 
         fun bind(item: RecentViewedItemModel) {
             binding.banchan = item
+            binding.holder = this
         }
     }
 }

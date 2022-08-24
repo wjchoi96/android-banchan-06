@@ -18,7 +18,8 @@ class DefaultBanchanAdapter(
     private val bannerTitle: String,
     private val filterTypeList: List<String>,
     private val filterSelectedListener: (Int) -> Unit,
-    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
+    private val itemClickListener: (BanchanModel) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var selectedFilterPosition: Int = 0
     private var banchanList = listOf<BanchanModel>()
@@ -49,7 +50,7 @@ class DefaultBanchanAdapter(
                 menuCnt = banchanList.size - 2
             )
             else -> {
-                MenuVerticalViewHolder.from(parent, banchanInsertCartListener)
+                MenuVerticalViewHolder.from(parent, banchanInsertCartListener, itemClickListener)
             }
         }
     }

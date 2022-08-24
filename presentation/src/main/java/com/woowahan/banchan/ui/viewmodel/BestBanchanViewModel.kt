@@ -21,8 +21,7 @@ import javax.inject.Inject
 class BestBanchanViewModel @Inject constructor(
     private val fetchBestBanchanUseCase: FetchBestBanchanUseCase,
     override val insertCartItemUseCase: InsertCartItemUseCase,
-    override val removeCartItemUseCase: RemoveCartItemUseCase,
-    private val insertRecentViewedItemUseCase: InsertRecentViewedItemUseCase
+    override val removeCartItemUseCase: RemoveCartItemUseCase
 ) : BaseCartUpdateViewModel() {
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -78,9 +77,6 @@ class BestBanchanViewModel @Inject constructor(
 
     val itemClickListener: (BanchanModel) -> Unit = { banchan ->
         viewModelScope.launch {
-            insertRecentViewedItemUseCase(banchan, Calendar.getInstance().time)
-                .flowOn(Dispatchers.Default)
-                .collect()
             _eventFlow.emit(UiEvent.ShowDetailView(banchan))
         }
     }

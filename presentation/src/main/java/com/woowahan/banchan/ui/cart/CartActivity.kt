@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.lifecycle.ViewModel
 import com.woowahan.banchan.R
 import com.woowahan.banchan.background.DeliveryAlarmReceiver
 import com.woowahan.banchan.databinding.ActivityCartBinding
@@ -20,10 +21,13 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.order.OrderItemActivity
 import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
+import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
+import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.*
@@ -53,7 +57,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
             selectItem = viewModel.selectItem,
             recentViewedAllClicked = {
                 startActivity(RecentViewedActivity.get(this))
-            }
+            },
+            itemClickListener = viewModel.itemClickListener
         )
     }
 
@@ -106,6 +111,16 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
             repeatOnStarted {
                 viewModel.cartItems.collect {
                     cartAdapter.updateList(it)
+                }
+            }
+
+            repeatOnStarted {
+                viewModel.eventFlow.collect {
+                    when (it) {
+                        is CartViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(BanchanDetailActivity.get(this@CartActivity, it.banchanModel.hash, it.banchanModel.title))
+                        }
+                    }
                 }
             }
         }

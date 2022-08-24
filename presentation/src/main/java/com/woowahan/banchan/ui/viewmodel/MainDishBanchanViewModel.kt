@@ -39,6 +39,12 @@ class MainDishBanchanViewModel @Inject constructor(
         private set
     private lateinit var defaultBanchans: List<BanchanModel>
 
+    val itemClickListener: (BanchanModel) -> Unit = { banchan ->
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.ShowDetailView(banchan))
+        }
+    }
+
     fun fetchMainDishBanchans() {
         if (_dataLoading.value) {
             _refreshDataLoading.value = false
@@ -66,14 +72,14 @@ class MainDishBanchanViewModel @Inject constructor(
                         if (_refreshDataLoading.value)
                             _refreshDataLoading.value = false
                     }
-            }
+                }
         }
     }
 
     private fun filterBanchan(banchans: List<BanchanModel>, filterType: BanchanModel.FilterType) {
         viewModelScope.launch {
-            when(filterType){
-                BanchanModel.FilterType.Default ->  _banchans.value = defaultBanchans
+            when (filterType) {
+                BanchanModel.FilterType.Default -> _banchans.value = defaultBanchans
                 else -> {
                     kotlin.runCatching {
                         _banchans.value = banchans.filterType(filterType)
@@ -110,7 +116,7 @@ class MainDishBanchanViewModel @Inject constructor(
         get() = { _, _ ->
             viewModelScope.launch {
                 _eventFlow.emit(UiEvent.ShowDialog(
-                    getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다"){
+                    getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다") {
                         viewModelScope.launch {
                             _eventFlow.emit(UiEvent.ShowCartView)
                         }
@@ -118,6 +124,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 ))
             }
         }
+
     override val insertCartThrowableEvent: (Throwable) -> Unit
         get() = {
             viewModelScope.launch {
@@ -132,7 +139,7 @@ class MainDishBanchanViewModel @Inject constructor(
         get() = { _, _ ->
             viewModelScope.launch {
                 _eventFlow.emit(UiEvent.ShowDialog(
-                    getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다"){
+                    getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다") {
                         viewModelScope.launch {
                             _eventFlow.emit(UiEvent.ShowCartView)
                         }
@@ -142,7 +149,7 @@ class MainDishBanchanViewModel @Inject constructor(
         }
     override val removeCartThrowableEvent: (Throwable) -> Unit
         get() = {
-            viewModelScope.launch{
+            viewModelScope.launch {
                 it.printStackTrace()
                 it.message?.let { message ->
                     _eventFlow.emit(UiEvent.ShowToast(message))
@@ -179,8 +186,9 @@ class MainDishBanchanViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
-        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
-        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
-        object ShowCartView: UiEvent()
+        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder) : UiEvent()
+        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
+        object ShowCartView : UiEvent()
+        data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }

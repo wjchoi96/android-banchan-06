@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -16,28 +18,26 @@
             type="Boolean" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:onClickListener="@{()->holder.itemClickListener.invoke(banchan)}"
-        android:background="?android:attr/selectableItemBackground"
         android:id="@+id/layout_background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:onClickListener="@{()->holder.itemClickListener.invoke(banchan.hash, banchan.title)}">
 
         <ImageView
-            android:loadImageUseCoil="@{banchan.imageUrl}"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
             android:id="@+id/iv_menu_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:loadImageUseCoil="@{banchan.imageUrl}"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:background="@drawable/bg_image_placeholder"
-            />
+            tools:background="@drawable/bg_image_placeholder" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_add_cart"
@@ -51,17 +51,16 @@
             app:layout_constraintEnd_toEndOf="@id/iv_menu_image">
 
             <ImageView
+                android:id="@+id/iv_add_cart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:background="?android:attr/selectableItemBackground"
                 android:onClickListener="@{()-> holder.banchanInsertCartListener.invoke(banchan, isCartItem)}"
                 android:scaleType="fitCenter"
-                android:src="@{isCartItem ? @drawable/bg_add_cart_checked : @drawable/bg_cart_padding}"
-                android:id="@+id/iv_add_cart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:src="@{isCartItem ? @drawable/bg_add_cart_checked : @drawable/bg_cart_padding}" />
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:text="@{banchan.title}"
             android:id="@+id/tv_menu_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -69,6 +68,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="4dp"
+            android:text="@{banchan.title}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -88,38 +88,38 @@
             app:layout_constraintTop_toBottomOf="@id/tv_menu_name">
 
             <TextView
-                android:setCashString="@{banchan.salePrice != 0L ? banchan.salePrice : banchan.price}"
                 android:id="@+id/tv_final_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
+                android:setCashString="@{banchan.salePrice != 0L ? banchan.salePrice : banchan.price}"
                 android:textColor="@color/black_000000"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="최종가격" />
 
             <TextView
-                android:visibility="@{banchan.salePrice != 0L ? View.VISIBLE : View.INVISIBLE}"
-                android:setCashString="@{banchan.price}"
-                android:setCancelLine="@{banchan.salePrice != 0L}"
                 android:id="@+id/tv_original_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:setCancelLine="@{banchan.salePrice != 0L}"
+                android:setCashString="@{banchan.price}"
                 android:textColor="@color/grey_828282"
                 android:textSize="12sp"
+                android:visibility="@{banchan.salePrice != 0L ? View.VISIBLE : View.INVISIBLE}"
                 tools:text="정가" />
         </LinearLayout>
 
         <TextView
-            android:setTimeText="@{banchan.time}"
             android:id="@+id/tv_time_stamp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
             android:paddingVertical="5dp"
+            android:setTimeText="@{banchan.time}"
             android:textColor="@color/grey_828282"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@id/iv_menu_image"

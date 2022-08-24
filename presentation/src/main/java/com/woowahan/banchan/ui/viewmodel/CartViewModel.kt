@@ -3,6 +3,7 @@ package com.woowahan.banchan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.domain.constant.DeliveryConstant
+import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.model.RecentViewedItemModel
@@ -37,16 +38,19 @@ class CartViewModel @Inject constructor(
         MutableStateFlow(emptyList())
     val cartItems = _cartItems.asStateFlow()
 
-    private val _recentViewedItems: MutableStateFlow<List<RecentViewedItemModel>> =
-        MutableStateFlow(emptyList())
-    val recentViewedItems = _recentViewedItems.asStateFlow()
-
     private val _eventFlow: MutableSharedFlow<UiEvent> =
         MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
     val isCartItemIsEmpty: Boolean
         get() = _cartItems.value.size == 2
+
+    val itemClickListener: (String, String) -> Unit = { hash, title ->
+        viewModelScope.launch {
+            val banchan = BanchanModel.empty().copy(hash = hash, title = title)
+            _eventFlow.emit(UiEvent.ShowDetailView(banchan))
+        }
+    }
 
     fun fetchCartItems() {
         if (_dataLoading.value) {
@@ -237,13 +241,15 @@ class CartViewModel @Inject constructor(
                 .collect { event ->
                     event.onSuccess {
                         clearCart(orderItems)
-                        _eventFlow.emit(UiEvent.DeliveryAlarmSetting(
-                            it,
-                            orderItems.firstOrNull()?.title,
-                            orderItems.size,
-                            DeliveryConstant.DeliveryMinute)
+                        _eventFlow.emit(
+                            UiEvent.DeliveryAlarmSetting(
+                                it,
+                                orderItems.firstOrNull()?.title,
+                                orderItems.size,
+                                DeliveryConstant.DeliveryMinute
+                            )
                         )
-                       _eventFlow.emit(UiEvent.GoToOrderList(it))
+                        _eventFlow.emit(UiEvent.GoToOrderList(it))
                     }.onFailure {
                         it.message?.let {
                             _eventFlow.emit(UiEvent.ShowToast(it))
@@ -263,7 +269,7 @@ class CartViewModel @Inject constructor(
             .flowOn(Dispatchers.Default)
             .collect { event ->
                 event.onSuccess { isSuccess ->
-                    when(isSuccess){
+                    when (isSuccess) {
                         true -> {}
                         else -> _eventFlow.emit(UiEvent.ShowToast("Can't Clear Cart"))
                     }
@@ -294,6 +300,8 @@ class CartViewModel @Inject constructor(
             val orderTitle: String?,
             val orderItemCount: Int,
             val minute: Int
-        ): UiEvent()
+        ) : UiEvent()
+
+        data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }
