@@ -5,7 +5,12 @@ import com.woowahan.data.apiservice.BestBanchanApiService
 import com.woowahan.data.apiservice.MainDishBanchanApiService
 import com.woowahan.data.apiservice.SideDishBanchanApiService
 import com.woowahan.data.apiservice.SoupDishBanchanApiService
-import com.woowahan.data.entity.*
+import com.woowahan.data.entity.BestBanchanEntity
+import com.woowahan.data.entity.MainDishBanchanEntity
+import com.woowahan.data.entity.SideDishBanchanEntity
+import com.woowahan.data.entity.SoupDishBanchanEntity
+import com.woowahan.domain.model.ApiIsNotSuccessful
+import com.woowahan.domain.model.ApiStatusCodeNotOk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
