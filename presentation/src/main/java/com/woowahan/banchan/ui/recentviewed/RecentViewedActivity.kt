@@ -114,6 +114,7 @@ class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
 
                         is RecentViewedViewModel.UiEvent.ShowCartView -> {
                             startActivity(CartActivity.get(this@RecentViewedActivity))
+                            finish()
                         }
 
                         is RecentViewedViewModel.UiEvent.ShowDetailView -> {
