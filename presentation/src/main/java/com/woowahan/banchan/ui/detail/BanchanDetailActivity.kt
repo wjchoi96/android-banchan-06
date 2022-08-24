@@ -10,6 +10,7 @@ import com.woowahan.banchan.databinding.ActivityCartBinding
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
+import com.woowahan.banchan.ui.adapter.ImageAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.viewmodel.DetailViewModel
 import com.woowahan.banchan.ui.viewmodel.OrderItemViewModel
@@ -57,6 +58,10 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
 
             launch {
                 viewModel.detail.collect {
+                    binding.banchanDetail = it
+                    binding.quantity = viewModel.quantity
+                    binding.viewPagerAdapter = ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
+                    binding.imageAdapter = ImageAdapter(it.detailImages, ImageAdapter.ImageType.DETAIL)
                 }
             }
         }

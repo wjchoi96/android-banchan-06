@@ -18,6 +18,7 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
     private var hash = ""
     private var title = ""
+    var quantity = 1
 
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
