@@ -61,11 +61,6 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
         binding.rvSideDish.addItemDecoration(gridItemDecoration)
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchSoupDishBanchans()
-    }
-
     private fun observeData() {
         repeatOnStarted {
             viewModel.eventFlow.collect {
