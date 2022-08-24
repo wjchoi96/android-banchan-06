@@ -17,6 +17,7 @@ import com.woowahan.banchan.ui.viewmodel.SoupDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
@@ -62,36 +63,39 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
 
     private fun observeData() {
         repeatOnStarted {
-            viewModel.eventFlow.collect {
-                when (it) {
-                    is SoupDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+            launch {
+                viewModel.eventFlow.collect {
+                    when (it) {
+                        is SoupDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
 
-                    is SoupDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
-                        it.message,
-                        binding.layoutBackground
-                    )
+                        is SoupDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
 
-                    is SoupDishBanchanViewModel.UiEvent.ShowDialog -> {
-                        DialogUtil.show(requireContext(), it.dialogBuilder)
+                        is SoupDishBanchanViewModel.UiEvent.ShowDialog -> {
+                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                        }
+
+                        is SoupDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
+                            it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                        }
+
+                        is SoupDishBanchanViewModel.UiEvent.ShowCartView -> {
+                            startActivity(CartActivity.get(requireContext()))
+                        }
+
                     }
+                }
+            }
 
-                    is SoupDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
-                        it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
-                    }
-
-                    is SoupDishBanchanViewModel.UiEvent.ShowCartView -> {
-                        startActivity(CartActivity.get(requireContext()))
-                    }
-
+            launch {
+                viewModel.banchans.collect {
+                    adapter.updateList(it)
                 }
             }
         }
 
-        repeatOnStarted {
-            viewModel.banchans.collect {
-                adapter.updateList(it)
-            }
-        }
     }
 
     private val gridItemDecoration by lazy {
