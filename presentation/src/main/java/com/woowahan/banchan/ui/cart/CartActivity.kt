@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +21,7 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.order.OrderItemActivity
 import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
@@ -29,8 +31,12 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
-class CartActivity : BaseActivity<ActivityCartBinding>() {
+class CartActivity : BaseNetworkActivity<ActivityCartBinding>() {
     private val viewModel: CartViewModel by viewModels()
+
+    override val snackBarView: View by lazy {
+        binding.layoutBackground
+    }
 
     companion object {
         fun get(context: Context): Intent {

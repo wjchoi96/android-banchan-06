@@ -1,5 +1,7 @@
 package com.woowahan.domain.model
 
+import java.io.IOException
+
 data class ApiStatusCodeNotOk(
     private val statusCode: Int?
 ): Throwable() {
@@ -13,3 +15,7 @@ class ApiBodyIsNull: Throwable() {
 data class ApiIsNotSuccessful(
     override val message: String
 ): Throwable()
+
+data class NoConnectivityIOException(
+    override val message: String = "네트워크 상태가 올바르지 않습니다"
+): IOException()

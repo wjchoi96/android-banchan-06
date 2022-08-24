@@ -12,12 +12,11 @@ import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityMainBinding
 import com.woowahan.banchan.extension.repeatOnStarted
-import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.bestbanchan.BestBanchanFragment
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.maindishbanchan.MainDishBanchanFragment
@@ -31,12 +30,15 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class RootActivity : BaseActivity<ActivityMainBinding>() {
+class RootActivity : BaseNetworkActivity<ActivityMainBinding>() {
     companion object {
         private var showSplash = false
     }
     private val viewModel: RootViewModel by viewModels()
     private lateinit var splashScreen: SplashScreen
+    override val snackBarView: View by lazy {
+        binding.layoutBackground
+    }
 
     private val fragmentList: List<Pair<String, Fragment>> by lazy {
         listOf(

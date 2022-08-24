@@ -16,6 +16,7 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.RecentViewedAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
@@ -23,7 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
+class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() {
 
     companion object {
         fun get(context: Context): Intent {
@@ -35,6 +36,10 @@ class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
 
     override val layoutResId: Int
         get() = R.layout.activity_recent_viewed
+
+    override val snackBarView: View by lazy {
+        binding.layoutBackground
+    }
 
     private val viewModel: RecentViewedViewModel by viewModels()
     private val spanCount = 2
