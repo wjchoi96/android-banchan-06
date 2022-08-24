@@ -121,7 +121,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             }
 
             launch {
-                viewModel.banchans.collect {
+                viewModel.banchans.collectLatest {
                     adapter.updateList(it)
                 }
             }
