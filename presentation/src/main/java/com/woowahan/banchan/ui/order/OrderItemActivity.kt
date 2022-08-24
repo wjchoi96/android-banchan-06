@@ -129,8 +129,6 @@ class OrderItemActivity : BaseActivity<ActivityOrderItemBinding>() {
                     adapter.updateList(it)
                 }
             }
-
-            viewModel.fetchOrder()
         }
     }
 }
