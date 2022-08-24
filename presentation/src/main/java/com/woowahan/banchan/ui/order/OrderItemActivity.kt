@@ -18,6 +18,7 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.viewmodel.OrderItemViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -125,12 +126,10 @@ class OrderItemActivity : BaseActivity<ActivityOrderItemBinding>() {
             }
 
             launch {
-                viewModel.orderItem.collect {
+                viewModel.orderItem.collectLatest {
                     adapter.updateList(it)
                 }
             }
-
-            viewModel.fetchOrder()
         }
     }
 }

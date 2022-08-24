@@ -34,27 +34,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_layout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-
-            app:onRefreshListener="@{()->viewModel.onRefresh()}"
-            app:refreshing="@{viewModel.refreshDataLoading}"
+        <androidx.recyclerview.widget.RecyclerView
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_include_tool_bar" >
+            app:layout_constraintTop_toBottomOf="@id/layout_include_tool_bar"
+            android:id="@+id/rv_cart"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adapter="@{adapter}"
+            android:orientation="vertical"
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_cart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adapter="@{adapter}"
-                android:orientation="vertical"
-
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

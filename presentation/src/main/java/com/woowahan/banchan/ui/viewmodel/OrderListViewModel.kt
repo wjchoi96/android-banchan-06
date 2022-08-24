@@ -23,8 +23,11 @@ class OrderListViewModel @Inject constructor(
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    init {
+        fetchOrders()
+    }
 
-    fun fetchOrders(){
+    private fun fetchOrders(){
         viewModelScope.launch {
             _dataLoading.value = true
             fetchOrdersUseCase()

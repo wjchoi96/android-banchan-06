@@ -30,27 +30,18 @@
             layout="@layout/item_toolbar_sub"
             />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        <androidx.recyclerview.widget.RecyclerView
             app:layout_constraintTop_toBottomOf="@id/layout_include_tool_bar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-
+            bind:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            android:adapter="@{adapter}"
+            android:id="@+id/rv_recent_viewed"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/swipe_layout"
-            app:refreshing="@{viewModel.refreshDataLoading}"
-            app:onRefreshListener="@{()->viewModel.onRefresh()}"
-            >
-            <androidx.recyclerview.widget.RecyclerView
-                bind:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                android:adapter="@{adapter}"
-                android:id="@+id/rv_recent_viewed"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                tools:listitem="@layout/item_menu_time_stamp"
-                />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            tools:listitem="@layout/item_menu_time_stamp"
+            />
 
         <ProgressBar
             app:layout_constraintTop_toTopOf="parent"

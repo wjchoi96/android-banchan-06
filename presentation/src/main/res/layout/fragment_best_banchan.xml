@@ -18,25 +18,17 @@
         android:id="@+id/layout_background"
         >
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        <androidx.recyclerview.widget.RecyclerView
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:adapter="@{adapter}"
+            android:id="@+id/rv_main_dish"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:id="@+id/swipe_layout"
-            app:refreshing="@{viewModel.refreshDataLoading}"
-            app:onRefreshListener="@{()->viewModel.onRefresh()}"
-            >
-            <androidx.recyclerview.widget.RecyclerView
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:adapter="@{adapter}"
-                android:id="@+id/rv_main_dish"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            />
 
 
         <ProgressBar

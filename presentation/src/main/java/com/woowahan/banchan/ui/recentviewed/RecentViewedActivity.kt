@@ -21,6 +21,8 @@ import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -99,43 +101,42 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchRecentViewedBanchans()
-    }
-
     private fun observeData() {
         repeatOnStarted {
-            viewModel.eventFlow.collect {
-                when (it) {
-                    is RecentViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
+            launch {
+                viewModel.eventFlow.collect {
+                    when (it) {
+                        is RecentViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
 
-                    is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                        is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
 
-                    is RecentViewedViewModel.UiEvent.ShowDialog -> {
-                        DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
+                        is RecentViewedViewModel.UiEvent.ShowDialog -> {
+                            DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
+                        }
+
+                        is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {
+                            it.bottomSheet.show(supportFragmentManager, "cart_bottom_sheet")
+                        }
+
+                        is RecentViewedViewModel.UiEvent.ShowCartView -> {
+                            startActivity(CartActivity.get(this@RecentViewedActivity))
+                            finish()
+                        }
+
+                        is RecentViewedViewModel.UiEvent.ShowDetailView -> {
+                            //TODO: startActivity(DetailActivity.get(requireContext())
+                        }
                     }
+                }
+            }
 
-                    is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {
-                        it.bottomSheet.show(supportFragmentManager, "cart_bottom_sheet")
-                    }
-
-                    is RecentViewedViewModel.UiEvent.ShowCartView -> {
-                        startActivity(CartActivity.get(this@RecentViewedActivity))
-                    }
-
-                    is RecentViewedViewModel.UiEvent.ShowDetailView -> {
-                        //TODO: startActivity(DetailActivity.get(requireContext())
-                    }
+            launch {
+                viewModel.banchans.collectLatest {
+                    adapter.updateList(it)
                 }
             }
         }
 
-        repeatOnStarted {
-            viewModel.banchans.collect {
-                adapter.updateList(it)
-            }
-        }
     }
 
 }
