@@ -25,6 +25,7 @@ import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -98,8 +99,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                 }
             }
 
-            repeatOnStarted {
-                viewModel.cartItems.collect {
+            launch {
+                viewModel.cartItems.collectLatest {
                     cartAdapter.updateList(it)
                 }
             }
