@@ -15,6 +15,7 @@ import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -38,11 +39,6 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
         binding.adapter = adapter
 
         observeData()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchBestBanchans()
     }
 
     private fun observeData() {
@@ -83,7 +79,7 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
             }
 
             launch {
-                viewModel.banchans.collect {
+                viewModel.banchans.collectLatest {
                     adapter.updateList(it)
                 }
             }
