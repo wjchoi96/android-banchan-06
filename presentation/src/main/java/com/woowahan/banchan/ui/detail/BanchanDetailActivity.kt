@@ -59,7 +59,7 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
             launch {
                 viewModel.detail.collect {
                     binding.banchanDetail = it
-                    binding.quantity = viewModel.quantity
+                    binding.vm = viewModel
                     binding.viewPagerAdapter = ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
                     binding.imageAdapter = ImageAdapter(it.detailImages, ImageAdapter.ImageType.DETAIL)
                 }

@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.viewmodel
 
+import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,7 +20,7 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
     private var hash = ""
     private var title = ""
-    var quantity = 1
+    val quantity = ObservableField(1)
 
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -56,6 +58,22 @@ class DetailViewModel @Inject constructor(
                             _refreshDataLoading.value = false
                     }
                 }
+        }
+    }
+
+    val minusClicked: () -> Unit = {
+        val currentQuantity = quantity.get()
+        currentQuantity?.let {
+            if (currentQuantity != 1) {
+                quantity.set(currentQuantity - 1)
+            }
+        }
+    }
+
+    val plusClicked: () -> Unit = {
+        val currentQuantity = quantity.get()
+        currentQuantity?.let {
+            quantity.set(currentQuantity + 1)
         }
     }
 

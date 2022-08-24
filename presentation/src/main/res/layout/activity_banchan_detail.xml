@@ -10,8 +10,8 @@
             type="com.woowahan.domain.model.BanchanDetailModel" />
 
         <variable
-            name="quantity"
-            type="Integer" />
+            name="vm"
+            type="com.woowahan.banchan.ui.viewmodel.DetailViewModel" />
 
         <variable
             name="viewPagerAdapter"
@@ -243,6 +243,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?android:attr/selectableItemBackground"
+                    android:onClickListener="@{()->vm.plusClicked.invoke()}"
                     android:padding="12dp"
                     app:srcCompat="@drawable/ic_plus" />
             </androidx.cardview.widget.CardView>
@@ -254,7 +255,7 @@
                 android:gravity="center"
                 android:minWidth="44dp"
                 android:paddingHorizontal="3dp"
-                android:text="@{Integer.toString(quantity)}"
+                android:text="@{Integer.toString(vm.quantity)}"
                 android:textColor="@color/black_000000"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@id/btn_plus"
@@ -276,6 +277,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?android:attr/selectableItemBackground"
+                    android:onClickListener="@{()->vm.minusClicked.invoke()}"
                     android:padding="12dp"
                     app:srcCompat="@drawable/ic_minus" />
             </androidx.cardview.widget.CardView>
@@ -309,7 +311,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="16dp"
-                android:setCashString="@{banchanDetail.price * quantity}"
+                android:setCashString="@{banchanDetail.salePrice == 0L ? banchanDetail.price * vm.quantity : banchanDetail.salePrice * vm.quantity}"
                 android:textColor="@color/black_000000"
                 android:textSize="32sp"
                 android:textStyle="bold"
