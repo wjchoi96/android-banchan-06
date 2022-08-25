@@ -102,12 +102,12 @@ class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>(
                     binding.vm = viewModel
                     binding.imageAdapter =
                         ImageAdapter(it.detailImages, ImageAdapter.ImageType.DETAIL)
+                    binding.isCartSelected = it.isCartItem
 
                     if (it.isNotEmpty()) {
                         viewModel.insertRecentViewedItem(it.toBanchanModel())
                         binding.vpMenuImages.adapter = ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
                         TabLayoutMediator(binding.layoutTabIndicator, binding.vpMenuImages) { tab, position ->
-
                         }.attach()
                     }
                 }

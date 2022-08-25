@@ -115,6 +115,9 @@ object UseCaseModule {
      * detail
      */
     @Provides
-    fun provideFetchBanchanDetailUseCase(repo: BanchanDetailRepository) =
-        FetchBanchanDetailUseCase(repo)
+    fun provideFetchBanchanDetailUseCase(
+        repo: BanchanDetailRepository,
+        fetchCartItemsKeyUseCase: FetchCartItemsKeyUseCase
+    ) =
+        FetchBanchanDetailUseCase(repo, fetchCartItemsKeyUseCase)
 }

@@ -21,7 +21,8 @@ class BanchanDetailRepositoryImpl @Inject constructor(
                 emit(it.toDomain(
                     title,
                     DeliveryConstant.DeliveryFee,
-                    DeliveryConstant.FreeDeliveryFeePrice
+                    DeliveryConstant.FreeDeliveryFeePrice,
+                    false
                 ))
             }
     }.flowOn(coroutineDispatcher)

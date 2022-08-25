@@ -32,7 +32,8 @@ data class BanchanDetailEntity(
     fun toDomain(
         title: String,
         deliveryFee: Long,
-        freeDeliveryFeePrice: Long
+        freeDeliveryFeePrice: Long,
+        isCartItem: Boolean
     ): BanchanDetailModel = BanchanDetailModel(
         hash = hash,
         title = title,
@@ -50,7 +51,8 @@ data class BanchanDetailEntity(
         deliveryInfo = data.deliveryInfo,
         deliveryFeeInfo = data.deliveryFee,
         detailImages = data.detailSection,
-        thumbImages = data.thumbImages
+        thumbImages = data.thumbImages,
+        isCartItem = isCartItem
     )
 
     private fun priceStrToLong(priceStr: String): Long {

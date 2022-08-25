@@ -13,11 +13,27 @@ data class BanchanDetailModel(
     val deliveryInfo: String,
     val deliveryFeeInfo: String,
     val detailImages: List<String>,
+    val isCartItem: Boolean,
     val thumbImages: List<String>
 ) {
     companion object {
         fun empty() =
-            BanchanDetailModel("", "", "", 0L, 0L, 0L, 0L, "", 0L, "", "", emptyList(), emptyList())
+            BanchanDetailModel(
+                "",
+                "",
+                "",
+                0L,
+                0L,
+                0L,
+                0L,
+                "",
+                0L,
+                "",
+                "",
+                emptyList(),
+                false,
+                emptyList()
+            )
     }
 
     val salePercent: Int
@@ -38,7 +54,7 @@ data class BanchanDetailModel(
             this.price,
             this.salePrice,
             BanchanModel.ViewType.Item,
-            false
+            this.isCartItem
         )
     }
 
