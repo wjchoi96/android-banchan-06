@@ -6,7 +6,6 @@ import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
-import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.FetchCartItemsUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
 import com.woowahan.domain.usecase.cart.UpdateCartItemCountUseCase

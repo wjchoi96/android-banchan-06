@@ -15,11 +15,9 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.RecentViewedAdapter
-import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.detail.BanchanDetailActivity
-import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint

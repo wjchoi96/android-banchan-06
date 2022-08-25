@@ -14,7 +14,6 @@ import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.detail.BanchanDetailActivity
-import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.SoupDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel

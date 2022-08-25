@@ -1,6 +1,5 @@
 package com.woowahan.banchan.ui.adapter
 
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

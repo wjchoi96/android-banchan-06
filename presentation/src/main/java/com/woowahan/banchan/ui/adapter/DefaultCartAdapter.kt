@@ -1,7 +1,5 @@
 package com.woowahan.banchan.ui.adapter
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,11 +9,12 @@ import com.woowahan.banchan.databinding.ItemCartEmptyBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
-import com.woowahan.domain.constant.DeliveryConstant
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class DefaultCartAdapter(
