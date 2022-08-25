@@ -55,15 +55,16 @@ class OrderDataSourceImpl @Inject constructor(
     override fun fetchOrdersPaging(): Flow<PagingData<OrderEntity>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 7,
+                pageSize = 10,
                 enablePlaceholders = true
             ),
             pagingSourceFactory = {
                 orderDao.fetchOrdersPaging()
             }
         ).flow.map { pagingData ->
-                println("paging event")
-                pagingData.map { it.toEntity() }
+                pagingData.map {
+                    it.toEntity()
+                }
             }
     }
 
