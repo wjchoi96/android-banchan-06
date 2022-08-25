@@ -61,7 +61,7 @@ class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>(
         intent?.let { initData(it) }
     }
 
-    private fun initData(intent: Intent){
+    private fun initData(intent: Intent) {
         viewModel.initDate(intent.getStringExtra(HASH), intent.getStringExtra(TITLE))
         viewModel.fetchBanchanDetail()
     }
@@ -114,9 +114,13 @@ class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>(
                     binding.isCartSelected = it.isCartItem
 
                     if (it.isNotEmpty()) {
-                        viewModel.insertRecentViewedItem(it.toBanchanModel())
-                        binding.vpMenuImages.adapter = ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
-                        TabLayoutMediator(binding.layoutTabIndicator, binding.vpMenuImages) { tab, position ->
+                        viewModel.insertRecentViewedItem(it.hash, it.title)
+                        binding.vpMenuImages.adapter =
+                            ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
+                        TabLayoutMediator(
+                            binding.layoutTabIndicator,
+                            binding.vpMenuImages
+                        ) { tab, position ->
                         }.attach()
                     }
                 }

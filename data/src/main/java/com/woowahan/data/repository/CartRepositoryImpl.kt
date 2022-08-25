@@ -33,10 +33,11 @@ class CartRepositoryImpl @Inject constructor(
     }.flowOn(coroutineDispatcher)
 
     override suspend fun insertCartItem(
-        banchan: BaseBanchan,
+        hash: String,
+        title: String,
         count: Int
     ): Flow<Boolean> = flow {
-        cartDataSource.insertCartItem(banchan.hash, banchan.title, count)
+        cartDataSource.insertCartItem(hash, title, count)
         emit(true)
     }.flowOn(coroutineDispatcher)
 
@@ -77,11 +78,12 @@ class CartRepositoryImpl @Inject constructor(
                 coroutineScope {
                     list.map {
                         async {
-                            when(cacheMap.containsKey(it.hash)){
+                            when (cacheMap.containsKey(it.hash)) {
                                 true -> cacheMap[it.hash]!!
                                 else -> {
                                     println("fetchCartItems async run => ${it.hash}")
-                                    banchanDetailDataSource.fetchBanchanDetail(it.hash).firstOrNull()?.also {
+                                    banchanDetailDataSource.fetchBanchanDetail(it.hash)
+                                        .firstOrNull()?.also {
                                         cacheMap[it.hash] = it
                                     }
                                 }

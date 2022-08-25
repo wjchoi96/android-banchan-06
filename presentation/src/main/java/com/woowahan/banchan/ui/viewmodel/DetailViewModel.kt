@@ -90,9 +90,9 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    fun insertRecentViewedItem(banchan: BanchanModel) {
+    fun insertRecentViewedItem(hash: String, title: String) {
         viewModelScope.launch {
-            insertRecentViewedItemUseCase(banchan = banchan, Calendar.getInstance().time)
+            insertRecentViewedItemUseCase(hash, title, Calendar.getInstance().time)
                 .flowOn(Dispatchers.IO)
                 .collect()
         }
@@ -125,15 +125,13 @@ class DetailViewModel @Inject constructor(
     }
 
     fun insertItemsToCart(banchanDetail: BanchanDetailModel) {
-        val banchan = banchanDetail.toBanchanModel()
-
         viewModelScope.launch {
             _dataLoading.emit(true)
-            insertCartItemUseCase.invoke(banchan, quantity.get()!!)
+            insertCartItemUseCase.invoke(banchanDetail.hash, banchanDetail.title, quantity.get()!!)
                 .flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
-                        insertCartResultEvent(banchan, it)
+                        insertCartResultEvent(banchanDetail, it)
                     }.onFailure {
                         insertCartThrowableEvent(it)
                     }.also {
@@ -169,7 +167,7 @@ class DetailViewModel @Inject constructor(
         }
     }
 
-    private val insertCartResultEvent: (BaseBanchan, Boolean) -> Unit
+    private val insertCartResultEvent: (BanchanDetailModel, Boolean) -> Unit
         get() = { _, _ ->
             viewModelScope.launch {
                 _eventFlow.emit(

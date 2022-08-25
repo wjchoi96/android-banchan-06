@@ -15,11 +15,12 @@ class RecentViewedDataSourceImpl @Inject constructor(
     private val recentViewedDao: RecentViewedDao
 ) : RecentViewedDataSource {
     override suspend fun insertRecentViewed(
-        banchan: BanchanModel,
+        hash: String,
+        title: String,
         time: String
     ) {
-        banchanDao.insertBanchanItems(BanchanItemTableEntity(banchan.hash, banchan.title))
-        recentViewedDao.insertRecentViewed(RecentViewedTableEntity(banchan.hash, time))
+        banchanDao.insertBanchanItems(BanchanItemTableEntity(hash, title))
+        recentViewedDao.insertRecentViewed(RecentViewedTableEntity(hash, time))
     }
 
     override suspend fun fetchRecentViewedFlow(fetchItemsCnt: Int?): Flow<List<RecentViewedEntity>> = flow {

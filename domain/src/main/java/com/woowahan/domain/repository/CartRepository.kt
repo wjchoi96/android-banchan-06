@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface CartRepository {
     fun getCartSizeFlow(): Flow<Int>
 
-    suspend fun insertCartItem(banchan: BaseBanchan, count: Int): Flow<Boolean>
+    suspend fun insertCartItem(hash: String, title: String, count: Int): Flow<Boolean>
 
     suspend fun removeCartItem(vararg hashes: String): Flow<Boolean>
 
