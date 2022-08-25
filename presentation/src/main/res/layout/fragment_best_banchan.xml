@@ -30,6 +30,17 @@
             android:layout_height="0dp"
             />
 
+        <include
+            android:visibility="@{viewModel.errorViewVisible ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            layout="@layout/item_error_button_view"
+            android:id="@+id/layout_error_view"
+            />
+
+
 
         <ProgressBar
             app:layout_constraintTop_toTopOf="parent"

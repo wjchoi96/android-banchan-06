@@ -17,6 +17,7 @@ import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
@@ -37,6 +38,7 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         binding.adapter = adapter
+        binding.layoutErrorView.viewModel = viewModel
 
         observeData()
     }
