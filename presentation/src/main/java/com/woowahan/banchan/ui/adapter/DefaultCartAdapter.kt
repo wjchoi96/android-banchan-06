@@ -183,9 +183,9 @@ class DefaultCartAdapter(
 
         fun bindRecentViewedItems(item: CartListItemModel.Footer) {
             recentViewedAdapter.updateList(item.recentViewedItems)
-            Handler(Looper.myLooper()!!).postDelayed({
+            binding.rvRecentViewed.post {
                 binding.rvRecentViewed.smoothScrollToPosition(0)
-            }, 200)
+            }
         }
     }
 
