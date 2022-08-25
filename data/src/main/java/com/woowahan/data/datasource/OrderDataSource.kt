@@ -1,5 +1,7 @@
 package com.woowahan.data.datasource
 
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import com.woowahan.data.entity.dto.OrderEntity
 import com.woowahan.domain.model.OrderItemModel
 import kotlinx.coroutines.flow.Flow
@@ -16,6 +18,8 @@ interface OrderDataSource {
     suspend fun fetchOrder(orderId: Long): Flow<OrderEntity>
 
     fun fetchOrders(): Flow<List<OrderEntity>>
+
+    fun fetchOrdersPaging(): Flow<PagingData<OrderEntity>>
 
     fun getDeliveryOrderCount(): Flow<Int>
 

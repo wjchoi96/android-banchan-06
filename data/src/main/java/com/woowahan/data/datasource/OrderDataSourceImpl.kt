@@ -1,5 +1,6 @@
 package com.woowahan.data.datasource
 
+import androidx.paging.*
 import com.woowahan.data.dao.OrderDao
 import com.woowahan.data.entity.dto.OrderEntity
 import com.woowahan.data.entity.table.OrderItemTableEntity
@@ -7,6 +8,7 @@ import com.woowahan.data.entity.table.OrderTableEntity
 import com.woowahan.domain.model.OrderItemModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class OrderDataSourceImpl @Inject constructor(
@@ -47,6 +49,21 @@ class OrderDataSourceImpl @Inject constructor(
         orderDao.fetchOrders()
             .collect {
                 emit(it.map { item -> item.toEntity() } )
+            }
+    }
+
+    override fun fetchOrdersPaging(): Flow<PagingData<OrderEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 7,
+                enablePlaceholders = true
+            ),
+            pagingSourceFactory = {
+                orderDao.fetchOrdersPaging()
+            }
+        ).flow.map { pagingData ->
+                println("paging event")
+                pagingData.map { it.toEntity() }
             }
     }
 

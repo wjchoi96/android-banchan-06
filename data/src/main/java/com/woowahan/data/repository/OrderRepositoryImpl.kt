@@ -1,5 +1,7 @@
 package com.woowahan.data.repository
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.woowahan.data.datasource.OrderDataSource
 import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.OrderItemModel
@@ -10,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class OrderRepositoryImpl @Inject constructor(
@@ -78,6 +81,27 @@ class OrderRepositoryImpl @Inject constructor(
                 )
             }
     }.flowOn(coroutineDispatcher)
+
+    override fun fetchOrdersPaging(): Flow<PagingData<OrderModel>> {
+        return orderDataSource.fetchOrdersPaging()
+            .map {  pagingData ->
+                pagingData.map { item ->
+                    val price = item.items.sumOf { it.price * it.count }
+                    OrderModel(
+                        orderId = item.orderId,
+                        time = BanchanDateConvertUtil.convert(item.time),
+                        items = item.items.map { child -> child.toDomain() },
+                        deliveryState = item.deliveryState,
+                        deliveryFee = DeliveryConstant.run {
+                            if (price >= FreeDeliveryFeePrice)
+                                FreeDeliveryFee
+                            else
+                                DeliveryFee
+                        }
+                    )
+                }
+            }
+    }
 
     override suspend fun getDeliveryOrderCount(): Flow<Int> = flow {
         orderDataSource.getDeliveryOrderCount()
