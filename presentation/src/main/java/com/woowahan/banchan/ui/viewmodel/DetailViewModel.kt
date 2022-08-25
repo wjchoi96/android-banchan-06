@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -90,8 +91,7 @@ class DetailViewModel @Inject constructor(
     fun insertRecentViewedItem(hash: String, title: String) {
         viewModelScope.launch {
             insertRecentViewedItemUseCase(hash, title, Calendar.getInstance().time)
-                .flowOn(Dispatchers.IO)
-                .collect()
+                .launchIn(this + Dispatchers.IO)
         }
     }
 
