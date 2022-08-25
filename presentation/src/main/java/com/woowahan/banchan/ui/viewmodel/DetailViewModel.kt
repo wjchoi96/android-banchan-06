@@ -6,8 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanDetailModel
-import com.woowahan.domain.model.BanchanModel
-import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.usecase.banchan.FetchBanchanDetailUseCase
 import com.woowahan.domain.usecase.cart.GetCartItemsSizeFlowUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase

@@ -4,7 +4,6 @@ import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.RecentViewedDataSource
 import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.domain.extension.priceStrToLong
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.repository.RecentViewedRepository
 import com.woowahan.domain.util.BanchanDateConvertUtil

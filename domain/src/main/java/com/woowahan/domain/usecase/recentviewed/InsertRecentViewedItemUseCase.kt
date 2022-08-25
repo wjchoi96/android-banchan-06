@@ -1,6 +1,5 @@
 package com.woowahan.domain.usecase.recentviewed
 
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.repository.RecentViewedRepository
 import kotlinx.coroutines.flow.Flow

@@ -5,7 +5,6 @@ import com.woowahan.data.dao.RecentViewedDao
 import com.woowahan.data.entity.dto.RecentViewedEntity
 import com.woowahan.data.entity.table.BanchanItemTableEntity
 import com.woowahan.data.entity.table.RecentViewedTableEntity
-import com.woowahan.domain.model.BanchanModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

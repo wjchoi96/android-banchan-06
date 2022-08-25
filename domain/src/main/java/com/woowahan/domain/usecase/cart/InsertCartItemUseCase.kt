@@ -1,6 +1,5 @@
 package com.woowahan.domain.usecase.cart
 
-import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow

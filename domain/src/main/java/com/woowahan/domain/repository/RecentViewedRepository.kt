@@ -1,6 +1,5 @@
 package com.woowahan.domain.repository
 
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
 import kotlinx.coroutines.flow.Flow
 import java.util.*

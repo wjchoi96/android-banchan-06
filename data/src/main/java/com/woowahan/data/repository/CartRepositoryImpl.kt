@@ -4,7 +4,6 @@ import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.CartDataSource
 import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.domain.extension.priceStrToLong
-import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.CoroutineDispatcher

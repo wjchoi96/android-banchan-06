@@ -1,6 +1,5 @@
 package com.woowahan.domain.repository
 
-import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.flow.Flow
 
