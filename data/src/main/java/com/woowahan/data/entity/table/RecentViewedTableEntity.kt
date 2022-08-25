@@ -18,7 +18,6 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecentViewedTableEntity(
-    @PrimaryKey
     @ColumnInfo(name = COLUMN_HASH) val hash: String,
     @ColumnInfo(name = COLUMN_TIME) val time: String,
 ) {
