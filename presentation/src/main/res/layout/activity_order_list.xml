@@ -9,7 +9,7 @@
 
         <variable
             name="adapter"
-            type="com.woowahan.banchan.ui.order.OrderListAdapter" />
+            type="com.woowahan.banchan.ui.order.OrderListPagingAdapter" />
 
         <variable
             name="title"

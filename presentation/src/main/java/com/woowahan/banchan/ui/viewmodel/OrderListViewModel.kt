@@ -2,7 +2,11 @@ package com.woowahan.banchan.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.OrderModel
+import com.woowahan.domain.usecase.order.FetchOrderPagingUseCase
 import com.woowahan.domain.usecase.order.FetchOrdersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -12,35 +16,32 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderListViewModel @Inject constructor(
-    private val fetchOrdersUseCase: FetchOrdersUseCase
+    private val fetchOrdersUseCase: FetchOrdersUseCase,
+    private val fetchOrderPagingUseCase: FetchOrderPagingUseCase
 ): ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _orders: MutableStateFlow<List<OrderModel>> = MutableStateFlow(emptyList())
-    val orders = _orders.asStateFlow()
+    val orderPaging = fetchOrderPagingUseCase()
+        .flowOn(Dispatchers.Default)
+        .filterIsInstance<DomainEvent.Success<PagingData<OrderModel>>>()
+        .map { it.data }
+        .onEach { _dataLoading.value = false }
+        .cachedIn(viewModelScope)
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        fetchOrders()
-    }
+        _dataLoading.value = true
 
-    private fun fetchOrders(){
         viewModelScope.launch {
-            _dataLoading.value = true
-            fetchOrdersUseCase()
+            fetchOrderPagingUseCase()
                 .flowOn(Dispatchers.Default)
-                .collect { event ->
-                    event.onSuccess {
-                        _orders.value = it
-                    }.onFailure {
-                        it.printStackTrace()
-                        it.message?.let { message -> _eventFlow.emit(UiEvent.ShowToast(message)) }
-                    }.also {
-                        _dataLoading.value = false
-                    }
+                .filterIsInstance<DomainEvent.Failure<PagingData<OrderModel>>>()
+                .collect {
+                    it.throwable.printStackTrace()
+                    it.throwable.message?.let { message -> _eventFlow.emit(UiEvent.ShowToast(message)) }
                 }
         }
     }

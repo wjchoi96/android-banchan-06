@@ -16,8 +16,10 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.viewmodel.OrderListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
@@ -29,8 +31,8 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
         get() = R.layout.activity_order_list
 
     private val viewModel: OrderListViewModel by viewModels()
-    private val adapter: OrderListAdapter by lazy {
-        OrderListAdapter(viewModel.orderDetailNavigateEvent)
+    private val adapter: OrderListPagingAdapter by lazy {
+        OrderListPagingAdapter(viewModel.orderDetailNavigateEvent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,8 +82,8 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
             }
 
             launch {
-                viewModel.orders.collectLatest {
-                    adapter.updateList(it)
+                viewModel.orderPaging.collect {
+                    adapter.submitData(it)
                 }
             }
         }
