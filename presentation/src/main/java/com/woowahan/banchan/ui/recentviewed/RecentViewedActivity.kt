@@ -60,6 +60,7 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
         binding.title = getString(R.string.recent_viewed_title)
 
         binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener { onBackPressed() }
+        binding.layoutErrorView.viewModel = viewModel
         setUpRecyclerView()
         observeData()
     }

@@ -23,7 +23,8 @@ class RecentViewedViewModel @Inject constructor(
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _banchans: MutableStateFlow<List<RecentViewedItemModel>> = MutableStateFlow(emptyList())
+    private val _banchans: MutableStateFlow<List<RecentViewedItemModel>> =
+        MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
@@ -34,17 +35,22 @@ class RecentViewedViewModel @Inject constructor(
     }
 
     private fun fetchRecentViewedBanchans() {
-        viewModelScope.launch {
+        refreshJob()
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
             fetchRecentViewedItemUseCase.invoke()
                 .flowOn(Dispatchers.Default)
                 .collect { res ->
                     res.onSuccess {
                         _banchans.value = it
+                        hideErrorView()
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
                             _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
+                        showErrorView(it.message, "재시도") {
+                            fetchRecentViewedBanchans()
                         }
                     }.also {
                         _dataLoading.value = false
@@ -53,12 +59,12 @@ class RecentViewedViewModel @Inject constructor(
         }
     }
 
-    val clickInsertCartButton: (RecentViewedItemModel, Boolean)->(Unit) = { banchan, isCartItem ->
+    val clickInsertCartButton: (RecentViewedItemModel, Boolean) -> (Unit) = { banchan, isCartItem ->
         viewModelScope.launch {
-            when(isCartItem){
+            when (isCartItem) {
                 true -> removeItemFromCart(banchan)
                 else -> {
-                    val dialog = CartItemInsertBottomSheet(banchan){ item, count ->
+                    val dialog = CartItemInsertBottomSheet(banchan) { item, count ->
                         insertItemsToCart(item, count)
                     }
                     _eventFlow.emit(UiEvent.ShowCartBottomSheet(dialog))
@@ -78,7 +84,7 @@ class RecentViewedViewModel @Inject constructor(
             viewModelScope.launch {
                 _eventFlow.emit(
                     UiEvent.ShowDialog(
-                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다"){
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다") {
                             viewModelScope.launch {
                                 _eventFlow.emit(UiEvent.ShowCartView)
                             }
@@ -101,7 +107,7 @@ class RecentViewedViewModel @Inject constructor(
             viewModelScope.launch {
                 _eventFlow.emit(
                     UiEvent.ShowDialog(
-                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다"){
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다") {
                             viewModelScope.launch {
                                 _eventFlow.emit(UiEvent.ShowCartView)
                             }
@@ -111,7 +117,7 @@ class RecentViewedViewModel @Inject constructor(
         }
     override val removeCartThrowableEvent: (Throwable) -> Unit
         get() = {
-            viewModelScope.launch{
+            viewModelScope.launch {
                 it.printStackTrace()
                 it.message?.let { message ->
                     _eventFlow.emit(UiEvent.ShowToast(message))
@@ -123,9 +129,9 @@ class RecentViewedViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
-        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
-        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
-        object ShowCartView: UiEvent()
-        data class ShowDetailView(val banchan: BaseBanchan): UiEvent()
+        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder) : UiEvent()
+        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
+        object ShowCartView : UiEvent()
+        data class ShowDetailView(val banchan: BaseBanchan) : UiEvent()
     }
 }
