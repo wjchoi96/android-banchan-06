@@ -1,5 +1,7 @@
 package com.woowahan.data.repository
 
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.RecentViewedDataSource
 import com.woowahan.data.entity.BanchanDetailEntity
@@ -12,10 +14,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import java.util.*
 import javax.inject.Inject
 
@@ -38,41 +37,75 @@ class RecentViewedRepositoryImpl @Inject constructor(
         emit(true)
     }.flowOn(coroutineDispatcher)
 
-    override suspend fun fetchRecentViewedItems(fetchItemsCnt: Int?): Flow<List<RecentViewedItemModel>> = flow {
-        recentViewedDataSource.fetchRecentViewedFlow(fetchItemsCnt)
-            .collect { list ->
-                coroutineScope {
-                    list.map {
-                        async {
-                            when(cacheMap.containsKey(it.hash)){
-                                true -> {
-                                    cacheMap[it.hash]!!
-                                }
-                                else -> {
-                                    println("fetchRecentViewed async run => ${it.hash}")
-                                    banchanDetailDataSource.fetchBanchanDetail(it.hash).first().also {
-                                        cacheMap[it.hash] = it
+    override suspend fun fetchRecentViewedItems(fetchItemsCnt: Int?): Flow<List<RecentViewedItemModel>> =
+        flow {
+            recentViewedDataSource.fetchRecentViewedFlow(fetchItemsCnt)
+                .collect { list ->
+                    coroutineScope {
+                        list.map {
+                            async {
+                                when (cacheMap.containsKey(it.hash)) {
+                                    true -> {
+                                        cacheMap[it.hash]!!
+                                    }
+                                    else -> {
+                                        println("fetchRecentViewed async run => ${it.hash}")
+                                        banchanDetailDataSource.fetchBanchanDetail(it.hash).first()
+                                            .also {
+                                                cacheMap[it.hash] = it
+                                            }
                                     }
                                 }
                             }
-                        }
-                    }.awaitAll()
+                        }.awaitAll()
 
-                    val res = list.map {
-                        cacheMap[it.hash]!!.run {
+                        val res = list.map {
+                            cacheMap[it.hash]!!.run {
+                                RecentViewedItemModel(
+                                    hash = it.hash,
+                                    title = it.title,
+                                    imageUrl = this.data.thumbImages.first(),
+                                    price = this.data.prices.first().priceStrToLong(),
+                                    salePrice = (if (this.data.prices.size > 1) this.data.prices[1] else "0").priceStrToLong(),
+                                    time = BanchanDateConvertUtil.convert(it.time),
+                                    description = cacheMap[it.hash]!!.data.productDescription
+                                )
+                            }
+                        }
+                        emit(res)
+                    }
+                }
+        }.flowOn(coroutineDispatcher)
+
+    override suspend fun fetchRecentViewedPaging(): Flow<PagingData<RecentViewedItemModel>> = flow {
+        recentViewedDataSource.fetchRecentViewedPaging()
+            .map { pagingData ->
+                pagingData.map { item ->
+                    coroutineScope {
+                        async {
+                            if (cacheMap.containsKey(item.hash)) {
+                                cacheMap[item.hash]
+                            } else {
+                                banchanDetailDataSource.fetchBanchanDetail(item.hash).first()
+                                    .also {
+                                        cacheMap[item.hash] = it
+                                    }
+                            }
+                        }.await()
+
+                        cacheMap[item.hash]!!.run {
                             RecentViewedItemModel(
-                                hash = it.hash,
-                                title = it.title,
+                                hash = item.hash,
+                                title = item.title,
                                 imageUrl = this.data.thumbImages.first(),
                                 price = this.data.prices.first().priceStrToLong(),
                                 salePrice = (if (this.data.prices.size > 1) this.data.prices[1] else "0").priceStrToLong(),
-                                time = BanchanDateConvertUtil.convert(it.time),
-                                description = cacheMap[it.hash]!!.data.productDescription
+                                time = BanchanDateConvertUtil.convert(item.time),
+                                description = cacheMap[item.hash]!!.data.productDescription
                             )
                         }
                     }
-                    emit(res)
                 }
             }
-    }.flowOn(coroutineDispatcher)
+    }
 }

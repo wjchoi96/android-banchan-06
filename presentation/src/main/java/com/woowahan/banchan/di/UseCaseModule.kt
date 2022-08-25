@@ -88,6 +88,11 @@ object UseCaseModule {
     fun provideInsertRecentViewedItemUseCase(repo: RecentViewedRepository) =
         InsertRecentViewedItemUseCase(repo)
 
+    @Provides
+    fun provideFetchRecentViewedPagingUseCase(
+        repo: RecentViewedRepository
+    ) = FetchRecentViewedItemUseCase(repo)
+
     /**
      * order
      */
