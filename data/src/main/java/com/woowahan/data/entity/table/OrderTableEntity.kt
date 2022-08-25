@@ -12,7 +12,7 @@ data class OrderTableEntity(
     @ColumnInfo(name = OrderTableEntity.COLUMN_STATE)val deliveryState: Boolean = true
 ) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = OrderTableEntity.COLUMN_ID) var id: Long = 0
+    @ColumnInfo(name = OrderTableEntity.COLUMN_ID) var id: Int = 0
     companion object {
         const val TABLE_NAME = "order"
         const val COLUMN_ID = "id"
