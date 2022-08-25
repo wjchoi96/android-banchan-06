@@ -45,10 +45,14 @@ class SoupDishBanchanViewModel @Inject constructor(
                     res.onSuccess {
                         defaultBanchans = it
                         _banchans.value = defaultBanchans
+                        hideErrorView()
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
                             _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
+                        showErrorView(it.message, "재시도"){
+                            fetchSoupDishBanchans()
                         }
                     }.also {
                         _dataLoading.value = false

@@ -42,6 +42,7 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         binding.adapter = adapter
+        binding.layoutErrorView.viewModel = viewModel
 
         setUpGridRecyclerView()
         observeData()
