@@ -3,6 +3,7 @@ package com.woowahan.banchan.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
@@ -16,12 +17,14 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.ImageAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.DetailViewModel
 import com.woowahan.banchan.ui.viewmodel.OrderItemViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
@@ -48,7 +51,27 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
 
         viewModel.initDate(intent.getStringExtra(HASH), intent.getStringExtra(TITLE))
         viewModel.fetchBanchanDetail()
+        setListener()
         observeData()
+    }
+
+    private fun setListener() {
+        binding.layoutIncludeToolBar.toolBar.setOnMenuItemClickListener {
+            Timber.d("menu item click => ${it.title}")
+            return@setOnMenuItemClickListener when (it.itemId) {
+                R.id.menu_main_action_bar_order -> {
+                    startActivity(OrderListActivity.get(this))
+                    true
+                }
+                else -> false
+            }
+        }
+
+        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_cart).actionView.let {
+            (it.findViewById(R.id.iv_cart_image) as ImageView).setOnClickListener {
+                startActivity(CartActivity.get(this))
+            }
+        }
     }
 
     private fun observeData() {
