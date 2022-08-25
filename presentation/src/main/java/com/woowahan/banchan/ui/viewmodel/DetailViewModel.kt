@@ -9,12 +9,15 @@ import com.woowahan.domain.model.BanchanDetailModel
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.usecase.banchan.FetchBanchanDetailUseCase
+import com.woowahan.domain.usecase.cart.GetCartItemsSizeFlowUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
+import com.woowahan.domain.usecase.order.GetDeliveryOrderCountUseCase
 import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
@@ -22,7 +25,9 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val fetchBanchanDetailUseCase: FetchBanchanDetailUseCase,
     private val insertRecentViewedItemUseCase: InsertRecentViewedItemUseCase,
-    private val insertCartItemUseCase: InsertCartItemUseCase
+    private val insertCartItemUseCase: InsertCartItemUseCase,
+    private val getCartItemsSizeFlowUseCase: GetCartItemsSizeFlowUseCase,
+    private val getDeliveryOrderCountUseCase: GetDeliveryOrderCountUseCase
 ) : ViewModel() {
     private var hash = ""
     private var title = ""
@@ -40,6 +45,50 @@ class DetailViewModel @Inject constructor(
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _cartItemSize: MutableStateFlow<Int> = MutableStateFlow(0)
+    val cartItemSize = _cartItemSize.asStateFlow()
+
+    private val _deliveryItemSize: MutableStateFlow<Int> = MutableStateFlow(0)
+    val deliveryItemSize = _deliveryItemSize.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            launch {
+                getCartItemsSizeFlowUseCase()
+                    .flowOn(Dispatchers.Default)
+                    .collect { flow ->
+                        Timber.d("getCartItemsSizeFlowUseCase on viewModel")
+                        flow.onSuccess {
+                            _cartItemSize.emit(it)
+                        }.onFailureWithData { it, data ->
+                            it.printStackTrace()
+                            Timber.d("catch debug onFailure $it")
+                            data?.let {
+                                _cartItemSize.emit(it)
+                            }
+                        }
+                    }
+            }
+
+            launch {
+                getDeliveryOrderCountUseCase()
+                    .flowOn(Dispatchers.Default)
+                    .collect { flow ->
+                        Timber.d("getDeliveryOrderCount on viewModel")
+                        flow.onSuccess { count ->
+                            _deliveryItemSize.emit(count)
+                        }.onFailureWithData { it, data ->
+                            it.printStackTrace()
+                            Timber.d("catch debug onFailure $it")
+                            data?.let {
+                                _deliveryItemSize.emit(it)
+                            }
+                        }
+                    }
+            }
+        }
+    }
 
     fun insertRecentViewedItem(banchan: BanchanModel) {
         viewModelScope.launch {

@@ -3,7 +3,9 @@ package com.woowahan.banchan.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityBanchanDetailBinding
@@ -85,6 +87,38 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
                     }
                 }
             }
+
+            repeatOnStarted {
+                launch {
+                    viewModel.cartItemSize.collect {
+                        setupBadge(it)
+                    }
+                }
+
+                launch {
+                    viewModel.deliveryItemSize.collect {
+                        setOrderBadge(it != 0)
+                    }
+                }
+            }
         }
+    }
+
+    private fun setupBadge(count: Int) {
+        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_cart).actionView.let {
+            (it.findViewById(R.id.cart_badge) as TextView).let { tv ->
+                tv.isVisible = count != 0
+                tv.text = if (count <= 10) count.toString() else "10+"
+            }
+        }
+    }
+
+    private fun setOrderBadge(on: Boolean) {
+        val iconRes = when (on) {
+            true -> R.drawable.ic_mypage_badge
+            else -> R.drawable.ic_mypage
+        }
+        binding.layoutIncludeToolBar.toolBar.menu.findItem(R.id.menu_main_action_bar_order)
+            .setIcon(iconRes)
     }
 }
