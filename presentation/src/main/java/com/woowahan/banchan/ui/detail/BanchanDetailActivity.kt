@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
+import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityBanchanDetailBinding
 import com.woowahan.banchan.databinding.ActivityCartBinding
@@ -72,13 +73,15 @@ class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
                 viewModel.detail.collect {
                     binding.banchanDetail = it
                     binding.vm = viewModel
-                    binding.viewPagerAdapter =
-                        ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
                     binding.imageAdapter =
                         ImageAdapter(it.detailImages, ImageAdapter.ImageType.DETAIL)
 
                     if (it.isNotEmpty()) {
                         viewModel.insertRecentViewedItem(it.toBanchanModel())
+                        binding.vpMenuImages.adapter = ImageAdapter(it.thumbImages, ImageAdapter.ImageType.THUMB)
+                        TabLayoutMediator(binding.layoutTabIndicator, binding.vpMenuImages) { tab, position ->
+
+                        }.attach()
                     }
                 }
             }
