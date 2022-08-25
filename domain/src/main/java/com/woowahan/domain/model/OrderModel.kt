@@ -52,8 +52,11 @@ data class OrderModel(
     val orderId: Long,
     val time: Date?,
     val items: List<OrderItemModel>,
-    val deliveryState: Boolean
-)
+    val deliveryState: Boolean,
+    val deliveryFee: Long
+){
+    val totalPrice = items.sumOf { it.price * it.count }
+}
 
 data class OrderItemModel(
     val hash: String,

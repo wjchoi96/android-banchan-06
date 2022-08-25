@@ -80,7 +80,7 @@ class OrderListAdapter(
                 binding.imageUrl = it.imageUrl
                 binding.title = it.title
             }
-            binding.price = item.items.sumOf { it.price }
+            binding.price = item.totalPrice + item.deliveryFee
             bindDeliveryState(item.deliveryState)
             binding.itemSize = item.items.size
             binding.order = item

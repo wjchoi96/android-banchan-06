@@ -61,7 +61,7 @@ class CartViewModel @Inject constructor(
             _dataLoading.value = true
             fetchCartItemsUseCase().collect {
                 it.onSuccess {
-                    _cartItems.value = it
+                    _cartItems.value = it.toList()
                 }.onFailureWithData { it, data ->
                     it.printStackTrace()
                     it.message?.let { message ->
@@ -301,7 +301,6 @@ class CartViewModel @Inject constructor(
             val orderItemCount: Int,
             val minute: Int
         ) : UiEvent()
-
         data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }

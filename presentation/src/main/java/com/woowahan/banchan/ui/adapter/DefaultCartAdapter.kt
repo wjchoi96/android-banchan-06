@@ -1,5 +1,7 @@
 package com.woowahan.banchan.ui.adapter
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,10 +15,7 @@ import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import timber.log.Timber
 
 class DefaultCartAdapter(
@@ -30,13 +29,13 @@ class DefaultCartAdapter(
     private val itemClickListener: (String, String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
+
     fun updateList(newList: List<CartListItemModel>) {
         CoroutineScope(Dispatchers.Default).launch {
-            val diffCallback =
-                CartListModelDiffUtilCallback(cartList, newList)
+            val diffCallback = CartListModelDiffUtilCallback(cartList, newList)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
+            cartList = newList
             withContext(Dispatchers.Main) {
-                cartList = newList.toList()
                 diffRes.dispatchUpdatesTo(this@DefaultCartAdapter)
             }
         }
