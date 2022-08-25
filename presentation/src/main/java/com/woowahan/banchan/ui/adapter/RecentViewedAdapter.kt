@@ -21,21 +21,6 @@ class RecentViewedAdapter(
 ) : PagingDataAdapter<RecentViewedItemModel, RecentViewedAdapter.RecentViewedViewHolder>(
     RecentViewedPagingDiffUtilCallback(cartStateChangePayload = cartStateChangePayload)
 ) {
-
-    private var banchanList = listOf<RecentViewedItemModel>()
-
-    fun updateList(newList: List<RecentViewedItemModel>) {
-        CoroutineScope(Dispatchers.Default).launch {
-            val diffCallback =
-                RecentViewedModelDiffUtilCallback(banchanList, newList, cartStateChangePayload)
-            val diffRes = DiffUtil.calculateDiff(diffCallback)
-            withContext(Dispatchers.Main) {
-                banchanList = newList.toList()
-                diffRes.dispatchUpdatesTo(this@RecentViewedAdapter)
-            }
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedViewHolder {
         Timber.d("onCreateViewHolder")
         return RecentViewedViewHolder.from(parent, banchanInsertCartListener, itemClickListener)
@@ -43,7 +28,7 @@ class RecentViewedAdapter(
 
     override fun onBindViewHolder(holder: RecentViewedViewHolder, position: Int) {
         Timber.d("onBindViewHolder[$position]")
-        holder.bind(banchanList[position])
+        getItem(position)?.let { holder.bind(it) }
     }
 
     override fun onBindViewHolder(
@@ -57,15 +42,15 @@ class RecentViewedAdapter(
         }
         payloads.firstOrNull()?.let {
             Timber.d("onBindViewHolder payloads[$position][$it]")
-            when (it) {
-                cartStateChangePayload -> {
-                    holder.bindCartStateChangePayload(banchanList[position])
+            getItem(position)?.let { item->
+                when (it) {
+                    cartStateChangePayload -> {
+                        holder.bindCartStateChangePayload(item)
+                    }
                 }
             }
         }
     }
-
-    override fun getItemCount(): Int = banchanList.size
 
     class RecentViewedViewHolder(
         private val binding: ItemMenuTimeStampBinding,
