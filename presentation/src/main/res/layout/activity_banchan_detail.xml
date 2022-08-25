@@ -105,10 +105,9 @@
                 android:textColor="@color/orange_f46700"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="@{banchanDetail.salePrice == 0L ? View.INVISIBLE : View.VISIBLE}"
+                android:visibility="@{banchanDetail.salePrice == 0L ? View.GONE : View.VISIBLE}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_menu_description"
-                app:layout_goneMarginEnd="14dp"
                 tools:text="10%" />
 
             <TextView
@@ -116,13 +115,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
                 android:setCashString="@{banchanDetail.salePrice == 0L ? banchanDetail.price : banchanDetail.salePrice}"
                 android:textColor="@color/black_000000"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/tv_discount_rate"
                 app:layout_constraintStart_toEndOf="@id/tv_discount_rate"
-                app:layout_goneMarginEnd="14dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_menu_description"
+                app:layout_goneMarginStart="16dp"
                 tools:text="18,000원" />
 
             <TextView
@@ -149,7 +149,7 @@
                 android:background="@color/white_f8f7f7"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_discount_rate" />
+                app:layout_constraintTop_toBottomOf="@id/tv_final_price" />
 
             <TextView
                 android:id="@+id/tv_point_title"
