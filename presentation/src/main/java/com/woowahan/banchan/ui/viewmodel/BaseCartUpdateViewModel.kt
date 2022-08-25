@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 
-abstract class BaseCartUpdateViewModel: ViewModel() {
+abstract class BaseCartUpdateViewModel: BaseErrorViewModel() {
 
     protected abstract val removeCartItemUseCase: RemoveCartItemUseCase
     protected abstract val insertCartItemUseCase: InsertCartItemUseCase
