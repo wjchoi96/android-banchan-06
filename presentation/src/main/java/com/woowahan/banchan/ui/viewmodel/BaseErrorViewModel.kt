@@ -21,11 +21,13 @@ abstract class BaseErrorViewModel: ViewModel() {
     private val _errorViewEvent: MutableStateFlow<()->Unit> = MutableStateFlow {}
     val errorViewEvent = _errorViewEvent.asStateFlow()
 
-    protected var dataJob: Job? = null
+    protected var prevJob: Job? = null
 
     protected fun refreshJob(){
-        if(dataJob != null)
-            dataJob = null
+        if(prevJob != null) {
+            prevJob?.cancel()
+            prevJob = null
+        }
     }
 
     protected fun hideErrorView(){

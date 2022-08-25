@@ -12,7 +12,6 @@ import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
 import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -41,7 +40,7 @@ class BestBanchanViewModel @Inject constructor(
 
     private fun fetchBestBanchans() {
         refreshJob()
-        dataJob = viewModelScope.launch {
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
             fetchBestBanchanUseCase.invoke()
                 .flowOn(Dispatchers.Default)

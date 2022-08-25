@@ -42,7 +42,7 @@ class MainDishBanchanViewModel @Inject constructor(
 
     private fun fetchMainDishBanchans() {
         refreshJob()
-        dataJob = viewModelScope.launch {
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
             fetchMainDishBanchanUseCase.invoke()
                 .flowOn(Dispatchers.Default)
