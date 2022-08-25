@@ -29,7 +29,9 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
     private var hash = ""
     private var title = ""
-    val quantity = ObservableField(1)
+
+    private val _quantity: MutableStateFlow<Int> = MutableStateFlow(1)
+    val quantity = _quantity.asStateFlow()
 
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -95,7 +97,6 @@ class DetailViewModel @Inject constructor(
 
     fun fetchBanchanDetail() {
         if (_dataLoading.value) {
-            _refreshDataLoading.value = false
             return
         }
         viewModelScope.launch {
@@ -112,8 +113,6 @@ class DetailViewModel @Inject constructor(
                         }
                     }.also {
                         _dataLoading.value = false
-                        if (_refreshDataLoading.value)
-                            _refreshDataLoading.value = false
                     }
                 }
         }
@@ -122,7 +121,7 @@ class DetailViewModel @Inject constructor(
     fun insertItemsToCart(banchanDetail: BanchanDetailModel) {
         viewModelScope.launch {
             _dataLoading.emit(true)
-            insertCartItemUseCase.invoke(banchanDetail.hash, banchanDetail.title, quantity.get()!!)
+            insertCartItemUseCase.invoke(banchanDetail.hash, banchanDetail.title, quantity.value)
                 .flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
@@ -147,18 +146,18 @@ class DetailViewModel @Inject constructor(
         }
 
     val minusClicked: () -> Unit = {
-        val currentQuantity = quantity.get()
-        currentQuantity?.let {
+        viewModelScope.launch {
+            val currentQuantity = quantity.value
             if (currentQuantity != 1) {
-                quantity.set(currentQuantity - 1)
+                _quantity.emit(currentQuantity - 1)
             }
         }
     }
 
     val plusClicked: () -> Unit = {
-        val currentQuantity = quantity.get()
-        currentQuantity?.let {
-            quantity.set(currentQuantity + 1)
+        viewModelScope.launch {
+            val currentQuantity = quantity.value
+            _quantity.emit(currentQuantity + 1)
         }
     }
 
