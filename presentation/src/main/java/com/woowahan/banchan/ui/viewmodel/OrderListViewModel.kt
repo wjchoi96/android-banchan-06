@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderListViewModel @Inject constructor(
     private val fetchOrdersUseCase: FetchOrdersUseCase
-): ViewModel() {
+): BaseErrorViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
@@ -28,16 +28,27 @@ class OrderListViewModel @Inject constructor(
     }
 
     private fun fetchOrders(){
-        viewModelScope.launch {
+        refreshJob()
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
             fetchOrdersUseCase()
                 .flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
                         _orders.value = it
+                        if(it.isEmpty()){
+                            showErrorView("주문내역이 없습니다", "주문하러 가기"){
+                                viewModelScope.launch { _eventFlow.emit(UiEvent.NavigateCartView) }
+                            }
+                        }else{
+                            hideErrorView()
+                        }
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message -> _eventFlow.emit(UiEvent.ShowToast(message)) }
+                        showErrorView(it.message, "재시도"){
+                            fetchOrders()
+                        }
                     }.also {
                         _dataLoading.value = false
                     }
@@ -56,5 +67,6 @@ class OrderListViewModel @Inject constructor(
         data class ShowToast(val message: String): UiEvent()
         data class ShowSnackBar(val message: String): UiEvent()
         data class NavigateOrderItemView(val orderId: Long): UiEvent()
+        object NavigateCartView: UiEvent()
     }
 }

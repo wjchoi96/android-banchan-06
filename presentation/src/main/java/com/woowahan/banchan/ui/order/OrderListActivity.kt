@@ -14,6 +14,7 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.OrderListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -38,6 +39,7 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
 
         binding.viewModel = viewModel
         binding.adapter = adapter
+        binding.layoutErrorView.viewModel = viewModel
 
         setUpToolbar()
         setUpRecyclerView()
@@ -75,6 +77,9 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
                         is OrderListViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
                         is OrderListViewModel.UiEvent.NavigateOrderItemView ->
                             startActivity(OrderItemActivity.get(this@OrderListActivity, it.orderId))
+                        is OrderListViewModel.UiEvent.NavigateCartView -> {
+                            startActivity(CartActivity.get(this@OrderListActivity))
+                        }
                     }
                 }
             }
