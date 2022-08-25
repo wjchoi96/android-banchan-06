@@ -1,6 +1,5 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
