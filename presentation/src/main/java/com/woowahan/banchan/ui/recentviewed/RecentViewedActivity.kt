@@ -15,9 +15,9 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.RecentViewedAdapter
-import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +48,7 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
     private val adapter: RecentViewedAdapter by lazy {
         RecentViewedAdapter(
             viewModel.clickInsertCartButton,
-            viewModel.itemClickListener
+            viewModel.itemClickListener,
         )
     }
 
@@ -109,7 +109,10 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                     when (it) {
                         is RecentViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
 
-                        is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                        is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
 
                         is RecentViewedViewModel.UiEvent.ShowDialog -> {
                             DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
@@ -125,19 +128,22 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                         }
 
                         is RecentViewedViewModel.UiEvent.ShowDetailView -> {
-                            //TODO: startActivity(DetailActivity.get(requireContext())
+                            startActivity(
+                                BanchanDetailActivity.get(
+                                    this@RecentViewedActivity,
+                                    it.banchan.hash,
+                                    it.banchan.title
+                                )
+                            )
                         }
                     }
                 }
             }
-
             launch {
                 viewModel.banchans.collectLatest {
                     adapter.updateList(it)
                 }
             }
         }
-
     }
-
 }

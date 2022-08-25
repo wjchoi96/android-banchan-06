@@ -3,6 +3,7 @@ package com.woowahan.banchan.ui.viewmodel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
+import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
@@ -73,9 +74,10 @@ class RecentViewedViewModel @Inject constructor(
         }
     }
 
-    val itemClickListener: (RecentViewedItemModel) -> Unit = {
+    val itemClickListener: (String, String) -> Unit = { hash, title ->
         viewModelScope.launch {
-            _eventFlow.emit(UiEvent.ShowDetailView(it))
+            val banchan = BanchanModel.empty().copy(hash, title)
+            _eventFlow.emit(UiEvent.ShowDetailView(banchan))
         }
     }
 

@@ -1,13 +1,12 @@
 package com.woowahan.domain.repository
 
-import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.CartModel
 import kotlinx.coroutines.flow.Flow
 
 interface CartRepository {
     fun getCartSizeFlow(): Flow<Int>
 
-    suspend fun insertCartItem(banchan: BaseBanchan, count: Int): Flow<Boolean>
+    suspend fun insertCartItem(hash: String, title: String, count: Int): Flow<Boolean>
 
     suspend fun removeCartItem(vararg hashes: String): Flow<Boolean>
 

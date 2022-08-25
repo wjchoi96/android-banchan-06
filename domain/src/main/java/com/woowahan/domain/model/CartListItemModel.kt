@@ -29,7 +29,7 @@ sealed class CartListItemModel {
         } else if (this is Content && other is Content) {
             this.cart == other.cart
         } else if (this is Footer && other is Footer) {
-            this.price == other.price
+            this.recentViewedItems == other.recentViewedItems && this.price == other.price
         } else {
             false
         }

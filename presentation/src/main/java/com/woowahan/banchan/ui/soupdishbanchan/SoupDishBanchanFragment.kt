@@ -13,6 +13,7 @@ import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.SoupDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
@@ -32,7 +33,8 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
             getString(R.string.soup_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
-            viewModel.clickInsertCartButton
+            viewModel.clickInsertCartButton,
+            viewModel.itemClickListener
         )
     }
 
@@ -68,7 +70,10 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
             launch {
                 viewModel.eventFlow.collect {
                     when (it) {
-                        is SoupDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+                        is SoupDishBanchanViewModel.UiEvent.ShowToast -> showToast(
+                            context,
+                            it.message
+                        )
 
                         is SoupDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
                             it.message,
@@ -87,17 +92,24 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
                             startActivity(CartActivity.get(requireContext()))
                         }
 
+                        is SoupDishBanchanViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(
+                                BanchanDetailActivity.get(
+                                    requireContext(),
+                                    it.banchanModel.hash,
+                                    it.banchanModel.title
+                                )
+                            )
+                        }
                     }
                 }
             }
-
             launch {
                 viewModel.banchans.collectLatest {
                     adapter.updateList(it)
                 }
             }
         }
-
     }
 
     private val gridItemDecoration by lazy {

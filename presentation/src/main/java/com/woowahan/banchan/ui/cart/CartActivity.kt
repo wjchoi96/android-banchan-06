@@ -18,8 +18,8 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
-import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.base.BaseNetworkActivity
+import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.order.OrderItemActivity
 import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
@@ -57,7 +57,8 @@ class CartActivity : BaseNetworkActivity<ActivityCartBinding>() {
             selectItem = viewModel.selectItem,
             recentViewedAllClicked = {
                 startActivity(RecentViewedActivity.get(this))
-            }
+            },
+            itemClickListener = viewModel.itemClickListener
         )
     }
 
@@ -99,6 +100,11 @@ class CartActivity : BaseNetworkActivity<ActivityCartBinding>() {
                                 it.minute
                             )
                         }
+
+                        is CartViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(BanchanDetailActivity.get(this@CartActivity, it.banchanModel.hash, it.banchanModel.title))
+                        }
+
                     }
                 }
             }
