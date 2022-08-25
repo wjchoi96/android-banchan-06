@@ -5,13 +5,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.woowahan.banchan.RecentViewedModelDiffUtilCallback
 import com.woowahan.banchan.databinding.ItemMenuTimeStampBinding
 import com.woowahan.domain.model.RecentViewedItemModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class RecentViewedAdapter(

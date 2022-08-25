@@ -1,6 +1,5 @@
 package com.woowahan.data.dao
 
-import androidx.paging.PagingData
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert

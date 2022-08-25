@@ -21,8 +21,6 @@ import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 

@@ -11,7 +11,6 @@ import com.woowahan.domain.repository.RecentViewedRepository
 import com.woowahan.domain.util.BanchanDateConvertUtil
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
