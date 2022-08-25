@@ -105,7 +105,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                         is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
                             startActivity(CartActivity.get(requireContext()))
                         }
-                        
+
                         is MainDishBanchanViewModel.UiEvent.ShowDetailView -> {
                             startActivity(BanchanDetailActivity.get(requireContext(), it.banchanModel.hash, it.banchanModel.title))
                         }
