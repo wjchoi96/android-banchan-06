@@ -84,4 +84,10 @@ dependencies {
 
     // kotlin extensions and coroutines support for Room
     implementation "androidx.room:room-ktx:2.4.3"
+
+    //paging
+    implementation "androidx.paging:paging-runtime:3.1.1"
+    implementation "androidx.room:room-paging:2.4.2"
+//    testImplementation "androidx.paging:paging-common:3.1.1"
+
 }
