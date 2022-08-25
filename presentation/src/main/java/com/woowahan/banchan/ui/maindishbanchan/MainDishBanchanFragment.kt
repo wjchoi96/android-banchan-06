@@ -19,6 +19,8 @@ import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -80,58 +82,54 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = 1
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchMainDishBanchans()
-    }
-
     private fun observeData() {
         repeatOnStarted {
-            viewModel.eventFlow.collect {
-                when (it) {
-                    is MainDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
+            launch {
+                viewModel.eventFlow.collect {
+                    when (it) {
+                        is MainDishBanchanViewModel.UiEvent.ShowToast -> showToast(context, it.message)
 
-                    is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
-                        it.message,
-                        binding.layoutBackground
-                    )
+                        is MainDishBanchanViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
 
-                    is MainDishBanchanViewModel.UiEvent.ShowDialog -> {
-                        DialogUtil.show(requireContext(), it.dialogBuilder)
-                    }
+                        is MainDishBanchanViewModel.UiEvent.ShowDialog -> {
+                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                        }
 
-                    is MainDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
-                        it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
-                    }
+                        is MainDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
+                            it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                        }
 
-                    is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
-                        startActivity(CartActivity.get(requireContext()))
-                    }
-
-                    is MainDishBanchanViewModel.UiEvent.ShowDetailView -> {
-                        startActivity(BanchanDetailActivity.get(requireContext(), it.banchanModel.hash, it.banchanModel.title))
+                        is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
+                            startActivity(CartActivity.get(requireContext()))
+                        }
+                        
+                        is MainDishBanchanViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(BanchanDetailActivity.get(requireContext(), it.banchanModel.hash, it.banchanModel.title))
+                        }
                     }
                 }
             }
-        }
 
-        repeatOnStarted {
-            viewModel.gridViewMode.collect {
-                Timber.d("gridViewMode => $it")
-                when(it){
-                    true -> setUpGridRecyclerView()
-                    else -> setUpLinearRecyclerView()
+            launch {
+                viewModel.gridViewMode.collect {
+                    Timber.d("gridViewMode => $it")
+                    when(it){
+                        true -> setUpGridRecyclerView()
+                        else -> setUpLinearRecyclerView()
+                    }
+                    adapter.refreshList()
                 }
-                adapter.refreshList()
+            }
+
+            launch {
+                viewModel.banchans.collectLatest {
+                    adapter.updateList(it)
+                }
             }
         }
-
-        repeatOnStarted {
-            viewModel.banchans.collect {
-                adapter.updateList(it)
-            }
-        }
-
     }
 
     private val gridItemDecoration by lazy {

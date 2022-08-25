@@ -31,9 +31,6 @@ class CartViewModel @Inject constructor(
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val refreshDataLoading = _refreshDataLoading.asStateFlow()
-
     private val _cartItems: MutableStateFlow<List<CartListItemModel>> =
         MutableStateFlow(emptyList())
     val cartItems = _cartItems.asStateFlow()
@@ -52,11 +49,11 @@ class CartViewModel @Inject constructor(
         }
     }
 
-    fun fetchCartItems() {
-        if (_dataLoading.value) {
-            _refreshDataLoading.value = false
-            return
-        }
+    init {
+        fetchCartItems()
+    }
+
+    private fun fetchCartItems() {
         viewModelScope.launch {
             _dataLoading.value = true
             fetchCartItemsUseCase().collect {
@@ -72,8 +69,6 @@ class CartViewModel @Inject constructor(
                     }
                 }.also {
                     _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
                 }
             }
         }
@@ -97,8 +92,6 @@ class CartViewModel @Inject constructor(
                             }
                         }.also {
                             _dataLoading.value = false
-                            if (_refreshDataLoading.value)
-                                _refreshDataLoading.value = false
                         }
                 }
         }
@@ -122,8 +115,6 @@ class CartViewModel @Inject constructor(
                             }
                         }.also {
                             _dataLoading.value = false
-                            if (_refreshDataLoading.value)
-                                _refreshDataLoading.value = false
                         }
                 }
         }
@@ -144,8 +135,6 @@ class CartViewModel @Inject constructor(
                             }
                         }.also {
                             _dataLoading.value = false
-                            if (_refreshDataLoading.value)
-                                _refreshDataLoading.value = false
                         }
                 }
         }
@@ -173,8 +162,6 @@ class CartViewModel @Inject constructor(
                             }
                         }.also {
                             _dataLoading.value = false
-                            if (_refreshDataLoading.value)
-                                _refreshDataLoading.value = false
                         }
                 }
         }
@@ -198,8 +185,6 @@ class CartViewModel @Inject constructor(
                             }
                         }.also {
                             _dataLoading.value = false
-                            if (_refreshDataLoading.value)
-                                _refreshDataLoading.value = false
                         }
                 }
         }
@@ -256,8 +241,6 @@ class CartViewModel @Inject constructor(
                         }
                     }.also {
                         _dataLoading.value = false
-                        if (_refreshDataLoading.value)
-                            _refreshDataLoading.value = false
                     }
                 }
         }
@@ -280,16 +263,10 @@ class CartViewModel @Inject constructor(
                     }
                 }.also {
                     _dataLoading.value = false
-                    if (_refreshDataLoading.value)
-                        _refreshDataLoading.value = false
                 }
             }
     }
 
-    fun onRefresh() {
-        _refreshDataLoading.value = true
-        fetchCartItems()
-    }
 
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()

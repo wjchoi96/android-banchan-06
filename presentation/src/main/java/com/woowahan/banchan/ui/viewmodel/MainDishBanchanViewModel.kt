@@ -23,9 +23,6 @@ class MainDishBanchanViewModel @Inject constructor(
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val refreshDataLoading = _refreshDataLoading.asStateFlow()
-
     private val _gridViewMode: MutableStateFlow<Boolean> = MutableStateFlow(true)
     val gridViewMode = _gridViewMode.asStateFlow()
 
@@ -45,11 +42,11 @@ class MainDishBanchanViewModel @Inject constructor(
         }
     }
 
-    fun fetchMainDishBanchans() {
-        if (_dataLoading.value) {
-            _refreshDataLoading.value = false
-            return
-        }
+    init {
+        fetchMainDishBanchans()
+    }
+
+    private fun fetchMainDishBanchans() {
         viewModelScope.launch {
             _dataLoading.value = true
             fetchMainDishBanchanUseCase.invoke()
@@ -69,8 +66,6 @@ class MainDishBanchanViewModel @Inject constructor(
                         }
                     }.also {
                         _dataLoading.value = false
-                        if (_refreshDataLoading.value)
-                            _refreshDataLoading.value = false
                     }
                 }
         }
@@ -176,11 +171,6 @@ class MainDishBanchanViewModel @Inject constructor(
                 BanchanModel.FilterType.SalePercentHigher
             }
         }
-    }
-
-    fun onRefresh() {
-        _refreshDataLoading.value = true
-        fetchMainDishBanchans()
     }
 
     sealed class UiEvent {

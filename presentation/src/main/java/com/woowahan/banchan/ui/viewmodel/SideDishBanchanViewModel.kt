@@ -23,9 +23,6 @@ class SideDishBanchanViewModel @Inject constructor(
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val refreshDataLoading = _refreshDataLoading.asStateFlow()
-
     private val _banchans: MutableStateFlow<List<BanchanModel>> = MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
@@ -55,11 +52,11 @@ class SideDishBanchanViewModel @Inject constructor(
         }
     }
 
-    fun fetchSoupDishBanchans() {
-        if (_dataLoading.value) {
-            _refreshDataLoading.value = false
-            return
-        }
+    init {
+        fetchSoupDishBanchans()
+    }
+
+    private fun fetchSoupDishBanchans() {
         viewModelScope.launch {
             _dataLoading.value = true
             fetchSideBanchanUseCase.invoke()
@@ -75,8 +72,6 @@ class SideDishBanchanViewModel @Inject constructor(
                         }
                     }.also {
                         _dataLoading.value = false
-                        if (_refreshDataLoading.value)
-                            _refreshDataLoading.value = false
                     }
                 }
         }
@@ -162,11 +157,6 @@ class SideDishBanchanViewModel @Inject constructor(
                 filterBanchan(BanchanModel.FilterType.SalePercentHigher)
             }
         }
-    }
-
-    fun onRefresh() {
-        _refreshDataLoading.value = true
-        fetchSoupDishBanchans()
     }
 
     sealed class UiEvent {

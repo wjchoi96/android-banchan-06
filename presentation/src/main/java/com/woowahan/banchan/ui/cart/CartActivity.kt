@@ -1,40 +1,40 @@
 package com.woowahan.banchan.ui.cart
 
 import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
 import com.woowahan.banchan.R
-import com.woowahan.banchan.background.DeliveryAlarmReceiver
+import com.woowahan.banchan.background.DeliveryRequester
 import com.woowahan.banchan.databinding.ActivityCartBinding
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.DefaultCartAdapter
-import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.order.OrderItemActivity
 import com.woowahan.banchan.ui.order.OrderListActivity
 import com.woowahan.banchan.ui.recentviewed.RecentViewedActivity
 import com.woowahan.banchan.ui.viewmodel.CartViewModel
-import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
-import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.*
 
 @AndroidEntryPoint
-class CartActivity : BaseActivity<ActivityCartBinding>() {
+class CartActivity : BaseNetworkActivity<ActivityCartBinding>() {
     private val viewModel: CartViewModel by viewModels()
+
+    override val snackBarView: View by lazy {
+        binding.layoutBackground
+    }
 
     companion object {
         fun get(context: Context): Intent {
@@ -60,11 +60,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
             },
             itemClickListener = viewModel.itemClickListener
         )
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchCartItems()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +92,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                             )
                         }
                         is CartViewModel.UiEvent.DeliveryAlarmSetting -> {
-                            setDeliveryAlarm(
+                            DeliveryRequester.setDeliveryAlarm(
+                                this@CartActivity,
                                 it.orderId,
                                 it.orderTitle,
                                 it.orderItemCount,
@@ -108,8 +104,8 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
                 }
             }
 
-            repeatOnStarted {
-                viewModel.cartItems.collect {
+            launch {
+                viewModel.cartItems.collectLatest {
                     cartAdapter.updateList(it)
                 }
             }
@@ -146,26 +142,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>() {
         }
         return super.dispatchTouchEvent(ev)
 
-    }
-
-    private fun setDeliveryAlarm(
-        orderId: Long,
-        orderTitle: String?,
-        orderItemCount: Int,
-        minute: Int
-    ) {
-        val title = getString(R.string.order_items_title, orderTitle ?: "상품", orderItemCount)
-        val alarmManager = getSystemService(AlarmManager::class.java)
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            Calendar.getInstance().time.time + (minute * 60) * 1000,
-            PendingIntent.getBroadcast(
-                this,
-                orderId.toInt(),
-                DeliveryAlarmReceiver.get(this, orderId, title),
-                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-            )
-        )
     }
 
     private val orderNavigateLauncher: ActivityResultLauncher<Intent> =

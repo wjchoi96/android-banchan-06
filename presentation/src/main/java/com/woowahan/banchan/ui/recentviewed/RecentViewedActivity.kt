@@ -16,16 +16,19 @@ import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.RecentViewedAdapter
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
+class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() {
 
     companion object {
         fun get(context: Context): Intent {
@@ -37,6 +40,10 @@ class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
 
     override val layoutResId: Int
         get() = R.layout.activity_recent_viewed
+
+    override val snackBarView: View by lazy {
+        binding.layoutBackground
+    }
 
     private val viewModel: RecentViewedViewModel by viewModels()
     private val spanCount = 2
@@ -96,43 +103,48 @@ class RecentViewedActivity : BaseActivity<ActivityRecentViewedBinding>() {
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchRecentViewedBanchans()
-    }
-
     private fun observeData() {
         repeatOnStarted {
-            viewModel.eventFlow.collect {
-                when (it) {
-                    is RecentViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
+            launch {
+                viewModel.eventFlow.collect {
+                    when (it) {
+                        is RecentViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
 
-                    is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                        is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
 
-                    is RecentViewedViewModel.UiEvent.ShowDialog -> {
-                        DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
-                    }
+                        is RecentViewedViewModel.UiEvent.ShowDialog -> {
+                            DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
+                        }
 
-                    is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {
-                        it.bottomSheet.show(supportFragmentManager, "cart_bottom_sheet")
-                    }
+                        is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {
+                            it.bottomSheet.show(supportFragmentManager, "cart_bottom_sheet")
+                        }
 
-                    is RecentViewedViewModel.UiEvent.ShowCartView -> {
-                        startActivity(CartActivity.get(this@RecentViewedActivity))
-                    }
+                        is RecentViewedViewModel.UiEvent.ShowCartView -> {
+                            startActivity(CartActivity.get(this@RecentViewedActivity))
+                            finish()
+                        }
 
-                    is RecentViewedViewModel.UiEvent.ShowDetailView -> {
-                            startActivity(BanchanDetailActivity.get(this@RecentViewedActivity, it.banchan.hash, it.banchan.title))
+                        is RecentViewedViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(
+                                BanchanDetailActivity.get(
+                                    this@RecentViewedActivity,
+                                    it.banchan.hash,
+                                    it.banchan.title
+                                )
+                            )
+                        }
                     }
                 }
             }
-        }
-
-        repeatOnStarted {
-            viewModel.banchans.collect {
-                adapter.updateList(it)
+            launch {
+                viewModel.banchans.collectLatest {
+                    adapter.updateList(it)
+                }
             }
         }
     }
-
 }

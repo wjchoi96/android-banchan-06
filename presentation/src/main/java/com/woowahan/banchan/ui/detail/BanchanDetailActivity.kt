@@ -3,6 +3,7 @@ package com.woowahan.banchan.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -10,25 +11,26 @@ import androidx.core.view.isVisible
 import com.google.android.material.tabs.TabLayoutMediator
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityBanchanDetailBinding
-import com.woowahan.banchan.databinding.ActivityCartBinding
 import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.adapter.ImageAdapter
-import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.base.BaseNetworkActivity
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.order.OrderListActivity
-import com.woowahan.banchan.ui.viewmodel.BestBanchanViewModel
 import com.woowahan.banchan.ui.viewmodel.DetailViewModel
-import com.woowahan.banchan.ui.viewmodel.OrderItemViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
-class BanchanDetailActivity : BaseActivity<ActivityBanchanDetailBinding>() {
+class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>() {
     private val viewModel: DetailViewModel by viewModels()
+
+    override val snackBarView: View by lazy {
+        binding.layoutBackground
+    }
 
     companion object {
         private const val HASH = "hash"

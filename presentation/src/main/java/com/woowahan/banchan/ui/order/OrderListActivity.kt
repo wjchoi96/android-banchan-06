@@ -16,6 +16,7 @@ import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.viewmodel.OrderListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -35,7 +36,7 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding.dataLoading = viewModel.dataLoading.value
+        binding.viewModel = viewModel
         binding.adapter = adapter
 
         setUpToolbar()
@@ -65,11 +66,6 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
         })
     }
 
-    override fun onStart() {
-        super.onStart()
-        viewModel.fetchOrders()
-    }
-
     private fun observeData(){
         repeatOnStarted {
             launch {
@@ -84,7 +80,7 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
             }
 
             launch {
-                viewModel.orders.collect {
+                viewModel.orders.collectLatest {
                     adapter.updateList(it)
                 }
             }

@@ -24,20 +24,17 @@ class RecentViewedViewModel @Inject constructor(
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val refreshDataLoading = _refreshDataLoading.asStateFlow()
-
     private val _banchans: MutableStateFlow<List<RecentViewedItemModel>> = MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun fetchRecentViewedBanchans() {
-        if (_dataLoading.value) {
-            _refreshDataLoading.value = false
-            return
-        }
+    init {
+        fetchRecentViewedBanchans()
+    }
+
+    private fun fetchRecentViewedBanchans() {
         viewModelScope.launch {
             _dataLoading.value = true
             fetchRecentViewedItemUseCase.invoke()
@@ -52,8 +49,6 @@ class RecentViewedViewModel @Inject constructor(
                         }
                     }.also {
                         _dataLoading.value = false
-                        if (_refreshDataLoading.value)
-                            _refreshDataLoading.value = false
                     }
                 }
         }
@@ -126,11 +121,6 @@ class RecentViewedViewModel @Inject constructor(
             }
         }
 
-
-    fun onRefresh() {
-        _refreshDataLoading.value = true
-        fetchRecentViewedBanchans()
-    }
 
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
