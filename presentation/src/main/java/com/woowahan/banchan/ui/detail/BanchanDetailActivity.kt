@@ -51,10 +51,19 @@ class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.initDate(intent.getStringExtra(HASH), intent.getStringExtra(TITLE))
-        viewModel.fetchBanchanDetail()
+        initData(intent)
         setListener()
         observeData()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let { initData(it) }
+    }
+
+    private fun initData(intent: Intent){
+        viewModel.initDate(intent.getStringExtra(HASH), intent.getStringExtra(TITLE))
+        viewModel.fetchBanchanDetail()
     }
 
     private fun setListener() {
