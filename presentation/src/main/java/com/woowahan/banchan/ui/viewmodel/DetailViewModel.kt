@@ -22,9 +22,6 @@ class DetailViewModel @Inject constructor(
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val refreshDataLoading = _refreshDataLoading.asStateFlow()
-
     private val _detail: MutableStateFlow<BanchanDetailModel> =
         MutableStateFlow(BanchanDetailModel.empty())
     val detail = _detail.asStateFlow()
@@ -34,7 +31,6 @@ class DetailViewModel @Inject constructor(
 
     fun fetchBanchanDetail() {
         if (_dataLoading.value) {
-            _refreshDataLoading.value = false
             return
         }
         viewModelScope.launch {
@@ -51,8 +47,6 @@ class DetailViewModel @Inject constructor(
                         }
                     }.also {
                         _dataLoading.value = false
-                        if (_refreshDataLoading.value)
-                            _refreshDataLoading.value = false
                     }
                 }
         }

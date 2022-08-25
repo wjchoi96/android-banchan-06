@@ -25,6 +25,7 @@ class RecentViewedDataSourceImpl @Inject constructor(
     ) {
         banchanDao.insertBanchanItems(BanchanItemTableEntity(banchan.hash, banchan.title))
         recentViewedDao.insertRecentViewed(RecentViewedTableEntity(banchan.hash, time))
+        print(time)
     }
 
     override suspend fun fetchRecentViewedFlow(fetchItemsCnt: Int?): Flow<List<RecentViewedEntity>> =

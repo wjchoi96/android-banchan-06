@@ -21,6 +21,7 @@ import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.RecentViewedViewModel
 import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -108,7 +109,10 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                     when (it) {
                         is RecentViewedViewModel.UiEvent.ShowToast -> showToast(it.message)
 
-                        is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                        is RecentViewedViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
 
                         is RecentViewedViewModel.UiEvent.ShowDialog -> {
                             DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
@@ -131,8 +135,8 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
             }
 
             launch {
-                viewModel.banchans.collectLatest {
-                    adapter.updateList(it)
+                viewModel.recentPaging.collect {
+                    adapter.submitData(it)
                 }
             }
         }

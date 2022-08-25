@@ -2,6 +2,7 @@ package com.woowahan.banchan.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.RecentViewedModelDiffUtilCallback
@@ -15,12 +16,13 @@ import timber.log.Timber
 
 class RecentViewedAdapter(
     private val banchanInsertCartListener: (RecentViewedItemModel, Boolean) -> Unit,
-    private val itemClickListener: (RecentViewedItemModel) -> Unit
-) : RecyclerView.Adapter<RecentViewedAdapter.RecentViewedViewHolder>() {
+    private val itemClickListener: (RecentViewedItemModel) -> Unit,
+    private val cartStateChangePayload: String = "changePayload"
+) : PagingDataAdapter<RecentViewedItemModel, RecentViewedAdapter.RecentViewedViewHolder>(
+    RecentViewedPagingDiffUtilCallback(cartStateChangePayload = cartStateChangePayload)
+) {
 
     private var banchanList = listOf<RecentViewedItemModel>()
-
-    private val cartStateChangePayload: String = "changePayload"
 
     fun updateList(newList: List<RecentViewedItemModel>) {
         CoroutineScope(Dispatchers.Default).launch {
@@ -69,7 +71,7 @@ class RecentViewedAdapter(
         private val binding: ItemMenuTimeStampBinding,
         val banchanInsertCartListener: (RecentViewedItemModel, Boolean) -> Unit,
         val itemClickListener: (RecentViewedItemModel) -> Unit
-    ): RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         companion object {
             fun from(
@@ -93,5 +95,34 @@ class RecentViewedAdapter(
             Timber.d("bindPayload bindCartStateChangePayload")
             binding.isCartItem = item.isCartItem
         }
+    }
+
+    class RecentViewedPagingDiffUtilCallback(
+        private val cartStateChangePayload: Any
+    ) : DiffUtil.ItemCallback<RecentViewedItemModel>() {
+        override fun areItemsTheSame(
+            oldItem: RecentViewedItemModel,
+            newItem: RecentViewedItemModel
+        ): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(
+            oldItem: RecentViewedItemModel,
+            newItem: RecentViewedItemModel
+        ): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun getChangePayload(
+            oldItem: RecentViewedItemModel,
+            newItem: RecentViewedItemModel
+        ): Any? {
+            return when {
+                oldItem.isCartItem != newItem.isCartItem -> cartStateChangePayload
+                else -> super.getChangePayload(oldItem, newItem)
+            }
+        }
+
     }
 }

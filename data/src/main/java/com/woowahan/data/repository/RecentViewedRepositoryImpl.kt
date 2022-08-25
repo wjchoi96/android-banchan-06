@@ -10,10 +10,7 @@ import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.repository.RecentViewedRepository
 import com.woowahan.domain.util.BanchanDateConvertUtil
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.util.*
 import javax.inject.Inject
@@ -62,6 +59,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
                         val res = list.map {
                             cacheMap[it.hash]!!.run {
                                 RecentViewedItemModel(
+                                    id = it.id,
                                     hash = it.hash,
                                     title = it.title,
                                     imageUrl = this.data.thumbImages.first(),
@@ -80,9 +78,9 @@ class RecentViewedRepositoryImpl @Inject constructor(
     override suspend fun fetchRecentViewedPaging(): Flow<PagingData<RecentViewedItemModel>> = flow {
         recentViewedDataSource.fetchRecentViewedPaging()
             .map { pagingData ->
-                pagingData.map { item ->
+                val res = pagingData.map { item ->
                     coroutineScope {
-                        async {
+                        withContext(Dispatchers.Default) {
                             if (cacheMap.containsKey(item.hash)) {
                                 cacheMap[item.hash]
                             } else {
@@ -91,10 +89,11 @@ class RecentViewedRepositoryImpl @Inject constructor(
                                         cacheMap[item.hash] = it
                                     }
                             }
-                        }.await()
+                        }
 
                         cacheMap[item.hash]!!.run {
                             RecentViewedItemModel(
+                                id = item.id,
                                 hash = item.hash,
                                 title = item.title,
                                 imageUrl = this.data.thumbImages.first(),
@@ -106,6 +105,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
                         }
                     }
                 }
+                emit(res)
             }
     }
 }

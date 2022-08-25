@@ -50,19 +50,23 @@ class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>(
         observeData()
     }
 
-    private fun observeData(){
+    private fun observeData() {
         repeatOnStarted {
             launch {
                 viewModel.eventFlow.collect {
-                    when(it){
+                    when (it) {
                         is DetailViewModel.UiEvent.ShowToast -> showToast(it.message)
-                        is DetailViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
+                        is DetailViewModel.UiEvent.ShowSnackBar -> showSnackBar(
+                            it.message,
+                            binding.layoutBackground
+                        )
                     }
                 }
             }
 
             launch {
                 viewModel.detail.collect {
+                    binding.detail = it
                 }
             }
         }
