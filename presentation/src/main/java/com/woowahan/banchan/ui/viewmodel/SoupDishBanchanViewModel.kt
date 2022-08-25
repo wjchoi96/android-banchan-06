@@ -57,6 +57,12 @@ class SoupDishBanchanViewModel @Inject constructor(
         }
     }
 
+    val itemClickListener: (BanchanModel) -> Unit = { banchan ->
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.ShowDetailView(banchan))
+        }
+    }
+
     val clickInsertCartButton: (BanchanModel, Boolean) -> (Unit) = { banchan, isCartItem ->
         viewModelScope.launch {
             when (isCartItem) {
@@ -76,12 +82,12 @@ class SoupDishBanchanViewModel @Inject constructor(
             viewModelScope.launch {
                 _eventFlow.emit(
                     UiEvent.ShowDialog(
-                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다"){
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에 담겼습니다") {
                             viewModelScope.launch {
                                 _eventFlow.emit(UiEvent.ShowCartView)
                             }
                         }
-                ))
+                    ))
             }
         }
     override val insertCartThrowableEvent: (Throwable) -> Unit
@@ -99,17 +105,17 @@ class SoupDishBanchanViewModel @Inject constructor(
             viewModelScope.launch {
                 _eventFlow.emit(
                     UiEvent.ShowDialog(
-                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다"){
+                        getCartItemUpdateDialog("선택한 상품이 장바구니에서 제거되었습니다") {
                             viewModelScope.launch {
                                 _eventFlow.emit(UiEvent.ShowCartView)
                             }
                         }
-                ))
+                    ))
             }
         }
     override val removeCartThrowableEvent: (Throwable) -> Unit
         get() = {
-            viewModelScope.launch{
+            viewModelScope.launch {
                 it.printStackTrace()
                 it.message?.let { message ->
                     _eventFlow.emit(UiEvent.ShowToast(message))
@@ -156,8 +162,9 @@ class SoupDishBanchanViewModel @Inject constructor(
     sealed class UiEvent {
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
-        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
-        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
-        object ShowCartView: UiEvent()
+        data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder) : UiEvent()
+        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
+        object ShowCartView : UiEvent()
+        data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }

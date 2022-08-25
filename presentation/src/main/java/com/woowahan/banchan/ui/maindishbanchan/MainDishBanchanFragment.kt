@@ -13,6 +13,7 @@ import com.woowahan.banchan.ui.adapter.ViewModeToggleBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.MainDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
@@ -36,7 +37,8 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.viewModeToggleEvent,
-            viewModel.clickInsertCartButton
+            viewModel.clickInsertCartButton,
+            viewModel.itemClickListener
         )
     }
 
@@ -102,6 +104,10 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                         is MainDishBanchanViewModel.UiEvent.ShowCartView -> {
                             startActivity(CartActivity.get(requireContext()))
                         }
+
+                        is MainDishBanchanViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(BanchanDetailActivity.get(requireContext(), it.banchanModel.hash, it.banchanModel.title))
+                        }
                     }
                 }
             }
@@ -131,5 +137,4 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             spanCount
         ).decoration
     }
-
 }

@@ -8,6 +8,10 @@
         <variable
             name="banchan"
             type="com.woowahan.domain.model.RecentViewedItemModel" />
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.adapter.RecentViewedHorizontalAdapter.RecentViewedHorizontalViewHolder" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,7 +19,9 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp">
+        android:layout_marginEnd="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:onClickListener="@{()->holder.itemClickListener.invoke(banchan.hash, banchan.title)}">
 
         <ImageView
             android:id="@+id/iv_menu_image"

@@ -18,11 +18,15 @@ import androidx.room.PrimaryKey
     ]
 )
 data class RecentViewedTableEntity(
-    @PrimaryKey
     @ColumnInfo(name = COLUMN_HASH) val hash: String,
     @ColumnInfo(name = COLUMN_TIME) val time: String,
 ) {
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = RecentViewedTableEntity.RECENT_VIEWED_ID)
+    var id: Long = 0
+
     companion object {
+        const val RECENT_VIEWED_ID = "id"
         const val TABLE_NAME = "recent_viewed"
         const val COLUMN_HASH = "hash"
         const val COLUMN_TIME = "time"

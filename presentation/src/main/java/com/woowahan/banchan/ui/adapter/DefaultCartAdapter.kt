@@ -1,7 +1,5 @@
 package com.woowahan.banchan.ui.adapter
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,10 +9,12 @@ import com.woowahan.banchan.databinding.ItemCartEmptyBinding
 import com.woowahan.banchan.databinding.ItemCartFooterBinding
 import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
-import com.woowahan.domain.constant.DeliveryConstant
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class DefaultCartAdapter(
@@ -25,6 +25,7 @@ class DefaultCartAdapter(
     private val updateItem: (CartModel, Int) -> Unit,
     private val orderClicked: () -> Unit,
     private val recentViewedAllClicked: () -> Unit,
+    private val itemClickListener: (String, String) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
 
@@ -129,17 +130,19 @@ class DefaultCartAdapter(
     class CartFooterViewHolder(
         private val binding: ItemCartFooterBinding,
         val moveToRecentViewedActivity: () -> Unit,
-        val orderClicked: () -> Unit
+        val orderClicked: () -> Unit,
+        private val itemClickListener: (String, String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         private val recentViewedAdapter: RecentViewedHorizontalAdapter by lazy {
-            RecentViewedHorizontalAdapter(onItemCLick = {})
+            RecentViewedHorizontalAdapter(itemClickListener = itemClickListener)
         }
 
         companion object {
             fun from(
                 parent: ViewGroup,
                 moveToRecentViewedActivity: () -> Unit,
-                orderClicked: () -> Unit
+                orderClicked: () -> Unit,
+                itemClickListener: (String, String) -> Unit
             ): CartFooterViewHolder =
                 CartFooterViewHolder(
                     binding = ItemCartFooterBinding.inflate(
@@ -148,7 +151,8 @@ class DefaultCartAdapter(
                         false
                     ),
                     moveToRecentViewedActivity,
-                    orderClicked
+                    orderClicked,
+                    itemClickListener
                 )
         }
 
@@ -178,6 +182,9 @@ class DefaultCartAdapter(
 
         fun bindRecentViewedItems(item: CartListItemModel.Footer) {
             recentViewedAdapter.updateList(item.recentViewedItems)
+            binding.rvRecentViewed.post {
+                binding.rvRecentViewed.smoothScrollToPosition(0)
+            }
         }
     }
 
@@ -217,7 +224,8 @@ class DefaultCartAdapter(
             else -> CartFooterViewHolder.from(
                 parent,
                 orderClicked = orderClicked,
-                moveToRecentViewedActivity = recentViewedAllClicked
+                moveToRecentViewedActivity = recentViewedAllClicked,
+                itemClickListener = itemClickListener
             )
         }
     }

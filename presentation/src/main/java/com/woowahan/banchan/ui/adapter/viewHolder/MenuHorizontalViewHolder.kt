@@ -9,12 +9,14 @@ import timber.log.Timber
 
 class MenuHorizontalViewHolder(
     private val binding: ItemMenuHorizontalBinding,
-    val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+    val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
+    val itemClickListener: (BanchanModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     companion object {
         fun from(
             parent: ViewGroup,
-            banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+            banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
+            itemClickListener: (BanchanModel) -> Unit
         ): MenuHorizontalViewHolder =
             MenuHorizontalViewHolder(
                 ItemMenuHorizontalBinding.inflate(
@@ -22,7 +24,8 @@ class MenuHorizontalViewHolder(
                     parent,
                     false
                 ),
-                banchanInsertCartListener
+                banchanInsertCartListener,
+                itemClickListener
             )
     }
 

@@ -27,7 +27,8 @@ class ViewModeToggleBanchanAdapter(
     private val filterTypeList: List<String>,
     private val filterSelectedListener: (Int) -> Unit,
     private val viewTypeListener: (Boolean) -> Unit,
-    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit)
+    private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
+    private val itemClickListener: (BanchanModel) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var isGridView: Boolean = defaultViewMode
     private var selectedItemPosition: Int = defaultFilter.value
@@ -46,9 +47,10 @@ class ViewModeToggleBanchanAdapter(
             }
         }
     }
-    fun refreshList(){
-        if(banchanList.size < 3) return
-        notifyItemRangeChanged(2, banchanList.size-2)
+
+    fun refreshList() {
+        if (banchanList.size < 3) return
+        notifyItemRangeChanged(2, banchanList.size - 2)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -70,11 +72,13 @@ class ViewModeToggleBanchanAdapter(
                 when (isGridView) {
                     true -> MenuVerticalViewHolder.from(
                         parent,
-                        banchanInsertCartListener
+                        banchanInsertCartListener,
+                        itemClickListener
                     )
                     false -> MenuHorizontalViewHolder.from(
                         parent,
-                        banchanInsertCartListener
+                        banchanInsertCartListener,
+                        itemClickListener
                     )
                 }
             }
@@ -82,11 +86,11 @@ class ViewModeToggleBanchanAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when{
+        return when {
             banchanList[position].viewType.value != BanchanModel.ViewType.Item.value ->
                 banchanList[position].viewType.value
             // isGridView 가 변경되었을때, onCreateViewHolder 가 호출될 수 있도록 viewType 을 다르게 해준다
-            else -> when(isGridView){
+            else -> when (isGridView) {
                 true -> banchanList[position].viewType.value
                 else -> banchanList[position].viewType.value + 1
             }
@@ -135,7 +139,7 @@ class ViewModeToggleBanchanAdapter(
         private val binding: ItemViewModeToggleHeaderBinding,
         private val filterTypeList: List<String>,
         private val filterSelectedListener: (Int) -> Unit,
-        private val viewTypeListener: (Boolean) -> Unit
+        private val viewTypeListener: (Boolean) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(

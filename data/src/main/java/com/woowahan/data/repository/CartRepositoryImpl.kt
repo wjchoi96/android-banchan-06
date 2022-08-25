@@ -4,7 +4,6 @@ import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.CartDataSource
 import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.domain.extension.priceStrToLong
-import com.woowahan.domain.model.BaseBanchan
 import com.woowahan.domain.model.CartModel
 import com.woowahan.domain.repository.CartRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,10 +32,11 @@ class CartRepositoryImpl @Inject constructor(
     }.flowOn(coroutineDispatcher)
 
     override suspend fun insertCartItem(
-        banchan: BaseBanchan,
+        hash: String,
+        title: String,
         count: Int
     ): Flow<Boolean> = flow {
-        cartDataSource.insertCartItem(banchan.hash, banchan.title, count)
+        cartDataSource.insertCartItem(hash, title, count)
         emit(true)
     }.flowOn(coroutineDispatcher)
 
@@ -77,11 +77,12 @@ class CartRepositoryImpl @Inject constructor(
                 coroutineScope {
                     list.map {
                         async {
-                            when(cacheMap.containsKey(it.hash)){
+                            when (cacheMap.containsKey(it.hash)) {
                                 true -> cacheMap[it.hash]!!
                                 else -> {
                                     println("fetchCartItems async run => ${it.hash}")
-                                    banchanDetailDataSource.fetchBanchanDetail(it.hash).firstOrNull()?.also {
+                                    banchanDetailDataSource.fetchBanchanDetail(it.hash)
+                                        .firstOrNull()?.also {
                                         cacheMap[it.hash] = it
                                     }
                                 }

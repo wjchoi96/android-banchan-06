@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RecentViewedHorizontalAdapter(
-    private val onItemCLick: (item: RecentViewedItemModel) -> Unit
+    private val itemClickListener: (String, String) -> Unit
 ) :
     RecyclerView.Adapter<RecentViewedHorizontalAdapter.RecentViewedHorizontalViewHolder>() {
     private var banchanList = listOf<RecentViewedItemModel>()
@@ -36,7 +36,7 @@ class RecentViewedHorizontalAdapter(
     ): RecentViewedHorizontalViewHolder {
         return RecentViewedHorizontalViewHolder.from(
             parent,
-            onItemCLick
+            itemClickListener
         )
     }
 
@@ -48,12 +48,12 @@ class RecentViewedHorizontalAdapter(
 
     class RecentViewedHorizontalViewHolder(
         private val binding: ItemMenuSmallBinding,
-        val itemClickListener: (RecentViewedItemModel) -> Unit
+        val itemClickListener: (String, String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
         companion object {
             fun from(
                 parent: ViewGroup,
-                itemClickListener: (RecentViewedItemModel) -> Unit
+                itemClickListener: (String, String) -> Unit
             ): RecentViewedHorizontalViewHolder =
                 RecentViewedHorizontalViewHolder(
                     ItemMenuSmallBinding.inflate(
@@ -67,6 +67,7 @@ class RecentViewedHorizontalAdapter(
 
         fun bind(item: RecentViewedItemModel) {
             binding.banchan = item
+            binding.holder = this
         }
     }
 }

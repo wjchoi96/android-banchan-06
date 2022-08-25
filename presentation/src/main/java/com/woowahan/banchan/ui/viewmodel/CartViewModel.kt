@@ -3,9 +3,9 @@ package com.woowahan.banchan.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.domain.constant.DeliveryConstant
+import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
-import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.FetchCartItemsUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
 import com.woowahan.domain.usecase.cart.UpdateCartItemCountUseCase
@@ -40,6 +40,13 @@ class CartViewModel @Inject constructor(
 
     val isCartItemIsEmpty: Boolean
         get() = _cartItems.value.size == 2
+
+    val itemClickListener: (String, String) -> Unit = { hash, title ->
+        viewModelScope.launch {
+            val banchan = BanchanModel.empty().copy(hash = hash, title = title)
+            _eventFlow.emit(UiEvent.ShowDetailView(banchan))
+        }
+    }
 
     init {
         fetchCartItems()
@@ -270,5 +277,6 @@ class CartViewModel @Inject constructor(
             val orderItemCount: Int,
             val minute: Int
         ) : UiEvent()
+        data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }
