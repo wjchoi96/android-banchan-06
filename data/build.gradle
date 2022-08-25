@@ -84,4 +84,7 @@ dependencies {
 
     // kotlin extensions and coroutines support for Room
     implementation "androidx.room:room-ktx:2.4.3"
+
+    // mockK
+    testImplementation "io.mockk:mockk:1.10.3"
 }
