@@ -100,6 +100,11 @@ class CartActivity : BaseNetworkActivity<ActivityCartBinding>() {
                                 it.minute
                             )
                         }
+
+                        is CartViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(BanchanDetailActivity.get(this@CartActivity, it.banchanModel.hash, it.banchanModel.title))
+                        }
+
                     }
                 }
             }
@@ -107,16 +112,6 @@ class CartActivity : BaseNetworkActivity<ActivityCartBinding>() {
             launch {
                 viewModel.cartItems.collectLatest {
                     cartAdapter.updateList(it)
-                }
-            }
-
-            repeatOnStarted {
-                viewModel.eventFlow.collect {
-                    when (it) {
-                        is CartViewModel.UiEvent.ShowDetailView -> {
-                            startActivity(BanchanDetailActivity.get(this@CartActivity, it.banchanModel.hash, it.banchanModel.title))
-                        }
-                    }
                 }
             }
         }
