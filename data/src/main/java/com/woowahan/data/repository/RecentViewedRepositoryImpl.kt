@@ -1,5 +1,6 @@
 package com.woowahan.data.repository
 
+import com.woowahan.data.datasource.BanchanDetailCacheDataSource
 import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.RecentViewedDataSource
 import com.woowahan.data.entity.BanchanDetailEntity
@@ -21,10 +22,9 @@ import javax.inject.Inject
 class RecentViewedRepositoryImpl @Inject constructor(
     private val recentViewedDataSource: RecentViewedDataSource,
     private val banchanDetailDataSource: BanchanDetailDataSource,
+    private val banchanDetailCacheDataSource: BanchanDetailCacheDataSource,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : RecentViewedRepository {
-
-    private val cacheMap = mutableMapOf<String, BanchanDetailEntity>()
 
     override suspend fun insertRecentViewedItem(
         hash: String,
@@ -46,15 +46,15 @@ class RecentViewedRepositoryImpl @Inject constructor(
                     coroutineScope {
                         list.map {
                             async {
-                                when (cacheMap.containsKey(it.hash)) {
+                                when (banchanDetailCacheDataSource.hasItem(it.hash)) {
                                     true -> {
-                                        cacheMap[it.hash]!!
+                                        banchanDetailCacheDataSource.getItem(it.hash)
                                     }
                                     else -> {
                                         println("fetchRecentViewed async run => ${it.hash}")
                                         banchanDetailDataSource.fetchBanchanDetail(it.hash).first()
                                             .also {
-                                                cacheMap[it.hash] = it
+                                                banchanDetailCacheDataSource.saveItem(it)
                                             }
                                     }
                                 }
@@ -62,7 +62,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
                         }.awaitAll()
 
                         val res = list.map {
-                            cacheMap[it.hash]!!.run {
+                            banchanDetailCacheDataSource.getItem(it.hash).run {
                                 RecentViewedItemModel(
                                     hash = it.hash,
                                     title = it.title,
@@ -70,7 +70,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
                                     price = this.data.prices.first().priceStrToLong(),
                                     salePrice = (if (this.data.prices.size > 1) this.data.prices[1] else "0").priceStrToLong(),
                                     time = BanchanDateConvertUtil.convert(it.time),
-                                    description = cacheMap[it.hash]!!.data.productDescription
+                                    description = banchanDetailCacheDataSource.getItem(it.hash).data.productDescription
                                 )
                             }
                         }

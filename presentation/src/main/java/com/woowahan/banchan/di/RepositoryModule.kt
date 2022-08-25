@@ -29,18 +29,26 @@ object RepositoryModule {
     fun provideCartRepository(
         cartDataSource: CartDataSource,
         banchanDetailDataSource: BanchanDetailDataSource,
+        banchanDetailCacheDataSource: BanchanDetailCacheDataSource,
         @IODispatcher dispatcher: CoroutineDispatcher
-    ): CartRepository = CartRepositoryImpl(cartDataSource, banchanDetailDataSource, dispatcher)
+    ): CartRepository = CartRepositoryImpl(
+        cartDataSource,
+        banchanDetailDataSource,
+        banchanDetailCacheDataSource,
+        dispatcher
+    )
 
 
     @Provides
     fun provideRecentViewedRepository(
         recentViewedDataSource: RecentViewedDataSource,
         banchanDetailDataSource: BanchanDetailDataSource,
+        banchanDetailCacheDataSource: BanchanDetailCacheDataSource,
         @IODispatcher coroutineDispatcher: CoroutineDispatcher
     ): RecentViewedRepository = RecentViewedRepositoryImpl(
         recentViewedDataSource,
         banchanDetailDataSource,
+        banchanDetailCacheDataSource,
         coroutineDispatcher
     )
 
