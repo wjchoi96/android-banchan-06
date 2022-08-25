@@ -15,6 +15,7 @@ data class RecentViewedDto(
     var recentViewedItemInfo: BanchanItemTableEntity
 ) {
     fun toEntity(): RecentViewedEntity = RecentViewedEntity(
+        recentViewed.id.toLong(),
         recentViewedItemInfo.hash,
         recentViewed.time,
         recentViewedItemInfo.title
@@ -22,6 +23,7 @@ data class RecentViewedDto(
 }
 
 data class RecentViewedEntity(
+    val id: Long,
     val hash: String,
     val time: String,
     val title: String
