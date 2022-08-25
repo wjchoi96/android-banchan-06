@@ -34,9 +34,6 @@ class DetailViewModel @Inject constructor(
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _refreshDataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val refreshDataLoading = _refreshDataLoading.asStateFlow()
-
     private val _detail: MutableStateFlow<BanchanDetailModel> =
         MutableStateFlow(BanchanDetailModel.empty())
     val detail = _detail.asStateFlow()
