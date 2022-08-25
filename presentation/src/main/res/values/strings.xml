@@ -55,4 +55,6 @@
 
     <string name="network_available_state">네트워크에 연결되었습니다</string>
     <string name="network_lost_state">네트워크 연결이 유실되었습니다</string>
+
+    <string name="banchan_detail_btn_disabled_text">이미 장바구니에 담긴 품목입니다</string>
 </resources>

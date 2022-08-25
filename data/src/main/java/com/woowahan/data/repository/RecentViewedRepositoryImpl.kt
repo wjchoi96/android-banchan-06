@@ -6,7 +6,6 @@ import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.RecentViewedDataSource
 import com.woowahan.data.entity.BanchanDetailEntity
 import com.woowahan.domain.extension.priceStrToLong
-import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.repository.RecentViewedRepository
 import com.woowahan.domain.util.BanchanDateConvertUtil
@@ -24,11 +23,13 @@ class RecentViewedRepositoryImpl @Inject constructor(
     private val cacheMap = mutableMapOf<String, BanchanDetailEntity>()
 
     override suspend fun insertRecentViewedItem(
-        banchan: BanchanModel,
+        hash: String,
+        title: String,
         time: Date
     ): Flow<Boolean> = flow {
         recentViewedDataSource.insertRecentViewed(
-            banchan,
+            hash,
+            title,
             BanchanDateConvertUtil.convert(time)
         )
         emit(true)

@@ -46,6 +46,12 @@ class SideDishBanchanViewModel @Inject constructor(
         }
     }
 
+    val itemClickListener: (BanchanModel) -> Unit = { banchan ->
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.ShowDetailView(banchan))
+        }
+    }
+
     init {
         fetchSoupDishBanchans()
     }
@@ -159,5 +165,6 @@ class SideDishBanchanViewModel @Inject constructor(
         data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder): UiEvent()
         data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet): UiEvent()
         object ShowCartView: UiEvent()
+        data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }

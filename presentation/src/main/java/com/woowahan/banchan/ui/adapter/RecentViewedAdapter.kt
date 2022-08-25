@@ -16,7 +16,7 @@ import timber.log.Timber
 
 class RecentViewedAdapter(
     private val banchanInsertCartListener: (RecentViewedItemModel, Boolean) -> Unit,
-    private val itemClickListener: (RecentViewedItemModel) -> Unit,
+    private val itemClickListener: (String, String) -> Unit,
     private val cartStateChangePayload: String = "changePayload"
 ) : PagingDataAdapter<RecentViewedItemModel, RecentViewedAdapter.RecentViewedViewHolder>(
     RecentViewedPagingDiffUtilCallback(cartStateChangePayload = cartStateChangePayload)
@@ -70,14 +70,14 @@ class RecentViewedAdapter(
     class RecentViewedViewHolder(
         private val binding: ItemMenuTimeStampBinding,
         val banchanInsertCartListener: (RecentViewedItemModel, Boolean) -> Unit,
-        val itemClickListener: (RecentViewedItemModel) -> Unit
+        val itemClickListener: (String, String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         companion object {
             fun from(
                 parent: ViewGroup,
                 banchanInsertCartListener: (RecentViewedItemModel, Boolean) -> Unit,
-                itemClickListener: (RecentViewedItemModel) -> Unit
+                itemClickListener: (String, String) -> Unit
             ): RecentViewedViewHolder = RecentViewedViewHolder(
                 ItemMenuTimeStampBinding.inflate(LayoutInflater.from(parent.context)),
                 banchanInsertCartListener,

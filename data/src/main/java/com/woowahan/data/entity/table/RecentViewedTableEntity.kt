@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.woowahan.data.entity.dto.RecentViewedEntity
 
 @Entity(
     tableName = RecentViewedTableEntity.TABLE_NAME,
@@ -24,6 +23,7 @@ data class RecentViewedTableEntity(
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = RecentViewedTableEntity.COLUMN_ID) var id: Int = 0
+
     companion object {
         const val TABLE_NAME = "recent_viewed"
         const val COLUMN_ID = "id"

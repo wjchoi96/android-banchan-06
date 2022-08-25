@@ -32,14 +32,27 @@ data class BanchanDetailEntity(
     fun toDomain(
         title: String,
         deliveryFee: Long,
-        freeDeliveryFeePrice: Long
+        freeDeliveryFeePrice: Long,
+        isCartItem: Boolean
     ): BanchanDetailModel = BanchanDetailModel(
         hash = hash,
         title = title,
         imageUrl = data.thumbImages.first(),
-        price = priceStrToLong(data.prices.last()),
-        deliveryFee,
-        freeDeliveryFeePrice
+        price = priceStrToLong(data.prices.first()),
+        deliveryFee = deliveryFee,
+        freeDeliveryFeePrice = freeDeliveryFeePrice,
+        description = data.productDescription,
+        point = priceStrToLong(data.point),
+        salePrice = if (data.prices.size > 1) {
+            priceStrToLong(data.prices.last())
+        } else {
+            0L
+        },
+        deliveryInfo = data.deliveryInfo,
+        deliveryFeeInfo = data.deliveryFee,
+        detailImages = data.detailSection,
+        thumbImages = data.thumbImages,
+        isCartItem = isCartItem
     )
 
     private fun priceStrToLong(priceStr: String): Long {

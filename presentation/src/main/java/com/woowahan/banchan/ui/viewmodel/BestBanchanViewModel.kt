@@ -9,20 +9,17 @@ import com.woowahan.domain.model.BestBanchanModel
 import com.woowahan.domain.usecase.banchan.FetchBestBanchanUseCase
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
-import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class BestBanchanViewModel @Inject constructor(
     private val fetchBestBanchanUseCase: FetchBestBanchanUseCase,
     override val insertCartItemUseCase: InsertCartItemUseCase,
-    override val removeCartItemUseCase: RemoveCartItemUseCase,
-    private val insertRecentViewedItemUseCase: InsertRecentViewedItemUseCase
+    override val removeCartItemUseCase: RemoveCartItemUseCase
 ) : BaseCartUpdateViewModel() {
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -73,9 +70,6 @@ class BestBanchanViewModel @Inject constructor(
 
     val itemClickListener: (BanchanModel) -> Unit = { banchan ->
         viewModelScope.launch {
-            insertRecentViewedItemUseCase(banchan, Calendar.getInstance().time)
-                .flowOn(Dispatchers.Default)
-                .collect()
             _eventFlow.emit(UiEvent.ShowDetailView(banchan))
         }
     }

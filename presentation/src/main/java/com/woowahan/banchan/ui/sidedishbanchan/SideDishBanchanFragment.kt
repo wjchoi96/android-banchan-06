@@ -13,6 +13,7 @@ import com.woowahan.banchan.ui.adapter.DefaultBanchanAdapter
 import com.woowahan.banchan.ui.adapter.decoratin.GridItemDecoration
 import com.woowahan.banchan.ui.base.BaseFragment
 import com.woowahan.banchan.ui.cart.CartActivity
+import com.woowahan.banchan.ui.detail.BanchanDetailActivity
 import com.woowahan.banchan.ui.viewmodel.SideDishBanchanViewModel
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
@@ -33,7 +34,8 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
             getString(R.string.side_dish_banchan_banner_title),
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
-            viewModel.clickInsertCartButton
+            viewModel.clickInsertCartButton,
+            viewModel.itemClickListener
         )
     }
 
@@ -86,10 +88,13 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
                         is SideDishBanchanViewModel.UiEvent.ShowCartView -> {
                             startActivity(CartActivity.get(requireContext()))
                         }
+
+                        is SideDishBanchanViewModel.UiEvent.ShowDetailView -> {
+                            startActivity(BanchanDetailActivity.get(requireContext(), it.banchanModel.hash, it.banchanModel.title))
+                        }
                     }
                 }
             }
-
             launch {
                 viewModel.banchans.collectLatest {
                     adapter.updateList(it)

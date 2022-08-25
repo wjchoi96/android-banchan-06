@@ -46,7 +46,7 @@ abstract class BaseCartUpdateViewModel: ViewModel() {
     protected fun insertItemsToCart(banchan: BaseBanchan, count: Int) {
         viewModelScope.launch {
             _dataLoading.emit(true)
-            insertCartItemUseCase.invoke(banchan, count)
+            insertCartItemUseCase.invoke(banchan.hash, banchan.title, count)
                 .flowOn(Dispatchers.Default)
                 .collect { event ->
                     event.onSuccess {
