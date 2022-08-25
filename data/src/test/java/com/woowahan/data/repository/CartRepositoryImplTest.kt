@@ -66,7 +66,7 @@ class CartRepositoryImplTest {
         val insertItem = BanchanModel.empty()
 
         //When
-        cartRepo.insertCartItem(insertItem, 1).first()
+        cartRepo.insertCartItem(insertItem.hash, insertItem.title, 1).first()
         val actualResult = spyCartDataSource.insertCartItemCallCount
 
         //Then
