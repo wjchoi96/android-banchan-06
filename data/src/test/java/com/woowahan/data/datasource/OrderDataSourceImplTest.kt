@@ -4,6 +4,7 @@ import com.woowahan.data.dao.OrderDao
 import com.woowahan.data.entity.table.OrderItemTableEntity
 import com.woowahan.data.entity.table.OrderTableEntity
 import com.woowahan.domain.model.OrderItemModel
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -47,6 +48,20 @@ class OrderDataSourceImplTest {
                 ) }
             )
         }
+    }
+
+    @Test
+    fun updateOrder_data_success() = runTest {
+        //Given
+        val orderId = 0L
+        val deliveryState = true
+        every { orderDao.update(orderId, deliveryState) } returns 1
+
+        //When
+        val actualResult = orderDataSourceImpl.updateOrder(orderId, deliveryState).first()
+
+        //Then
+        assert(actualResult)
     }
 
 }
