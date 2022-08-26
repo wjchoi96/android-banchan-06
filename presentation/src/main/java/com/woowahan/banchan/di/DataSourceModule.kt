@@ -5,6 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -15,6 +16,9 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun provideBanchanDetailDataSource(impl: BanchanDetailRetrofitDataSourceImpl): BanchanDetailDataSource
+
+    @Binds
+    abstract fun provideBanchanDetailCacheDataSource(impl: BanchanDetailCacheDataSourceImpl): BanchanDetailCacheDataSource
 
     @Binds
     abstract fun provideCartDataSource(impl: CartDataSourceImpl): CartDataSource

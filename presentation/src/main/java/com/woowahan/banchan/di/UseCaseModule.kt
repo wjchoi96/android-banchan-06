@@ -5,6 +5,7 @@ import com.woowahan.domain.usecase.banchan.*
 import com.woowahan.domain.usecase.cart.*
 import com.woowahan.domain.usecase.order.*
 import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
+import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedPagingUseCase
 import com.woowahan.domain.usecase.recentviewed.InsertRecentViewedItemUseCase
 import dagger.Module
 import dagger.Provides
@@ -88,12 +89,17 @@ object UseCaseModule {
     fun provideInsertRecentViewedItemUseCase(repo: RecentViewedRepository) =
         InsertRecentViewedItemUseCase(repo)
 
+    @Provides
+    fun provideFetchRecentViewedPagingUseCase(
+        repo: RecentViewedRepository
+    ) = FetchRecentViewedPagingUseCase(repo)
+
     /**
      * order
      */
     @Provides
-    fun provideFetchOrdersUseCase(repo: OrderRepository) =
-        FetchOrdersUseCase(repo)
+    fun provideFetchOrdersPagingUseCase(repo: OrderRepository) =
+        FetchOrderPagingUseCase(repo)
 
     @Provides
     fun provideFetchOrderUseCase(repo: OrderRepository) =

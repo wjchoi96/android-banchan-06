@@ -1,8 +1,11 @@
 package com.woowahan.banchan.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.OrderModel
-import com.woowahan.domain.usecase.order.FetchOrdersUseCase
+import com.woowahan.domain.usecase.order.FetchOrderPagingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -11,48 +14,51 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderListViewModel @Inject constructor(
-    private val fetchOrdersUseCase: FetchOrdersUseCase
+    private val fetchOrderPagingUseCase: FetchOrderPagingUseCase
 ): BaseErrorViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _orders: MutableStateFlow<List<OrderModel>> = MutableStateFlow(emptyList())
-    val orders = _orders.asStateFlow()
+    val orderPaging = fetchOrderPagingUseCase()
+        .flowOn(Dispatchers.Default)
+        .filterIsInstance<DomainEvent.Success<PagingData<OrderModel>>>()
+        .map { it.data }
+        .onEach { _dataLoading.value = false }
+        .cachedIn(viewModelScope)
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        _dataLoading.value = true
         fetchOrders()
     }
 
     private fun fetchOrders(){
         refreshJob()
         prevJob = viewModelScope.launch {
-            _dataLoading.value = true
-            fetchOrdersUseCase()
+            fetchOrderPagingUseCase()
                 .flowOn(Dispatchers.Default)
-                .collect { event ->
-                    event.onSuccess {
-                        _orders.value = it
-                        if(it.isEmpty()){
-                            showErrorView("주문내역이 없습니다", "주문하러 가기"){
-                                viewModelScope.launch { _eventFlow.emit(UiEvent.NavigateCartView) }
-                            }
-                        }else{
-                            hideErrorView()
-                        }
-                    }.onFailure {
-                        it.printStackTrace()
-                        it.message?.let { message -> _eventFlow.emit(UiEvent.ShowToast(message)) }
-                        showErrorView(it.message, "재시도"){
+                .filterIsInstance<DomainEvent.Failure<PagingData<OrderModel>>>()
+                .collect {
+                    it.throwable.printStackTrace()
+                    it.throwable.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                        showErrorView(message, "재시도") {
                             fetchOrders()
                         }
-                    }.also {
-                        _dataLoading.value = false
                     }
                 }
         }
+    }
+
+    fun showEmptyView(){
+        showErrorView("주문내역이 없습니다", "주문하러 가기") {
+            viewModelScope.launch { _eventFlow.emit(UiEvent.NavigateCartView) }
+        }
+    }
+    fun hideEmptyView(){
+        hideErrorView()
     }
 
     val orderDetailNavigateEvent: (OrderModel) -> Unit = {
