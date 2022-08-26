@@ -208,7 +208,9 @@ class CartViewModel @Inject constructor(
     }
 
     val updateItemCount: (CartModel, Int) -> Unit = { item, cnt ->
-        updateCartItemCount(item.hash, cnt)
+        if (cnt >= 1) {
+            updateCartItemCount(item.hash, cnt)
+        }
     }
 
     val orderItems: () -> Unit = {
@@ -277,6 +279,7 @@ class CartViewModel @Inject constructor(
             val orderItemCount: Int,
             val minute: Int
         ) : UiEvent()
+
         data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
     }
 }

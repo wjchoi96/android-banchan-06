@@ -17,10 +17,6 @@
             type="Long" />
 
         <variable
-            name="itemCount"
-            type="Integer" />
-
-        <variable
             name="isSelected"
             type="Boolean" />
     </data>
@@ -132,7 +128,7 @@
             android:maxLength="3"
             android:minWidth="44dp"
             android:paddingHorizontal="3dp"
-            android:text="@{Integer.toString(itemCount)}"
+            android:text="@{Integer.toString(cartItem.count)}"
             android:textColor="@color/black_000000"
             android:textSize="14sp"
             android:updateItem="@{cartItem}"
