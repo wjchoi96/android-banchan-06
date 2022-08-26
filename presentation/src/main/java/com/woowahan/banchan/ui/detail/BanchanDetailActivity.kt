@@ -101,6 +101,13 @@ class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>(
                         is DetailViewModel.UiEvent.ShowCartView -> {
                             startActivity(CartActivity.get(this@BanchanDetailActivity))
                         }
+                        is DetailViewModel.UiEvent.FinishView -> {
+                            it.message?.let {
+                                DialogUtil.show(this@BanchanDetailActivity, it, "닫기") {
+                                    finish()
+                                }
+                            }
+                        }
                     }
                 }
             }
