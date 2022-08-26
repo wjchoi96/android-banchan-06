@@ -1,9 +1,6 @@
 package com.woowahan.data.entity.table
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(
     tableName = RecentViewedTableEntity.TABLE_NAME,
@@ -15,19 +12,19 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.RESTRICT,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = [RecentViewedTableEntity.COLUMN_HASH], unique = true)]
 )
 data class RecentViewedTableEntity(
     @ColumnInfo(name = COLUMN_HASH) val hash: String,
     @ColumnInfo(name = COLUMN_TIME) val time: String,
 ) {
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = RecentViewedTableEntity.RECENT_VIEWED_ID)
-    var id: Long = 0
+    @ColumnInfo(name = RecentViewedTableEntity.COLUMN_ID) var id: Int = 0
 
     companion object {
-        const val RECENT_VIEWED_ID = "id"
         const val TABLE_NAME = "recent_viewed"
+        const val COLUMN_ID = "id"
         const val COLUMN_HASH = "hash"
         const val COLUMN_TIME = "time"
     }

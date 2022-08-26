@@ -1,14 +1,17 @@
 package com.woowahan.banchan.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
 import com.woowahan.domain.model.BaseBanchan
+import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
-import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
+import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedPagingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -17,9 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecentViewedViewModel @Inject constructor(
-    private val fetchRecentViewedItemUseCase: FetchRecentViewedItemUseCase,
+    private val fetchRecentViewedPagingUseCase: FetchRecentViewedPagingUseCase,
     override val insertCartItemUseCase: InsertCartItemUseCase,
-    override val removeCartItemUseCase: RemoveCartItemUseCase
+    override val removeCartItemUseCase: RemoveCartItemUseCase,
 ) : BaseCartUpdateViewModel() {
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
@@ -27,6 +30,13 @@ class RecentViewedViewModel @Inject constructor(
     private val _banchans: MutableStateFlow<List<RecentViewedItemModel>> =
         MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
+
+    val recentPaging = fetchRecentViewedPagingUseCase()
+        .flowOn(Dispatchers.Default)
+        .filterIsInstance<DomainEvent.Success<PagingData<RecentViewedItemModel>>>()
+        .map { it.data }
+        .onEach { _dataLoading.value = false }
+        .cachedIn(viewModelScope)
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -36,25 +46,19 @@ class RecentViewedViewModel @Inject constructor(
     }
 
     private fun fetchRecentViewedBanchans() {
+        _dataLoading.value = true
         refreshJob()
         prevJob = viewModelScope.launch {
-            _dataLoading.value = true
-            fetchRecentViewedItemUseCase.invoke()
+            fetchRecentViewedPagingUseCase()
                 .flowOn(Dispatchers.Default)
-                .collect { res ->
-                    res.onSuccess {
-                        _banchans.value = it
-                        hideErrorView()
-                    }.onFailure {
-                        it.printStackTrace()
-                        it.message?.let { message ->
-                            _eventFlow.emit(UiEvent.ShowToast(message))
-                        }
-                        showErrorView(it.message, "재시도") {
+                .filterIsInstance<DomainEvent.Failure<PagingData<RecentViewedItemModel>>>()
+                .collect {
+                    it.throwable.printStackTrace()
+                    it.throwable.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                        showErrorView(message, "재시도") {
                             fetchRecentViewedBanchans()
                         }
-                    }.also {
-                        _dataLoading.value = false
                     }
                 }
         }
@@ -126,6 +130,13 @@ class RecentViewedViewModel @Inject constructor(
                 }
             }
         }
+
+    fun showEmptyView(){
+        showErrorView("최근 본 목록이 없습니다", null) {}
+    }
+    fun hideEmptyView(){
+        hideErrorView()
+    }
 
 
     sealed class UiEvent {

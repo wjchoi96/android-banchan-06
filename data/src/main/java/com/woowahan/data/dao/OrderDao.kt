@@ -1,5 +1,6 @@
 package com.woowahan.data.dao
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -38,7 +39,7 @@ interface OrderDao {
 
     @Transaction
     @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}` ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) DESC")
-    fun fetchOrders(): Flow<List<OrderDto>>
+    fun fetchOrdersPaging(): PagingSource<Int, OrderDto>
 
     // true => 1
     @Query("select COUNT(*) FROM `${OrderTableEntity.TABLE_NAME}` where ${OrderTableEntity.COLUMN_STATE} = 1")

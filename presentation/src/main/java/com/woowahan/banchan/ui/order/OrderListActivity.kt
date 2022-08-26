@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityOrderListBinding
@@ -17,7 +18,6 @@ import com.woowahan.banchan.ui.base.BaseActivity
 import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.OrderListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -30,8 +30,8 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
         get() = R.layout.activity_order_list
 
     private val viewModel: OrderListViewModel by viewModels()
-    private val adapter: OrderListAdapter by lazy {
-        OrderListAdapter(viewModel.orderDetailNavigateEvent)
+    private val adapter: OrderListPagingAdapter by lazy {
+        OrderListPagingAdapter(viewModel.orderDetailNavigateEvent)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +66,14 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
                 }
             }
         })
+
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                viewModel.showEmptyView()
+            } else {
+                viewModel.hideEmptyView()
+            }
+        }
     }
 
     private fun observeData(){
@@ -85,8 +93,8 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
             }
 
             launch {
-                viewModel.orders.collectLatest {
-                    adapter.updateList(it)
+                viewModel.orderPaging.collect {
+                    adapter.submitData(it)
                 }
             }
         }

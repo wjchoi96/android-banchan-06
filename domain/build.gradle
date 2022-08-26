@@ -4,11 +4,15 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
     //coroutine
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+
+    //paging
+    implementation "androidx.paging:paging-common:3.1.1"
+
 }

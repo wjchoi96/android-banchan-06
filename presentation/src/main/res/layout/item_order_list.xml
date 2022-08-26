@@ -25,7 +25,7 @@
 
         <variable
             name="holder"
-            type="com.woowahan.banchan.ui.order.OrderListAdapter.OrderListItemViewHolder" />
+            type="com.woowahan.banchan.ui.order.OrderListItemViewHolder" />
 
         <variable
             name="order"
