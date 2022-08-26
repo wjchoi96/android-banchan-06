@@ -46,8 +46,7 @@ class DefaultBanchanAdapter(
                 filterSelectedListener = {
                     selectedFilterPosition = it
                     filterSelectedListener(it)
-                },
-                menuCnt = banchanList.size - 2
+                }
             )
             else -> {
                 MenuVerticalViewHolder.from(parent, banchanInsertCartListener, itemClickListener)
@@ -62,7 +61,7 @@ class DefaultBanchanAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
-            is CountHeaderViewHolder -> holder.bind(selectedFilterPosition)
+            is CountHeaderViewHolder -> holder.bind(selectedFilterPosition, banchanList.size)
             is MenuVerticalViewHolder -> holder.bind(banchanList[position])
         }
     }
