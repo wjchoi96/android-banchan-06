@@ -108,7 +108,7 @@ class DetailViewModel @Inject constructor(
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
-                            _eventFlow.emit(UiEvent.ShowToast(message))
+                            _eventFlow.emit(UiEvent.FinishView(message))
                         }
                     }.also {
                         _dataLoading.value = false
@@ -192,10 +192,10 @@ class DetailViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
+        data class FinishView(val message: String? = null): UiEvent()
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
         data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder) : UiEvent()
-        data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
         object ShowCartView : UiEvent()
     }
 }
