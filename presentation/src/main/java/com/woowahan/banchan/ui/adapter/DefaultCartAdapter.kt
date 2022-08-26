@@ -186,6 +186,10 @@ class DefaultCartAdapter(
                 binding.rvRecentViewed.smoothScrollToPosition(0)
             }
         }
+
+        fun bindShowPriceInfo(item: CartListItemModel.Footer) {
+            binding.showPrice = item.showPriceInfo
+        }
     }
 
     class CartItemEmptyViewHolder(
@@ -294,6 +298,12 @@ class DefaultCartAdapter(
                         holder.bindRecentViewedItems(cartList[position] as CartListItemModel.Footer)
                     }
                 }
+
+                Payload.PriceInfoChanged -> {
+                    if (holder is CartFooterViewHolder) {
+                        holder.bindShowPriceInfo(cartList[position] as CartListItemModel.Footer)
+                    }
+                }
             }
         }
     }
@@ -306,6 +316,7 @@ class DefaultCartAdapter(
         object QuantityChanged : Payload()
         object TotalPriceChanged : Payload()
         object UpdateRecentViewed : Payload()
+        object PriceInfoChanged : Payload()
     }
 
     class CartListModelDiffUtilCallback(
@@ -327,6 +338,8 @@ class DefaultCartAdapter(
         override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
+            val payloads = ArrayList<Any>()
+
             when {
                 oldItem is CartListItemModel.Header && newItem is CartListItemModel.Header -> {
                     if (!(oldItem isSameContentWith newItem)) {
@@ -338,16 +351,23 @@ class DefaultCartAdapter(
                         return Payload.SelectOneChanged
                     }
                     if (oldItem.cart.count != newItem.cart.count) {
-                        return Payload.QuantityChanged
+                        payloads.add(Payload.QuantityChanged)
                     }
                 }
                 oldItem is CartListItemModel.Footer && newItem is CartListItemModel.Footer -> {
                     if (oldItem.recentViewedItems != newItem.recentViewedItems) {
-                        return Payload.UpdateRecentViewed
-                    } else if (!(oldItem isSameContentWith newItem)) {
+                        payloads.add(Payload.UpdateRecentViewed)
+                    }
+                    if (oldItem.showPriceInfo != newItem.showPriceInfo) {
+                        payloads.add(Payload.PriceInfoChanged)
+                    }
+                    if (!(oldItem isSameContentWith newItem)) {
                         return Payload.TotalPriceChanged
                     }
                 }
+            }
+            if (payloads.isNotEmpty()) {
+                return payloads
             }
 
             return super.getChangePayload(oldItemPosition, newItemPosition)
