@@ -7,7 +7,6 @@ import androidx.paging.cachedIn
 import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.OrderModel
 import com.woowahan.domain.usecase.order.FetchOrderPagingUseCase
-import com.woowahan.domain.usecase.order.FetchOrdersUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -16,7 +15,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OrderListViewModel @Inject constructor(
-    private val fetchOrdersUseCase: FetchOrdersUseCase,
     private val fetchOrderPagingUseCase: FetchOrderPagingUseCase
 ): ViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)

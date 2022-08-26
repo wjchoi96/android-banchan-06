@@ -59,29 +59,6 @@ class OrderRepositoryImpl @Inject constructor(
             }
     }.flowOn(coroutineDispatcher)
 
-    override suspend fun fetchOrders(): Flow<List<OrderModel>> = flow {
-        orderDataSource.fetchOrders()
-            .collect {
-                emit(
-                    it.map { item ->
-                        val price = item.items.sumOf { it.price * it.count }
-                        OrderModel(
-                            orderId = item.orderId,
-                            time = BanchanDateConvertUtil.convert(item.time),
-                            items = item.items.map { child -> child.toDomain() },
-                            deliveryState = item.deliveryState,
-                            deliveryFee = DeliveryConstant.run {
-                                if(price >= FreeDeliveryFeePrice)
-                                    FreeDeliveryFee
-                                else
-                                    DeliveryFee
-                            }
-                        )
-                    }
-                )
-            }
-    }.flowOn(coroutineDispatcher)
-
     override fun fetchOrdersPaging(): Flow<PagingData<OrderModel>> {
         return orderDataSource.fetchOrdersPaging()
             .map {  pagingData ->

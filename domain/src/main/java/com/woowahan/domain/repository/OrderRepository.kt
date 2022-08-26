@@ -16,8 +16,6 @@ interface OrderRepository {
 
     suspend fun fetchOrder(orderId: Long): Flow<OrderModel>
 
-    suspend fun fetchOrders(): Flow<List<OrderModel>>
-
     fun fetchOrdersPaging(): Flow<PagingData<OrderModel>>
 
     suspend fun getDeliveryOrderCount(): Flow<Int>

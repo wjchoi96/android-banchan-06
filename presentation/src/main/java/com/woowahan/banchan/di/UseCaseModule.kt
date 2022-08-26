@@ -98,10 +98,6 @@ object UseCaseModule {
      * order
      */
     @Provides
-    fun provideFetchOrdersUseCase(repo: OrderRepository) =
-        FetchOrdersUseCase(repo)
-
-    @Provides
     fun provideFetchOrdersPagingUseCase(repo: OrderRepository) =
         FetchOrderPagingUseCase(repo)
 

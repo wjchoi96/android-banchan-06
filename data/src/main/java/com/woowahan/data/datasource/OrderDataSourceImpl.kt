@@ -48,13 +48,6 @@ class OrderDataSourceImpl @Inject constructor(
             }
     }
 
-    override fun fetchOrders(): Flow<List<OrderEntity>> = flow {
-        orderDao.fetchOrders()
-            .collect {
-                emit(it.map { item -> item.toEntity() } )
-            }
-    }
-
     override fun fetchOrdersPaging(): Flow<PagingData<OrderEntity>> {
         return Pager(
             config = PagingConfig(

@@ -39,10 +39,6 @@ interface OrderDao {
 
     @Transaction
     @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}` ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) DESC")
-    fun fetchOrders(): Flow<List<OrderDto>>
-
-    @Transaction
-    @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}` ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) DESC")
     fun fetchOrdersPaging(): PagingSource<Int, OrderDto>
 
     // true => 1

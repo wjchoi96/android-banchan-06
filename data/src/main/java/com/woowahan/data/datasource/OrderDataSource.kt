@@ -16,8 +16,6 @@ interface OrderDataSource {
 
     suspend fun fetchOrder(orderId: Long): Flow<OrderEntity>
 
-    fun fetchOrders(): Flow<List<OrderEntity>>
-
     fun fetchOrdersPaging(): Flow<PagingData<OrderEntity>>
 
     fun getDeliveryOrderCount(): Flow<Int>
