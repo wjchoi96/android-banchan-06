@@ -1,6 +1,5 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import androidx.databinding.ObservableField
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.ui.dialog.CartItemInsertBottomSheet

@@ -15,7 +15,7 @@ data class OrderDto(
     var orderItemInforms: List<OrderItemTableEntity>
 ) {
     fun toEntity(): OrderEntity = OrderEntity(
-        order.id,
+        order.id.toLong(),
         order.time,
         orderItemInforms,
         order.deliveryState
