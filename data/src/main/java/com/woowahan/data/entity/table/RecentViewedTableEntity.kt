@@ -1,9 +1,6 @@
 package com.woowahan.data.entity.table
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(
     tableName = RecentViewedTableEntity.TABLE_NAME,
@@ -15,7 +12,8 @@ import androidx.room.PrimaryKey
             onDelete = ForeignKey.RESTRICT,
             onUpdate = ForeignKey.CASCADE
         )
-    ]
+    ],
+    indices = [Index(value = [RecentViewedTableEntity.COLUMN_HASH], unique = true)]
 )
 data class RecentViewedTableEntity(
     @ColumnInfo(name = COLUMN_HASH) val hash: String,
