@@ -56,17 +56,16 @@ object DialogUtil {
         }.show()
     }
 
-    private fun show(
+    fun show(
         context: Context,
         content: String,
         positive: String,
         positiveListener: ()->Unit
     ){
-        MaterialAlertDialogBuilder(context).apply {
+        MainDialog(context).apply {
             setMessage(content)
-            setPositiveButton(positive){ dialog, _ ->
+            setPositiveBtn (positive){
                 positiveListener()
-                dialog.dismiss()
             }
         }.show()
     }
