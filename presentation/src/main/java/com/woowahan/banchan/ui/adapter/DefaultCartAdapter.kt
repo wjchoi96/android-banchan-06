@@ -110,14 +110,11 @@ class DefaultCartAdapter(
             binding.cartItem = item
             binding.holder = this
             binding.isSelected = item.isSelected
-            binding.itemCount = item.count
             binding.totalPrice = (item.price * item.count)
-            binding.isSelected = item.isSelected
         }
 
         fun bindQuantityPayload(item: CartListItemModel.Content) {
             binding.cartItem = item.cart
-            binding.itemCount = item.cart.count
             binding.totalPrice = (item.cart.price * item.cart.count)
         }
 
@@ -266,42 +263,44 @@ class DefaultCartAdapter(
             super.onBindViewHolder(holder, position, payloads)
             return
         }
-        payloads.firstOrNull()?.let {
-            Timber.d("onBindViewHolder payloads[$position][$it]")
-            when (it) {
-                Payload.SelectAllChanged -> {
-                    if (holder is CartHeaderViewHolder) {
-                        holder.bindSelectAllPayload(cartList[position] as CartListItemModel.Header)
+        payloads.firstOrNull()?.let { payloads ->
+            Timber.d("onBindViewHolder payloads[$position][$payloads]")
+            (payloads as ArrayList<*>).forEach { payload ->
+                when (payload) {
+                    Payload.SelectAllChanged -> {
+                        if (holder is CartHeaderViewHolder) {
+                            holder.bindSelectAllPayload(cartList[position] as CartListItemModel.Header)
+                        }
                     }
-                }
 
-                Payload.QuantityChanged -> {
-                    if (holder is CartItemViewHolder) {
-                        holder.bindQuantityPayload(cartList[position] as CartListItemModel.Content)
+                    Payload.QuantityChanged -> {
+                        if (holder is CartItemViewHolder) {
+                            holder.bindQuantityPayload(cartList[position] as CartListItemModel.Content)
+                        }
                     }
-                }
 
-                Payload.SelectOneChanged -> {
-                    if (holder is CartItemViewHolder) {
-                        holder.bindSelectPayload(cartList[position] as CartListItemModel.Content)
+                    Payload.SelectOneChanged -> {
+                        if (holder is CartItemViewHolder) {
+                            holder.bindSelectPayload(cartList[position] as CartListItemModel.Content)
+                        }
                     }
-                }
 
-                Payload.TotalPriceChanged -> {
-                    if (holder is CartFooterViewHolder) {
-                        holder.bindTotalPrice(cartList[position] as CartListItemModel.Footer)
+                    Payload.TotalPriceChanged -> {
+                        if (holder is CartFooterViewHolder) {
+                            holder.bindTotalPrice(cartList[position] as CartListItemModel.Footer)
+                        }
                     }
-                }
 
-                Payload.UpdateRecentViewed -> {
-                    if (holder is CartFooterViewHolder) {
-                        holder.bindRecentViewedItems(cartList[position] as CartListItemModel.Footer)
+                    Payload.UpdateRecentViewed -> {
+                        if (holder is CartFooterViewHolder) {
+                            holder.bindRecentViewedItems(cartList[position] as CartListItemModel.Footer)
+                        }
                     }
-                }
 
-                Payload.PriceInfoChanged -> {
-                    if (holder is CartFooterViewHolder) {
-                        holder.bindShowPriceInfo(cartList[position] as CartListItemModel.Footer)
+                    Payload.PriceInfoChanged -> {
+                        if (holder is CartFooterViewHolder) {
+                            holder.bindShowPriceInfo(cartList[position] as CartListItemModel.Footer)
+                        }
                     }
                 }
             }
