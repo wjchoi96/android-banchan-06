@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="image_url"
+            type="String" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="itemSize"
+            type="Integer" />
+
+        <variable
+            name="deliveryItemState"
+            type="Boolean" />
+
+        <variable
+            name="price"
+            type="Long" />
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.order.OrderListItemViewHolder" />
+
+        <variable
+            name="order"
+            type="com.woowahan.domain.model.OrderModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_ffffff"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:id="@+id/layout_background"
+        android:onClickListener="@{() -> holder.itemClickListener.invoke(order)}"
+        >
+
+        <View
+            android:id="@+id/view_top_line"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/grey_DDDDDD"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_marginVertical="16dp"
+            android:layout_marginStart="16dp"
+            android:loadImageUseCoil="@{image_url}"
+            app:layout_constraintTop_toBottomOf="@id/view_top_line"
+            app:layout_constraintBottom_toTopOf="@id/view_bottom_line"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/iv_image"
+            android:src="@drawable/bg_image_placeholder"
+            android:adjustViewBounds="true"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            />
+
+        <TextView
+            android:textStyle="bold"
+            android:text="@{itemSize>1 ? @string/order_items_title(title, itemSize) : title}"
+            android:id="@+id/tv_title"
+            app:layout_constraintStart_toEndOf="@id/iv_image"
+            app:layout_constraintBottom_toTopOf="@id/tv_price"
+            app:layout_constraintEnd_toStartOf="@id/iv_btn_cancel"
+            app:layout_constraintTop_toTopOf="@id/iv_image"
+            android:layout_marginStart="8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black_000000"
+            tools:text="새콩달콤 오징어 무침"
+            />
+
+        <TextView
+            android:setCashString="@{price}"
+            android:id="@+id/tv_price"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintBottom_toTopOf="@id/tv_state"
+            app:layout_constraintEnd_toEndOf="@id/tv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black_000000"
+            tools:text="2,000원"
+            />
+
+        <TextView
+            android:textStyle="bold"
+            android:text="@{deliveryItemState ? @string/order_list_item_state_delivery_title : @string/order_list_item_state_finish_title}"
+            android:id="@+id/tv_state"
+            app:layout_constraintTop_toBottomOf="@id/tv_price"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="@id/tv_title"
+            app:layout_constraintBottom_toBottomOf="@id/iv_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@{deliveryItemState ? @color/orange_f46700 : @color/black_000000}"
+            tools:text="배송 준비중"
+            />
+
+        <ImageButton
+            android:layout_marginEnd="16dp"
+            android:id="@+id/iv_btn_cancel"
+            app:layout_constraintTop_toTopOf="@id/tv_title"
+            app:layout_constraintBottom_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toEndOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_right_black"
+            />
+
+        <View
+            android:id="@+id/view_bottom_line"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/grey_DDDDDD"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

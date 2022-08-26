@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_tab_min_width">140dp</dimen>
+    <dimen name="banchan_list_banner_height">202dp</dimen>
+    <dimen name="banchan_view_mode_toggle_radio_button_size">24dp</dimen>
+    <dimen name="main_dialog_min_width">312dp</dimen>
+    <dimen name="main_dialog_title_min_width">300dp</dimen>
+    <dimen name="round_btn_elevation">2dp</dimen>
+</resources>

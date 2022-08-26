@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="image_url"
+            type="String" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="count"
+            type="Integer" />
+
+        <variable
+            name="price"
+            type="Long" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:background="@color/white_ffffff"
+        >
+
+        <ImageView
+            android:loadImageUseCoil="@{image_url}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/iv_image"
+            android:src="@drawable/bg_image_placeholder"
+            android:adjustViewBounds="true"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            />
+
+        <TextView
+            android:textStyle="bold"
+            android:text="@{title}"
+            android:id="@+id/tv_title"
+            app:layout_constraintStart_toEndOf="@id/iv_image"
+            app:layout_constraintBottom_toTopOf="@id/tv_count"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black_000000"
+            tools:text="새콩달콤 오징어 무침"
+            />
+
+        <TextView
+            android:text="@{@string/count_str(count)}"
+            android:id="@+id/tv_count"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintBottom_toTopOf="@id/tv_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black_000000"
+            tools:text="새콩달콤 오징어 무침"
+            />
+
+        <TextView
+            android:textStyle="bold"
+            android:setCashString="@{price}"
+            android:id="@+id/tv_content"
+            app:layout_constraintTop_toBottomOf="@id/tv_count"
+            app:layout_constraintStart_toStartOf="@id/tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/black_000000"
+            tools:text="새콩달콤 오징어 무침"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

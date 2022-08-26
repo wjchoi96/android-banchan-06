@@ -1,18 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+<layout>
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout_background"
+        tools:context=".ui.root.RootActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <include
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:id="@+id/layout_include_tool_bar"
+            layout="@layout/item_toolbar_main"
+            />
+
+        <com.google.android.material.tabs.TabLayout
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_include_tool_bar"
+            android:id="@+id/layout_tab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:tabMinWidth="@dimen/main_tab_min_width"
+            app:tabTextColor="@color/black_000000"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/orange_f46700"
+            app:tabMode="scrollable"
+            app:tabTextAppearance="@style/MainTabLayoutTextStyle"
+            android:background="@drawable/bg_main_tab_layout"
+            />
+
+        <androidx.viewpager2.widget.ViewPager2
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_tab"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:id="@+id/vp_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

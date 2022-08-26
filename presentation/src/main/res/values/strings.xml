@@ -1,3 +1,60 @@
 <resources>
     <string name="app_name">Banchan</string>
+    <string name="cart_add_title">장바구니 담기</string>
+    <string name="cart_add_cancel">취소</string>
+
+    <!-- use at main tab, title -->
+    <string name="best_banchan_title">기획전</string>
+    <string name="main_dish_banchan_title">든든한 메인요리</string>
+    <string name="soup_dish_banchan_title">뜨끈한 국물요리</string>
+    <string name="side_dish_banchan_title">정갈한 밑반찬</string>
+
+    <!-- banner title -->
+    <string name="best_banchan_banner_title">한 번 주문하면\n두 번 반하는 반찬들</string>
+    <string name="main_dish_banchan_banner_title">모두가 좋아하는\n든든한 메인 요리</string>
+    <string name="soup_dish_banchan_banner_title">정성이 담긴\n뜨끈뜨근 국물 요리</string>
+    <string name="side_dish_banchan_banner_title">식탁을 풍성하게 하는\n정갈한 밑반찬</string>
+
+    <!-- recent viewed -->
+    <string name="recent_viewed_title">Recently viewed products</string>
+
+    <!-- use at cart -->
+    <string name="cart_unselect">선택 해제₩</string>
+    <string name="cart_select_all">전체 선택</string>
+    <string name="cart_remove_selected">선택 삭제</string>
+    <string name="cart_menus_price">상품 주문 금액</string>
+    <string name="cart_delivery_fee">배송료</string>
+    <string name="cart_total_price">총 주문 금액</string>
+    <string name="cart_recent_viewed">최근 본 상품</string>
+    <string name="cart_view_all">전체보기</string>
+    <string name="cart_title">Cart</string>
+    <string name="no_cart_item">상품이 없습니다.</string>
+    <string name="order_btn_text">%1$s원 주문하기</string>
+    <string name="order_btn_disabled">최소주문금액을 확인해주세요</string>
+
+    <string name="count_str">%1$d 개</string>
+    <string name="total_count_str">총 %1$d 개</string>
+    <string name="minute_str">%1$d분</string>
+    <string name="order_state_delivery_title">주문이 접수되었습니다</string>
+    <string name="order_state_finish_title">배송이 완료되었습니다</string>
+    <string name="order_state_time_title">배송까지 남은 시간</string>
+    <string name="order_state_count_title">주문한 상품</string>
+    <string name="order_items_title">%1$s 외 %2$d개</string>
+    <string name="order_list_item_state_delivery_title">배송 준비중</string>
+    <string name="order_list_item_state_finish_title">배송완료</string>
+    <string name="order_title">Order List</string>
+    <string name="order_default_product">상품</string>
+    <string name="order_complete">배송이 완료되었습니다.</string>
+    <string name="order_complete_content">%1$s의 배송이 완료되었습니다.</string>
+    <string name="banchan_detail_quantity">수량</string>
+    <string name="banchan_detail_total_price">총 주문금액</string>
+    <string name="banchan_detail_order_text">주문하기</string>
+    <string name="banchan_detail_point_title">적립금</string>
+    <string name="banchan_detail_delivery_info_title">배송정보</string>
+    <string name="banchan_detail_delivery_fee_title">배송비</string>
+
+    <string name="network_available_state">네트워크에 연결되었습니다</string>
+    <string name="network_lost_state">네트워크 연결이 유실되었습니다</string>
+
+    <string name="banchan_detail_btn_disabled_text">이미 장바구니에 담긴 품목입니다</string>
 </resources>

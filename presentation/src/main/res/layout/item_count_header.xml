@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.adapter.viewHolder.CountHeaderViewHolder" />
+
+        <variable
+            name="defaultSpinnerSelectPosition"
+            type="Integer" />
+
+        <variable
+            name="menuCnt"
+            type="Integer" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="24dp">
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black_000000"
+            android:textSize="12sp"
+            android:text="@{`총 ` + menuCnt + `개 상품`}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="총 8개 상품" />
+
+        <Spinner
+            android:id="@+id/spinner_filter_type"
+            style="@style/SpinnerTheme"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:adapter="@{holder.spinnerAdapter}"
+            android:background="@null"
+            android:drawableEnd="@drawable/ic_down"
+            android:overlapAnchor="false"
+            android:selectedItemPosition="@{defaultSpinnerSelectPosition}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/iv_spinner_triangle"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:setOnItemSelectedListener="@{holder.filterSpinnerItemSelectListener}" />
+
+        <ImageView
+            android:id="@+id/iv_spinner_triangle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@drawable/ic_down"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

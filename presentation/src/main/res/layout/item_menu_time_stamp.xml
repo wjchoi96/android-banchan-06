@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="banchan"
+            type="com.woowahan.domain.model.RecentViewedItemModel" />
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.adapter.RecentViewedAdapter.RecentViewedViewHolder" />
+
+        <variable
+            name="isCartItem"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/layout_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:onClickListener="@{()->holder.itemClickListener.invoke(banchan.hash, banchan.title)}">
+
+        <ImageView
+            android:id="@+id/iv_menu_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:loadImageUseCoil="@{banchan.imageUrl}"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/bg_image_placeholder" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_add_cart"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="@dimen/round_btn_elevation"
+            app:layout_constraintBottom_toBottomOf="@id/iv_menu_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_menu_image">
+
+            <ImageView
+                android:id="@+id/iv_add_cart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:onClickListener="@{()-> holder.banchanInsertCartListener.invoke(banchan, isCartItem)}"
+                android:scaleType="fitCenter"
+                android:src="@{isCartItem ? @drawable/bg_add_cart_checked : @drawable/bg_cart_padding}" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tv_menu_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="4dp"
+            android:text="@{banchan.title}"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/iv_menu_image"
+            app:layout_constraintStart_toStartOf="@id/iv_menu_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_menu_image"
+            tools:text="제품명" />
+
+        <LinearLayout
+            android:id="@+id/layout_menu"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp"
+            app:layout_constraintEnd_toEndOf="@id/iv_menu_image"
+            app:layout_constraintStart_toStartOf="@id/iv_menu_image"
+            app:layout_constraintTop_toBottomOf="@id/tv_menu_name">
+
+            <TextView
+                android:id="@+id/tv_final_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:setCashString="@{banchan.salePrice != 0L ? banchan.salePrice : banchan.price}"
+                android:textColor="@color/black_000000"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="최종가격" />
+
+            <TextView
+                android:id="@+id/tv_original_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:setCancelLine="@{banchan.salePrice != 0L}"
+                android:setCashString="@{banchan.price}"
+                android:textColor="@color/grey_828282"
+                android:textSize="12sp"
+                android:visibility="@{banchan.salePrice != 0L ? View.VISIBLE : View.INVISIBLE}"
+                tools:text="정가" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_time_stamp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="5dp"
+            android:setTimeText="@{banchan.time}"
+            android:textColor="@color/grey_828282"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/iv_menu_image"
+            app:layout_constraintStart_toStartOf="@id/iv_menu_image"
+            app:layout_constraintTop_toBottomOf="@id/layout_menu"
+            tools:text="타임스탬프" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

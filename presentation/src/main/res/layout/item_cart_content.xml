@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="holder"
+            type="com.woowahan.banchan.ui.adapter.DefaultCartAdapter.CartItemViewHolder" />
+
+        <variable
+            name="cartItem"
+            type="com.woowahan.domain.model.CartModel" />
+
+        <variable
+            name="totalPrice"
+            type="Long" />
+
+        <variable
+            name="isSelected"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_constraint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@{isSelected ? @color/white_ffffff : @android:color/transparent}"
+        android:paddingTop="16dp">
+
+        <CheckBox
+            android:id="@+id/cbx_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:button="@drawable/sel_checkbox"
+            android:buttonTint="@color/black_000000"
+            android:checked="@={isSelected}"
+            android:minWidth="33dp"
+            android:minHeight="33dp"
+            android:onClick="@{()->holder.selectItem.invoke(cartItem, isSelected)}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_menu_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="10dp"
+            android:loadImageUseCoil="@{cartItem.imageUrl}"
+            android:scaleType="centerCrop"
+            app:layout_constraintLeft_toRightOf="@id/cbx_select"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/yellow_fbf5e0" />
+
+        <TextView
+            android:id="@+id/tv_menu_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="2dp"
+            android:text="@{cartItem.title}"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/iv_menu_image"
+            app:layout_constraintRight_toLeftOf="@id/ibtn_remove"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="오징어무침" />
+
+        <TextView
+            android:id="@+id/tv_menu_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="2dp"
+            android:setCashString="@{cartItem.price}"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@id/iv_menu_image"
+            app:layout_constraintRight_toLeftOf="@id/ibtn_remove"
+            app:layout_constraintTop_toBottomOf="@id/tv_menu_name"
+            tools:text="6,000원" />
+
+        <ImageButton
+            android:id="@+id/ibtn_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="@{()->holder.deleteItem.invoke(cartItem)}"
+            android:padding="5dp"
+            android:src="@drawable/ic_close"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn_plus"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:onClick="@{()->holder.updateItem.invoke(cartItem, cartItem.count + 1)}"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="@dimen/round_btn_elevation"
+            app:layout_constraintBottom_toBottomOf="@id/btn_minus"
+            app:layout_constraintStart_toEndOf="@id/edt_quantity"
+            app:layout_constraintTop_toTopOf="@id/btn_minus">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="5dp"
+                app:srcCompat="@drawable/ic_plus" />
+        </androidx.cardview.widget.CardView>
+
+        <EditText
+            android:id="@+id/edt_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="3"
+            android:minWidth="44dp"
+            android:paddingHorizontal="3dp"
+            android:text="@{Integer.toString(cartItem.count)}"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            android:updateItem="@{cartItem}"
+            android:updateQuantityMethod="@{holder.onQuantityChange}"
+            app:layout_constraintBottom_toBottomOf="@id/btn_minus"
+            app:layout_constraintStart_toEndOf="@id/btn_minus"
+            app:layout_constraintTop_toTopOf="@id/btn_minus"
+            app:layout_constraintVertical_bias="0.6"
+            tools:text="1" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn_minus"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:onClick="@{()->holder.updateItem.invoke(cartItem, cartItem.count -1)}"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="@dimen/round_btn_elevation"
+            app:layout_constraintLeft_toRightOf="@id/iv_menu_image"
+            app:layout_constraintTop_toBottomOf="@id/tv_menu_price">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="5dp"
+                app:srcCompat="@drawable/ic_minus" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tv_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:setCashString="@{totalPrice}"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_menu_image"
+            tools:text="6,000원" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/white_dddddd"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_price" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

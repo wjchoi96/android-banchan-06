@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.woowahan.banchan">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
+        android:name=".application.BanchanOrderApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,10 +16,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Banchan"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".ui.detail.BanchanDetailActivity"
+            android:exported="false" />
+
+        <receiver android:name=".background.DeliveryAlarmReceiver" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove"></provider>
+
+        <activity
+            android:name=".ui.order.OrderListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.order.OrderItemActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.root.RootActivity" />
+        <activity
+            android:name=".ui.recentviewed.RecentViewedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.cart.CartActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.root.RootActivity"
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
