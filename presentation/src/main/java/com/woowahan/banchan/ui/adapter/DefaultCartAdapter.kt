@@ -342,12 +342,12 @@ class DefaultCartAdapter(
             when {
                 oldItem is CartListItemModel.Header && newItem is CartListItemModel.Header -> {
                     if (!(oldItem isSameContentWith newItem)) {
-                        return Payload.SelectAllChanged
+                        payloads.add(Payload.SelectAllChanged)
                     }
                 }
                 oldItem is CartListItemModel.Content && newItem is CartListItemModel.Content -> {
                     if (oldItem.cart.isSelected != newItem.cart.isSelected) {
-                        return Payload.SelectOneChanged
+                        payloads.add(Payload.SelectOneChanged)
                     }
                     if (oldItem.cart.count != newItem.cart.count) {
                         payloads.add(Payload.QuantityChanged)
