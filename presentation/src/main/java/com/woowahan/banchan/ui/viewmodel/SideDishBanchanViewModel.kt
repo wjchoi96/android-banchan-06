@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,18 +58,24 @@ class SideDishBanchanViewModel @Inject constructor(
     }
 
     private fun fetchSoupDishBanchans() {
-        viewModelScope.launch {
+        refreshJob()
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
             fetchSideBanchanUseCase.invoke()
                 .flowOn(Dispatchers.Default)
                 .collect { res ->
                     res.onSuccess {
+                        Timber.d("collect side dish")
                         defaultBanchans = it
                         _banchans.value = defaultBanchans
+                        hideErrorView()
                     }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
                             _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
+                        showErrorView(it.message, "재시도"){
+                            fetchSoupDishBanchans()
                         }
                     }.also {
                         _dataLoading.value = false

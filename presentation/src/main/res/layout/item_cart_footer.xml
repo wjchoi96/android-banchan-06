@@ -60,7 +60,7 @@
             android:id="@+id/layout_upper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{showPrice ? View.GONE : View.VISIBLE}"
+            android:visibility="@{showPrice ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView

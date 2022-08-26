@@ -27,6 +27,10 @@ class RecentViewedViewModel @Inject constructor(
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
+    private val _banchans: MutableStateFlow<List<RecentViewedItemModel>> =
+        MutableStateFlow(emptyList())
+    val banchans = _banchans.asStateFlow()
+
     val recentPaging = fetchRecentViewedPagingUseCase()
         .flowOn(Dispatchers.Default)
         .filterIsInstance<DomainEvent.Success<PagingData<RecentViewedItemModel>>>()
@@ -38,19 +42,23 @@ class RecentViewedViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        fetchRecentViewedBanchans()
+    }
+
+    private fun fetchRecentViewedBanchans() {
         _dataLoading.value = true
-        viewModelScope.launch {
+        refreshJob()
+        prevJob = viewModelScope.launch {
             fetchRecentViewedPagingUseCase()
                 .flowOn(Dispatchers.Default)
                 .filterIsInstance<DomainEvent.Failure<PagingData<RecentViewedItemModel>>>()
                 .collect {
                     it.throwable.printStackTrace()
                     it.throwable.message?.let { message ->
-                        _eventFlow.emit(
-                            UiEvent.ShowToast(
-                                message
-                            )
-                        )
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                        showErrorView(message, "재시도") {
+                            fetchRecentViewedBanchans()
+                        }
                     }
                 }
         }
@@ -122,6 +130,13 @@ class RecentViewedViewModel @Inject constructor(
                 }
             }
         }
+
+    fun showEmptyView(){
+        showErrorView("최근 본 목록이 없습니다", null) {}
+    }
+    fun hideEmptyView(){
+        hideErrorView()
+    }
 
 
     sealed class UiEvent {

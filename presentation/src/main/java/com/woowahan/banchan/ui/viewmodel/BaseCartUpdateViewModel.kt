@@ -1,6 +1,5 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.banchan.util.DialogUtil
 import com.woowahan.domain.model.BanchanModel
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 
-abstract class BaseCartUpdateViewModel: ViewModel() {
+abstract class BaseCartUpdateViewModel: BaseErrorViewModel() {
 
     protected abstract val removeCartItemUseCase: RemoveCartItemUseCase
     protected abstract val insertCartItemUseCase: InsertCartItemUseCase

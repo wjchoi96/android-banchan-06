@@ -13,6 +13,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,17 +37,24 @@ class BestBanchanViewModel @Inject constructor(
     }
 
     private fun fetchBestBanchans() {
-        viewModelScope.launch {
+        refreshJob()
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
             fetchBestBanchanUseCase.invoke()
                 .flowOn(Dispatchers.Default)
                 .collect { res ->
                     res.onSuccess {
+                        Timber.d("collect data at viewModel")
                         _banchans.value = it
+                        hideErrorView()
                     }.onFailure {
+                        Timber.d("catch error at viewModel => $it")
                         it.printStackTrace()
                         it.message?.let { message ->
                             _eventFlow.emit(UiEvent.ShowToast(message))
+                        }
+                        showErrorView(it.message, "재시도"){
+                            fetchBestBanchans()
                         }
                     }.also {
                         _dataLoading.value = false

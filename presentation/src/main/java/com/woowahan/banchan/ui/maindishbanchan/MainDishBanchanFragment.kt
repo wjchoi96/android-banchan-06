@@ -48,6 +48,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.viewModel = viewModel
         binding.adapter = adapter
+        binding.layoutErrorView.viewModel = viewModel
 
         setUpRecyclerView()
         observeData()

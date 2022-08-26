@@ -47,7 +47,8 @@ class MainDishBanchanViewModel @Inject constructor(
     }
 
     private fun fetchMainDishBanchans() {
-        viewModelScope.launch {
+        refreshJob()
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
             fetchMainDishBanchanUseCase.invoke()
                 .flowOn(Dispatchers.Default)
@@ -55,14 +56,14 @@ class MainDishBanchanViewModel @Inject constructor(
                     res.onSuccess {
                         defaultBanchans = it
                         filterBanchan(defaultBanchans, filter)
-                    }.onFailureWithData { it, list ->
+                        hideErrorView()
+                    }.onFailure {
                         it.printStackTrace()
                         it.message?.let { message ->
                             _eventFlow.emit(UiEvent.ShowToast(message))
                         }
-                        list?.let {
-                            defaultBanchans = it
-                            filterBanchan(defaultBanchans, filter)
+                        showErrorView(it.message, "재시도"){
+                            fetchMainDishBanchans()
                         }
                     }.also {
                         _dataLoading.value = false

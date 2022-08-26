@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.ActivityOrderListBinding
@@ -14,6 +15,7 @@ import com.woowahan.banchan.extension.repeatOnStarted
 import com.woowahan.banchan.extension.showSnackBar
 import com.woowahan.banchan.extension.showToast
 import com.woowahan.banchan.ui.base.BaseActivity
+import com.woowahan.banchan.ui.cart.CartActivity
 import com.woowahan.banchan.ui.viewmodel.OrderListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,6 +39,8 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
 
         binding.viewModel = viewModel
         binding.adapter = adapter
+        binding.layoutErrorView.viewModel = viewModel
+        binding.layoutErrorView.hideRefresh = true
 
         setUpToolbar()
         setUpRecyclerView()
@@ -63,6 +67,14 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
                 }
             }
         })
+
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                viewModel.showEmptyView()
+            } else {
+                viewModel.hideEmptyView()
+            }
+        }
     }
 
     private fun observeData(){
@@ -74,6 +86,9 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
                         is OrderListViewModel.UiEvent.ShowSnackBar -> showSnackBar(it.message, binding.layoutBackground)
                         is OrderListViewModel.UiEvent.NavigateOrderItemView ->
                             startActivity(OrderItemActivity.get(this@OrderListActivity, it.orderId))
+                        is OrderListViewModel.UiEvent.NavigateCartView -> {
+                            startActivity(CartActivity.get(this@OrderListActivity))
+                        }
                     }
                 }
             }

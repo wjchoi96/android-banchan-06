@@ -1,6 +1,5 @@
 package com.woowahan.banchan.ui.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -16,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OrderListViewModel @Inject constructor(
     private val fetchOrderPagingUseCase: FetchOrderPagingUseCase
-): ViewModel() {
+): BaseErrorViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
@@ -32,16 +31,34 @@ class OrderListViewModel @Inject constructor(
 
     init {
         _dataLoading.value = true
+        fetchOrders()
+    }
 
-        viewModelScope.launch {
+    private fun fetchOrders(){
+        refreshJob()
+        prevJob = viewModelScope.launch {
             fetchOrderPagingUseCase()
                 .flowOn(Dispatchers.Default)
                 .filterIsInstance<DomainEvent.Failure<PagingData<OrderModel>>>()
                 .collect {
                     it.throwable.printStackTrace()
-                    it.throwable.message?.let { message -> _eventFlow.emit(UiEvent.ShowToast(message)) }
+                    it.throwable.message?.let { message ->
+                        _eventFlow.emit(UiEvent.ShowToast(message))
+                        showErrorView(message, "재시도") {
+                            fetchOrders()
+                        }
+                    }
                 }
         }
+    }
+
+    fun showEmptyView(){
+        showErrorView("주문내역이 없습니다", "주문하러 가기") {
+            viewModelScope.launch { _eventFlow.emit(UiEvent.NavigateCartView) }
+        }
+    }
+    fun hideEmptyView(){
+        hideErrorView()
     }
 
     val orderDetailNavigateEvent: (OrderModel) -> Unit = {
@@ -55,5 +72,6 @@ class OrderListViewModel @Inject constructor(
         data class ShowToast(val message: String): UiEvent()
         data class ShowSnackBar(val message: String): UiEvent()
         data class NavigateOrderItemView(val orderId: Long): UiEvent()
+        object NavigateCartView: UiEvent()
     }
 }

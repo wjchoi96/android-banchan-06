@@ -82,17 +82,17 @@ class RecentViewedRepositoryImpl @Inject constructor(
                 pagingData.map { item ->
                     coroutineScope {
                         withContext(Dispatchers.Default) {
-                            if (cacheMap.containsKey(item.hash)) {
-                                cacheMap[item.hash]
+                            if (banchanDetailCacheDataSource.hasItem(item.hash)) {
+                                banchanDetailCacheDataSource.getItem(item.hash)
                             } else {
                                 banchanDetailDataSource.fetchBanchanDetail(item.hash).first()
                                     .also {
-                                        cacheMap[item.hash] = it
+                                        banchanDetailCacheDataSource.saveItem(it)
                                     }
                             }
                         }
 
-                        cacheMap[item.hash]!!.run {
+                        banchanDetailCacheDataSource.getItem(item.hash).run {
                             RecentViewedItemModel(
                                 id = item.id,
                                 hash = item.hash,
@@ -101,7 +101,7 @@ class RecentViewedRepositoryImpl @Inject constructor(
                                 price = this.data.prices.first().priceStrToLong(),
                                 salePrice = (if (this.data.prices.size > 1) this.data.prices[1] else "0").priceStrToLong(),
                                 time = BanchanDateConvertUtil.convert(item.time),
-                                description = cacheMap[item.hash]!!.data.productDescription
+                                description = banchanDetailCacheDataSource.getItem(item.hash).data.productDescription
                             )
                         }
                     }

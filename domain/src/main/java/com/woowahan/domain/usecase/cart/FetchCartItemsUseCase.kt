@@ -26,7 +26,7 @@ class FetchCartItemsUseCase(
                                 CartListItemModel.Footer(
                                     price = 0L,
                                     recentViewedItems = recentViewedList.getOrThrow(),
-                                    showPriceInfo = cartList.isEmpty(),
+                                    showPriceInfo = cartList.isNotEmpty(),
                                     deliveryFee = DeliveryConstant.DeliveryFee,
                                     minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
                                     freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,
@@ -43,7 +43,7 @@ class FetchCartItemsUseCase(
                             CartListItemModel.Footer(
                                 price = price,
                                 recentViewedItems = recentViewedList.getOrThrow(),
-                                showPriceInfo = cartList.isEmpty(),
+                                showPriceInfo = cartList.isNotEmpty(),
                                 deliveryFee = if (price < DeliveryConstant.FreeDeliveryFeePrice) DeliveryConstant.DeliveryFee else DeliveryConstant.FreeDeliveryFee,
                                 minimumOrderPrice = DeliveryConstant.MinimumOrderPrice,
                                 freeDeliveryFeePrice = DeliveryConstant.FreeDeliveryFeePrice,

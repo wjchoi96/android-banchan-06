@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.R
@@ -59,6 +60,7 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
         binding.title = getString(R.string.recent_viewed_title)
 
         binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener { onBackPressed() }
+        binding.layoutErrorView.viewModel = viewModel
         setUpRecyclerView()
         observeData()
     }
@@ -98,6 +100,14 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                 Timber.d("idx[$idx] => left[${outRect.left}], right[${outRect.right}]")
             }
         })
+
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                viewModel.showEmptyView()
+            } else {
+                viewModel.hideEmptyView()
+            }
+        }
     }
 
     private fun observeData() {
