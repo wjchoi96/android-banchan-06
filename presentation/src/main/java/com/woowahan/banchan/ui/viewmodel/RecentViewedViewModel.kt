@@ -11,7 +11,6 @@ import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
-import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
 import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedPagingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecentViewedViewModel @Inject constructor(
-    private val fetchRecentViewedItemUseCase: FetchRecentViewedItemUseCase,
     private val fetchRecentViewedPagingUseCase: FetchRecentViewedPagingUseCase,
     override val insertCartItemUseCase: InsertCartItemUseCase,
     override val removeCartItemUseCase: RemoveCartItemUseCase,
