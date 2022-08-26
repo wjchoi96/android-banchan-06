@@ -40,6 +40,7 @@ class OrderListActivity : BaseActivity<ActivityOrderListBinding>() {
         binding.viewModel = viewModel
         binding.adapter = adapter
         binding.layoutErrorView.viewModel = viewModel
+        binding.layoutErrorView.hideRefresh = true
 
         setUpToolbar()
         setUpRecyclerView()

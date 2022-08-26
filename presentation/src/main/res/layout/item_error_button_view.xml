@@ -3,50 +3,99 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.woowahan.banchan.ui.viewmodel.BaseErrorViewModel" />
+
+        <variable
+            name="hideRefresh"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="30dp"
-        >
+        android:padding="30dp">
 
         <TextView
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toTopOf="@id/btn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/tv_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@{viewModel.errorViewTitle}"
-            tools:text="@string/no_cart_item"
             android:textColor="@color/black_000000"
-            android:textSize="18sp" />
-
-        <Button
-            android:text="@{viewModel.errorBtnTitle}"
-            android:visibility="@{viewModel.errorBtnVisible ? View.VISIBLE : View.GONE}"
-            android:onClickListener="@{()-> viewModel.errorViewEvent.invoke()}"
-            android:textColor="@color/white_ffffff"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_refresh"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="@string/no_cart_item" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/btn_refresh"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="30dp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="@dimen/cardview_default_elevation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
-            android:id="@+id/btn"
-            android:layout_marginTop="50dp"
-            android:layout_marginHorizontal="50dp"
-            android:layout_marginBottom="50dp"
+            app:layout_constraintVertical_chainStyle="packed">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?android:attr/selectableItemBackground"
+                android:onClickListener="@{()-> viewModel.errorViewEvent.invoke()}"
+                android:padding="15dp"
+                android:src="@drawable/ic_retry"
+                android:visibility="@{viewModel.errorBtnVisible ? View.VISIBLE : View.GONE}" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/tv_refresh_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            />
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:text="@{viewModel.errorBtnTitle}"
+            android:textColor="@color/black_000000"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_refresh" />
+
+        <Button
+            android:id="@+id/btn_order"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="16dp"
+            android:backgroundTint="@{hideRefresh ? @color/yellow_f9ba70 : @color/yellow_fcdcb7}"
+            android:elevation="10dp"
+            android:onClickListener="@{()-> viewModel.errorViewEvent.invoke()}"
+            android:text="@{viewModel.errorBtnTitle}"
+            android:textColor="@color/white_ffffff"
+            android:textSize="18sp"
+            android:visibility="@{hideRefresh ? View.VISIBLE : View.GONE, default=gone}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+        <androidx.constraintlayout.widget.Group
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{!hideRefresh ? View.VISIBLE : View.GONE, default=visible}"
+            app:constraint_referenced_ids="btn_refresh, tv_refresh_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
