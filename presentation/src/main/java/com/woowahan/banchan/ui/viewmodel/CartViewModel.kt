@@ -208,7 +208,7 @@ class CartViewModel @Inject constructor(
     }
 
     val updateItemCount: (CartModel, Int) -> Unit = { item, cnt ->
-        if (cnt >= 1) {
+        if (cnt in 1..999) {
             updateCartItemCount(item.hash, cnt)
         }
     }
