@@ -1,5 +1,6 @@
 package com.woowahan.data.repository
 
+import com.woowahan.data.datasource.BanchanDetailCacheDataSource
 import com.woowahan.data.datasource.BanchanDetailDataSource
 import com.woowahan.data.datasource.CartDataSource
 import com.woowahan.data.entity.BanchanDetailEntity
@@ -19,10 +20,9 @@ import javax.inject.Inject
 class CartRepositoryImpl @Inject constructor(
     private val cartDataSource: CartDataSource,
     private val banchanDetailDataSource: BanchanDetailDataSource,
+    private val banchanDetailCacheDataSource: BanchanDetailCacheDataSource,
     private val coroutineDispatcher: CoroutineDispatcher
 ) : CartRepository {
-
-    private val cacheMap = mutableMapOf<String, BanchanDetailEntity>()
 
     override fun getCartSizeFlow(): Flow<Int> = flow {
         cartDataSource.getCartSizeFlow()
@@ -77,13 +77,13 @@ class CartRepositoryImpl @Inject constructor(
                 coroutineScope {
                     list.map {
                         async {
-                            when (cacheMap.containsKey(it.hash)) {
-                                true -> cacheMap[it.hash]!!
+                            when (banchanDetailCacheDataSource.hasItem(it.hash)) {
+                                true -> banchanDetailCacheDataSource.getItem(it.hash)
                                 else -> {
                                     println("fetchCartItems async run => ${it.hash}")
                                     banchanDetailDataSource.fetchBanchanDetail(it.hash)
                                         .firstOrNull()?.also {
-                                        cacheMap[it.hash] = it
+                                            banchanDetailCacheDataSource.saveItem(it)
                                     }
                                 }
                             }
@@ -91,7 +91,7 @@ class CartRepositoryImpl @Inject constructor(
                     }.awaitAll()
 
                     val res = list.map {
-                        cacheMap[it.hash]!!.run {
+                        banchanDetailCacheDataSource.getItem(it.hash).run {
                             CartModel(
                                 hash = it.hash,
                                 count = it.count,
