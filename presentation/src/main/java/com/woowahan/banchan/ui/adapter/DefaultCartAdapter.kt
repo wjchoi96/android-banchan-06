@@ -362,7 +362,7 @@ class DefaultCartAdapter(
                         payloads.add(Payload.PriceInfoChanged)
                     }
                     if (!(oldItem isSameContentWith newItem)) {
-                        return Payload.TotalPriceChanged
+                        payloads.add(Payload.TotalPriceChanged)
                     }
                 }
             }
