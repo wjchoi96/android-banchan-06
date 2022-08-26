@@ -7,7 +7,7 @@ import com.woowahan.banchan.R
 import java.util.*
 
 object DeliveryRequester {
-    private const val testDeliveryMill: Long = 1000*10
+    private const val testDeliveryMill: Long = 1000*15
 
     fun setDeliveryAlarm(
         context: Context,
