@@ -12,14 +12,12 @@ import com.woowahan.banchan.ui.adapter.FilterSpinnerAdapter
 class CountHeaderViewHolder(
     private val binding: ItemCountHeaderBinding,
     private val filterTypeList: List<String>,
-    private val menuCnt: Int,
     private val filterSelectedListener: (Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     companion object {
         fun from(
             parent: ViewGroup,
             filterTypeList: List<String>,
-            menuCnt: Int,
             filterSelectedListener: (Int) -> Unit
         ): CountHeaderViewHolder =
             CountHeaderViewHolder(
@@ -30,11 +28,10 @@ class CountHeaderViewHolder(
                 ),
                 filterTypeList = filterTypeList,
                 filterSelectedListener = filterSelectedListener,
-                menuCnt = menuCnt
             )
     }
 
-    fun bind(selectedItemPosition: Int) {
+    fun bind(selectedItemPosition: Int, menuCnt: Int) {
         binding.holder = this
         binding.menuCnt = menuCnt - 2
         binding.defaultSpinnerSelectPosition = selectedItemPosition
