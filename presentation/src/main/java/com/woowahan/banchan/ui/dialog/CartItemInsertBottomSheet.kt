@@ -54,7 +54,7 @@ class CartItemInsertBottomSheet: BottomSheetDialogFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.insertListener = this.insertListener
+        insertListener?.let { viewModel.insertListener = it }
         arguments?.let {
             viewModel.banchan = it.getSerializable(EXTRA_BANCHAN) as BaseBanchan
         }
