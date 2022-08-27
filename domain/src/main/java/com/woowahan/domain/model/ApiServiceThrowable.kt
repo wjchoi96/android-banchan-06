@@ -1,6 +1,24 @@
 package com.woowahan.domain.model
 
 import java.io.IOException
+import java.net.SocketTimeoutException
+
+object ThrowableUtil {
+    private const val socketTimeoutMessage = "요청 시간이 초과되었습니다"
+    private const val noConnectivityIOExceptionMessage = "네트워크 상태가 올바르지 않습니다"
+    private const val apiBodyIsNullMessage = "응답 데이터가 올바르지 않습니다"
+    private const val apiStatusCodeNotOkMessage = "응답 코드가 올바르지 않습니다"
+
+    fun throwableToMessage(throwable: Throwable): String? {
+        return when(throwable){
+            is NoConnectivityIOException -> noConnectivityIOExceptionMessage
+            is ApiBodyIsNull -> apiBodyIsNullMessage
+            is ApiStatusCodeNotOk -> apiStatusCodeNotOkMessage
+            is SocketTimeoutException -> socketTimeoutMessage
+            else -> throwable.message
+        }
+    }
+}
 
 data class ApiStatusCodeNotOk(
     private val statusCode: Int?
