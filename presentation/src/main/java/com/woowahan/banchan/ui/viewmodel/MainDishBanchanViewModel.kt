@@ -59,9 +59,6 @@ class MainDishBanchanViewModel @Inject constructor(
                         hideErrorView()
                     }.onFailure {
                         it.printStackTrace()
-                        it.message?.let { message ->
-                            _eventFlow.emit(UiEvent.ShowToast(message))
-                        }
                         showErrorView(it.message, "재시도"){
                             fetchMainDishBanchans()
                         }
