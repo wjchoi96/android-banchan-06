@@ -55,7 +55,7 @@ class MainDishBanchanViewModel @Inject constructor(
                 .collect { res ->
                     res.onSuccess {
                         defaultBanchans = it
-                        filterBanchan(defaultBanchans, filter)
+                        _banchans.value = it.filterType(filter, defaultBanchans)
                         hideErrorView()
                     }.onFailure {
                         it.printStackTrace()
@@ -69,24 +69,6 @@ class MainDishBanchanViewModel @Inject constructor(
                         _dataLoading.value = false
                     }
                 }
-        }
-    }
-
-    private fun filterBanchan(banchans: List<BanchanModel>, filterType: BanchanModel.FilterType) {
-        viewModelScope.launch {
-            when (filterType) {
-                BanchanModel.FilterType.Default -> _banchans.value = defaultBanchans
-                else -> {
-                    kotlin.runCatching {
-                        _banchans.value = banchans.filterType(filterType)
-                    }.onFailure {
-                        it.printStackTrace()
-                        it.message?.let { message ->
-                            _eventFlow.emit(UiEvent.ShowToast(message))
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -154,24 +136,8 @@ class MainDishBanchanViewModel @Inject constructor(
         }
 
     val filterItemSelect: (Int) -> Unit = {
-        filter = when (it) {
-            BanchanModel.FilterType.Default.value -> {
-                filterBanchan(_banchans.value, BanchanModel.FilterType.Default)
-                BanchanModel.FilterType.Default
-            }
-            BanchanModel.FilterType.PriceHigher.value -> {
-                filterBanchan(_banchans.value, BanchanModel.FilterType.PriceHigher)
-                BanchanModel.FilterType.PriceHigher
-            }
-            BanchanModel.FilterType.PriceLower.value -> {
-                filterBanchan(_banchans.value, BanchanModel.FilterType.PriceLower)
-                BanchanModel.FilterType.PriceLower
-            }
-            else -> {
-                filterBanchan(_banchans.value, BanchanModel.FilterType.SalePercentHigher)
-                BanchanModel.FilterType.SalePercentHigher
-            }
-        }
+        filter = BanchanModel.FilterType.find(it) ?: BanchanModel.FilterType.Default
+        _banchans.value = _banchans.value.filterType(filter, defaultBanchans)
     }
 
     sealed class UiEvent {
