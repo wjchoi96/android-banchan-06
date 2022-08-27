@@ -9,6 +9,4 @@ interface RecentViewedRepository {
     suspend fun insertRecentViewedItem(hash: String, title: String, time: Date): Flow<Boolean>
 
     suspend fun fetchRecentViewedItems(fetchItemsCnt: Int?): Flow<List<RecentViewedItemModel>>
-
-    suspend fun fetchRecentViewedPaging(): Flow<PagingData<RecentViewedItemModel>>
 }

@@ -2,20 +2,35 @@ package com.woowahan.banchan.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemMenuTimeStampBinding
 import com.woowahan.domain.model.RecentViewedItemModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class RecentViewedAdapter(
     private val banchanInsertCartListener: (RecentViewedItemModel, Boolean) -> Unit,
-    private val itemClickListener: (String, String) -> Unit,
+    private val itemClickListener: (String, String) -> Unit
+) : RecyclerView.Adapter<RecentViewedAdapter.RecentViewedViewHolder>() {
+    private var banchans: List<RecentViewedItemModel> = emptyList()
     private val cartStateChangePayload: String = "changePayload"
-) : PagingDataAdapter<RecentViewedItemModel, RecentViewedAdapter.RecentViewedViewHolder>(
-    RecentViewedPagingDiffUtilCallback(cartStateChangePayload = cartStateChangePayload)
-) {
+
+    fun updateList(list: List<RecentViewedItemModel>){
+        val newList = list.toList()
+        CoroutineScope(Dispatchers.Default).launch {
+            val diffCallback = RecentViewedPagingDiffUtilCallback(banchans, newList, cartStateChangePayload)
+            val diffRes = DiffUtil.calculateDiff(diffCallback)
+            withContext(Dispatchers.Main) {
+                banchans = newList
+                diffRes.dispatchUpdatesTo(this@RecentViewedAdapter)
+            }
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedViewHolder {
         Timber.d("onCreateViewHolder")
         return RecentViewedViewHolder.from(parent, banchanInsertCartListener, itemClickListener)
@@ -23,7 +38,11 @@ class RecentViewedAdapter(
 
     override fun onBindViewHolder(holder: RecentViewedViewHolder, position: Int) {
         Timber.d("onBindViewHolder[$position]")
-        getItem(position)?.let { holder.bind(it) }
+        holder.bind(banchans[position])
+    }
+
+    override fun getItemCount(): Int {
+        return banchans.size
     }
 
     override fun onBindViewHolder(
@@ -37,11 +56,9 @@ class RecentViewedAdapter(
         }
         payloads.firstOrNull()?.let {
             Timber.d("onBindViewHolder payloads[$position][$it]")
-            getItem(position)?.let { item->
-                when (it) {
-                    cartStateChangePayload -> {
-                        holder.bindCartStateChangePayload(item)
-                    }
+            when (it) {
+                cartStateChangePayload -> {
+                    holder.bindCartStateChangePayload(banchans[position])
                 }
             }
         }
@@ -78,31 +95,27 @@ class RecentViewedAdapter(
     }
 
     class RecentViewedPagingDiffUtilCallback(
+        private val oldList: List<RecentViewedItemModel>,
+        private val newList: List<RecentViewedItemModel>,
         private val cartStateChangePayload: Any
-    ) : DiffUtil.ItemCallback<RecentViewedItemModel>() {
-        override fun areItemsTheSame(
-            oldItem: RecentViewedItemModel,
-            newItem: RecentViewedItemModel
-        ): Boolean {
-            return oldItem.id == newItem.id
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
         }
 
-        override fun areContentsTheSame(
-            oldItem: RecentViewedItemModel,
-            newItem: RecentViewedItemModel
-        ): Boolean {
-            return oldItem == newItem
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
 
-        override fun getChangePayload(
-            oldItem: RecentViewedItemModel,
-            newItem: RecentViewedItemModel
-        ): Any? {
+        override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? {
             return when {
-                oldItem.isCartItem != newItem.isCartItem -> cartStateChangePayload
-                else -> super.getChangePayload(oldItem, newItem)
+                oldList[oldItemPosition].isCartItem != newList[newItemPosition].isCartItem -> cartStateChangePayload
+                else -> super.getChangePayload(oldItemPosition, newItemPosition)
             }
         }
-
     }
 }

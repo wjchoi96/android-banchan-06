@@ -91,9 +91,7 @@ class CartRepositoryImpl @Inject constructor(
                                 }
                             }
                         }
-                    }.run {
-                        awaitAll() // JobCancellationException 이 발생하면 어떤 에러로 인해 Cancel 되었는지 모르게 조용히 처리된다, try catch 가 없으면 로그에 찍히지도 않는다
-                    }
+                    }.awaitAll() // JobCancellationException 이 발생하면 어떤 에러로 인해 Cancel 되었는지 모르게 조용히 처리된다, try catch 가 없으면 로그에 찍히지도 않는다
                 }
                 if(throwable != null) // 때문에, 에러가 발생하면 해당 에러가 무엇인지 캡쳐해 두었다가, 해당 에러를 직접 throw
                     throw throwable!!
