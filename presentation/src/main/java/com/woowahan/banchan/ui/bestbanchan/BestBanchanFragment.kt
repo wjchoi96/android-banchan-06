@@ -56,7 +56,7 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
                         )
 
                         is BestBanchanViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                            DialogUtil.show(childFragmentManager, it.dialogBuilder)
                         }
 
                         is BestBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
