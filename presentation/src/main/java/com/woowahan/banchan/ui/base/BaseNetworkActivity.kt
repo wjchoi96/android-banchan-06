@@ -8,6 +8,8 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.whenStarted
 import com.woowahan.banchan.R
 import com.woowahan.banchan.extension.showTopSnackBar
 import timber.log.Timber
@@ -77,6 +79,9 @@ abstract class BaseNetworkActivity<T: ViewDataBinding>: BaseActivity<T>(){
     }
 
     private fun showNetworkSnackBar(networkConnect: Boolean){
+        Timber.d("showNetworkSnackBar => ${lifecycle.currentState}")
+        if(lifecycle.currentState != Lifecycle.State.STARTED && lifecycle.currentState != Lifecycle.State.RESUMED)
+            return
         when(networkConnect){
             true -> showTopSnackBar(getString(R.string.network_available_state), snackBarView)
             else -> showTopSnackBar(getString(R.string.network_lost_state), snackBarView)
