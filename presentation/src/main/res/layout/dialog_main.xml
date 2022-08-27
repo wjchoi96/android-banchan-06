@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="com.woowahan.banchan.ui.viewmodel.MainDialogViewModel" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -14,6 +20,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:minWidth="@dimen/main_dialog_title_min_width"
+            android:text="@{viewModel.message}"
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +32,9 @@
         <TextView
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             app:layout_constraintEnd_toStartOf="@id/btn_color"
-
+            android:visibility="@{viewModel.negativeVisible ? View.VISIBLE : View.GONE, default = gone}"
+            android:text="@{viewModel.negativeBtn}"
+            android:onClickListener="@{() -> viewModel.bindingNegativeBtnEvent.invoke()}"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:textColor="@color/black_000000"
             android:textStyle="bold"
@@ -39,7 +48,9 @@
         <TextView
             app:layout_constraintTop_toTopOf="@id/btn_black"
             app:layout_constraintEnd_toEndOf="parent"
-
+            android:visibility="@{viewModel.positiveVisible ? View.VISIBLE : View.GONE, default = gone}"
+            android:text="@{viewModel.positiveBtn}"
+            android:onClickListener="@{() -> viewModel.bindingPositiveBtnEvent.invoke()}"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:textColor="@color/orange_f46700"
             android:textStyle="bold"
