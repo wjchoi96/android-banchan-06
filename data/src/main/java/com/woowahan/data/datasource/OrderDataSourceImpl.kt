@@ -64,6 +64,10 @@ class OrderDataSourceImpl @Inject constructor(
             }
     }
 
+    override suspend fun fetchDeliveryOrder(): Flow<List<OrderEntity>> = flow {
+        emit(orderDao.fetchDeliveryOrders().map { it.toEntity() })
+    }
+
     override fun getDeliveryOrderCount(): Flow<Int> = flow {
         orderDao.fetchDeliveryOrderCount()
             .collect {

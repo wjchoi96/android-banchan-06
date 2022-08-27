@@ -41,6 +41,11 @@ interface OrderDao {
     @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}` ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) DESC")
     fun fetchOrdersPaging(): PagingSource<Int, OrderDto>
 
+    @Query("select * FROM `${OrderTableEntity.TABLE_NAME}` " +
+            "where ${OrderTableEntity.COLUMN_STATE} = 1 " +
+            "ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) ASC")
+    fun fetchDeliveryOrders(): List<OrderDto>
+
     // true => 1
     @Query("select COUNT(*) FROM `${OrderTableEntity.TABLE_NAME}` where ${OrderTableEntity.COLUMN_STATE} = 1")
     fun fetchDeliveryOrderCount(): Flow<Int>
