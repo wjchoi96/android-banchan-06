@@ -8,14 +8,15 @@ object ThrowableUtil {
     private const val noConnectivityIOExceptionMessage = "네트워크 상태가 올바르지 않습니다"
     private const val apiBodyIsNullMessage = "응답 데이터가 올바르지 않습니다"
     private const val apiStatusCodeNotOkMessage = "응답 코드가 올바르지 않습니다"
+    private const val unKnownMessage = "알 수 없는 오류입니다"
 
-    fun throwableToMessage(throwable: Throwable): String? {
+    fun throwableToMessage(throwable: Throwable): String {
         return when(throwable){
             is NoConnectivityIOException -> noConnectivityIOExceptionMessage
             is ApiBodyIsNull -> apiBodyIsNullMessage
             is ApiStatusCodeNotOk -> apiStatusCodeNotOkMessage
             is SocketTimeoutException -> socketTimeoutMessage
-            else -> throwable.message
+            else -> throwable.message ?: unKnownMessage
         }
     }
 }

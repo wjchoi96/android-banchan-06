@@ -37,7 +37,7 @@ abstract class BaseErrorViewModel: ViewModel() {
 
     protected fun showErrorView(throwable: Throwable, btnType: ErrorViewButtonType?, event: ()->Unit){
         _errorViewVisible.value = true
-        ThrowableUtil.throwableToMessage(throwable)?.let { _errorViewTitle.value = it }
+        _errorViewTitle.value = ThrowableUtil.throwableToMessage(throwable)
         btnType?.title?.let { _errorBtnTitle.value = it }
         _errorBtnVisible.value = btnType != null && btnType != ErrorViewButtonType.None
         _errorViewEvent.value = event
