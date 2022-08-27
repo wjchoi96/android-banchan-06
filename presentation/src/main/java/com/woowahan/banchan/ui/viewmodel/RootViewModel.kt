@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.woowahan.domain.usecase.cart.GetCartItemsSizeFlowUseCase
 import com.woowahan.domain.usecase.order.GetDeliveryOrderCountUseCase
+import com.woowahan.domain.usecase.order.UpdateMissingDeliveryOrderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RootViewModel @Inject constructor(
     private val getCartItemsSizeFlowUseCase: GetCartItemsSizeFlowUseCase,
-    private val getDeliveryOrderCountUseCase: GetDeliveryOrderCountUseCase
+    private val getDeliveryOrderCountUseCase: GetDeliveryOrderCountUseCase,
+    private val updateMissingDeliveryOrderUseCase: UpdateMissingDeliveryOrderUseCase
 ) : ViewModel() {
     private var _isReady = false
     val isReady: Boolean
@@ -61,6 +64,16 @@ class RootViewModel @Inject constructor(
                             data?.let {
                                 _deliveryItemSize.emit(it)
                             }
+                        }
+                    }
+            }
+
+            launch {
+                updateMissingDeliveryOrderUseCase()
+                    .flowOn(Dispatchers.Default)
+                    .collect { event ->
+                        event.onFailure {
+                            it.printStackTrace()
                         }
                     }
             }
