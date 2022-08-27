@@ -85,7 +85,7 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
                         }
 
                         is SoupDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
-                            it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                            it.bottomSheet.show(childFragmentManager)
                         }
 
                         is SoupDishBanchanViewModel.UiEvent.ShowCartView -> {
