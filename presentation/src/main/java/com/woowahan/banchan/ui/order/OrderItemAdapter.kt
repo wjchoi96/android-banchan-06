@@ -110,7 +110,7 @@ class OrderItemAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             binding.imageUrl = item.imageUrl
             binding.count = item.count
             binding.title = item.title
-            binding.price = item.price
+            binding.price = (item.price * item.count)
         }
     }
 
