@@ -47,14 +47,14 @@ class RecentViewedViewModel @Inject constructor(
                 .collect { event ->
                     event.onSuccess {
                         _banchans.value = it
-                        hideEmptyView()
+                        when(it.isEmpty()){
+                            true -> showEmptyView()
+                            else -> hideErrorView()
+                        }
                     }.onFailure {
                         it.printStackTrace()
-                        it.message?.let { message ->
-                            _eventFlow.emit(UiEvent.ShowToast(message))
-                            showErrorView(message, "재시도") {
-                                fetchRecentViewedBanchans()
-                            }
+                        showErrorView(it, ErrorViewButtonType.Retry) {
+                            fetchRecentViewedBanchans()
                         }
                     }.also {
                         _dataLoading.value = false
@@ -130,11 +130,8 @@ class RecentViewedViewModel @Inject constructor(
             }
         }
 
-    fun showEmptyView(){
-        showErrorView("최근 본 목록이 없습니다", null) {}
-    }
-    fun hideEmptyView(){
-        hideErrorView()
+    private fun showEmptyView(){
+        showCustomButtonErrorView("최근 본 목록이 없습니다", null) {}
     }
 
 

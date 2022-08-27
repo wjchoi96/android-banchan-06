@@ -50,7 +50,7 @@ class BestBanchanViewModel @Inject constructor(
                     }.onFailure {
                         Timber.d("catch error at viewModel => $it")
                         it.printStackTrace()
-                        showErrorView(it.message, "재시도"){
+                        showErrorView(it, ErrorViewButtonType.Retry){
                             fetchBestBanchans()
                         }
                     }.also {

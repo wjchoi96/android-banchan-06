@@ -48,7 +48,7 @@ class SoupDishBanchanViewModel @Inject constructor(
                         hideErrorView()
                     }.onFailure {
                         it.printStackTrace()
-                        showErrorView(it.message, "재시도"){
+                        showErrorView(it, ErrorViewButtonType.Retry){
                             fetchSoupDishBanchans()
                         }
                     }.also {

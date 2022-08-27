@@ -42,18 +42,15 @@ class OrderListViewModel @Inject constructor(
                 .filterIsInstance<DomainEvent.Failure<PagingData<OrderModel>>>()
                 .collect {
                     it.throwable.printStackTrace()
-                    it.throwable.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                        showErrorView(message, "재시도") {
-                            fetchOrders()
-                        }
+                    showErrorView(it.throwable, ErrorViewButtonType.Retry) {
+                        fetchOrders()
                     }
                 }
         }
     }
 
     fun showEmptyView(){
-        showErrorView("주문내역이 없습니다", "주문하러 가기") {
+        showCustomButtonErrorView("주문내역이 없습니다", "주문하러 가기") {
             viewModelScope.launch { _eventFlow.emit(UiEvent.NavigateCartView) }
         }
     }
