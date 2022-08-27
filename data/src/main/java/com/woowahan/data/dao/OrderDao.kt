@@ -30,8 +30,8 @@ interface OrderDao {
 
     @Query("update `${OrderTableEntity.TABLE_NAME}` set " +
             "${OrderTableEntity.COLUMN_STATE} = :deliveryState " +
-            "where ${OrderTableEntity.COLUMN_ID} = :orderId")
-    fun update(orderId: Long, deliveryState: Boolean): Int
+            "where ${OrderTableEntity.COLUMN_ID} in (:orderId)")
+    fun update(vararg orderId: Long, deliveryState: Boolean): Int
 
     @Transaction
     @Query("select * from `${OrderTableEntity.TABLE_NAME}` where ${OrderTableEntity.COLUMN_ID} = :orderId")

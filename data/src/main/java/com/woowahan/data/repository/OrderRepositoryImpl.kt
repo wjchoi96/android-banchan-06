@@ -31,8 +31,8 @@ class OrderRepositoryImpl @Inject constructor(
         }
     }.flowOn(coroutineDispatcher)
 
-    override suspend fun updateOrder(orderId: Long, deliveryState: Boolean): Flow<Boolean> = flow {
-        orderDataSource.updateOrder(orderId, deliveryState)
+    override suspend fun updateOrder(vararg orderId: Long, deliveryState: Boolean): Flow<Boolean> = flow {
+        orderDataSource.updateOrder(orderId = orderId, deliveryState)
             .collect {
                 emit(it)
             }

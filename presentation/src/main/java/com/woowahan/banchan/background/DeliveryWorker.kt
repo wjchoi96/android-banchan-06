@@ -21,13 +21,13 @@ class DeliveryWorker @AssistedInject constructor(
         private const val EXTRA_ORDER_TITLE = "order_title"
 
         fun getRequest(
-            orderId: Long,
+            vararg orderId: Long,
             orderTitle: String?
         ): WorkRequest{
            return OneTimeWorkRequestBuilder<DeliveryWorker>()
                 .setInputData(workDataOf(
                     EXTRA_ORDER_ID to orderId,
-                    EXTRA_ORDER_TITLE to orderTitle
+                    EXTRA_ORDER_TITLE to orderTitle,
                 ))
                .build()
         }
@@ -39,13 +39,15 @@ class DeliveryWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         Timber.d("Delivery background debug => doWork")
-        val orderId = inputData.getLong(EXTRA_ORDER_ID, 0)
+        val orderId = inputData.getLongArray(EXTRA_ORDER_ID)
         val orderTitle = inputData.getString(EXTRA_ORDER_TITLE)
-        updateOrderUseCase(orderId, false)
+        if(orderId == null) return Result.failure()
+        updateOrderUseCase(orderId = orderId, false)
             .collect {
                 it.onSuccess {
                     Timber.d("Delivery background debug => useCase finish => $it")
-                    showDeliveryNotification(orderId, orderTitle)
+                    if(orderId.isNotEmpty()) // 여러개를 동시에 처리중이라면 첫번째 알림만 보낸다
+                        showDeliveryNotification(orderId.first(), orderTitle)
                 }
             }
         Timber.d("Delivery background debug = > worker finish")

@@ -12,7 +12,7 @@ interface OrderRepository {
         items: List<OrderItemModel>
     ): Flow<Long>
 
-    suspend fun updateOrder(orderId: Long, deliveryState: Boolean): Flow<Boolean>
+    suspend fun updateOrder(vararg orderId: Long, deliveryState: Boolean): Flow<Boolean>
 
     suspend fun fetchOrder(orderId: Long): Flow<OrderModel>
 
