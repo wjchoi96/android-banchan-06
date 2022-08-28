@@ -24,6 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:visibility="@{viewModel.errorViewVisible ? View.GONE : View.VISIBLE, default = visible}"
             android:adapter="@{adapter}"
             android:id="@+id/rv_main_dish"
             android:layout_width="0dp"

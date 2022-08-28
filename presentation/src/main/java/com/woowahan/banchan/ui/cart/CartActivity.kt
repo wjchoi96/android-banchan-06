@@ -69,6 +69,7 @@ class CartActivity : BaseNetworkActivity<ActivityCartBinding>() {
         binding.adapter = cartAdapter
         binding.title = getString(R.string.cart_title)
         binding.layoutIncludeToolBar.toolBar.setNavigationOnClickListener { onBackPressed() }
+        binding.layoutErrorView.viewModel = viewModel
 
         observeData()
     }

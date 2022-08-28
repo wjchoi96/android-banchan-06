@@ -11,7 +11,7 @@ import com.woowahan.domain.model.DomainEvent
 import com.woowahan.domain.model.RecentViewedItemModel
 import com.woowahan.domain.usecase.cart.InsertCartItemUseCase
 import com.woowahan.domain.usecase.cart.RemoveCartItemUseCase
-import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedPagingUseCase
+import com.woowahan.domain.usecase.recentviewed.FetchRecentViewedItemUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecentViewedViewModel @Inject constructor(
-    private val fetchRecentViewedPagingUseCase: FetchRecentViewedPagingUseCase,
+    private val fetchRecentViewedItemUseCase: FetchRecentViewedItemUseCase,
     override val insertCartItemUseCase: InsertCartItemUseCase,
     override val removeCartItemUseCase: RemoveCartItemUseCase,
 ) : BaseCartUpdateViewModel() {
@@ -30,13 +30,6 @@ class RecentViewedViewModel @Inject constructor(
     private val _banchans: MutableStateFlow<List<RecentViewedItemModel>> =
         MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
-
-    val recentPaging = fetchRecentViewedPagingUseCase()
-        .flowOn(Dispatchers.Default)
-        .filterIsInstance<DomainEvent.Success<PagingData<RecentViewedItemModel>>>()
-        .map { it.data }
-        .onEach { _dataLoading.value = false }
-        .cachedIn(viewModelScope)
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -49,16 +42,22 @@ class RecentViewedViewModel @Inject constructor(
         _dataLoading.value = true
         refreshJob()
         prevJob = viewModelScope.launch {
-            fetchRecentViewedPagingUseCase()
+            fetchRecentViewedItemUseCase()
                 .flowOn(Dispatchers.Default)
-                .filterIsInstance<DomainEvent.Failure<PagingData<RecentViewedItemModel>>>()
-                .collect {
-                    it.throwable.printStackTrace()
-                    it.throwable.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                        showErrorView(message, "재시도") {
+                .collect { event ->
+                    event.onSuccess {
+                        _banchans.value = it
+                        when(it.isEmpty()){
+                            true -> showEmptyView()
+                            else -> hideErrorView()
+                        }
+                    }.onFailure {
+                        it.printStackTrace()
+                        showErrorView(it, ErrorViewButtonType.Retry) {
                             fetchRecentViewedBanchans()
                         }
+                    }.also {
+                        _dataLoading.value = false
                     }
                 }
         }
@@ -131,11 +130,8 @@ class RecentViewedViewModel @Inject constructor(
             }
         }
 
-    fun showEmptyView(){
-        showErrorView("최근 본 목록이 없습니다", null) {}
-    }
-    fun hideEmptyView(){
-        hideErrorView()
+    private fun showEmptyView(){
+        showCustomButtonErrorView("최근 본 목록이 없습니다", null) {}
     }
 
 
