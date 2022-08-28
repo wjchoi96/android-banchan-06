@@ -156,7 +156,9 @@ class DetailViewModel @Inject constructor(
     val plusClicked: () -> Unit = {
         viewModelScope.launch {
             val currentQuantity = quantity.value
-            _quantity.emit(currentQuantity + 1)
+            if (currentQuantity != 999) {
+                _quantity.emit(currentQuantity + 1)
+            }
         }
     }
 
@@ -192,7 +194,7 @@ class DetailViewModel @Inject constructor(
     }
 
     sealed class UiEvent {
-        data class FinishView(val message: String? = null): UiEvent()
+        data class FinishView(val message: String? = null) : UiEvent()
         data class ShowToast(val message: String) : UiEvent()
         data class ShowSnackBar(val message: String) : UiEvent()
         data class ShowDialog(val dialogBuilder: DialogUtil.DialogCustomBuilder) : UiEvent()
