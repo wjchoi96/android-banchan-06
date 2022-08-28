@@ -12,11 +12,13 @@ interface OrderDataSource {
         items: List<OrderItemModel>
     ): Flow<Long>
 
-    suspend fun updateOrder(orderId: Long, deliveryState: Boolean): Flow<Boolean>
+    suspend fun updateOrder(vararg orderId: Long, deliveryState: Boolean): Flow<Boolean>
 
     suspend fun fetchOrder(orderId: Long): Flow<OrderEntity>
 
     fun fetchOrdersPaging(): Flow<PagingData<OrderEntity>>
+
+    suspend fun fetchDeliveryOrder(): Flow<List<OrderEntity>>
 
     fun getDeliveryOrderCount(): Flow<Int>
 

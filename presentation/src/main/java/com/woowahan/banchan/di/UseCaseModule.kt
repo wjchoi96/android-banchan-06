@@ -117,6 +117,12 @@ object UseCaseModule {
     fun provideUpdateOrderUseCase(repo: OrderRepository) =
         UpdateOrderUseCase(repo)
 
+    @Provides
+    fun provideUpdateMissingDeliveryOrderUseCase(
+        repo: OrderRepository,
+        updateOrderUseCase: UpdateOrderUseCase
+    ) = UpdateMissingDeliveryOrderUseCase(repo, updateOrderUseCase)
+
     /**
      * detail
      */

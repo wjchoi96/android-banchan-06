@@ -31,8 +31,8 @@ class OrderRepositoryImpl @Inject constructor(
         }
     }.flowOn(coroutineDispatcher)
 
-    override suspend fun updateOrder(orderId: Long, deliveryState: Boolean): Flow<Boolean> = flow {
-        orderDataSource.updateOrder(orderId, deliveryState)
+    override suspend fun updateOrder(vararg orderId: Long, deliveryState: Boolean): Flow<Boolean> = flow {
+        orderDataSource.updateOrder(orderId = orderId, deliveryState)
             .collect {
                 emit(it)
             }
@@ -79,6 +79,29 @@ class OrderRepositoryImpl @Inject constructor(
                 }
             }
     }
+
+    override suspend fun fetchDeliveryOrder(): Flow<List<OrderModel>> = flow {
+        orderDataSource.fetchDeliveryOrder()
+            .collect {
+                emit(
+                    it.map { item ->
+                        val price = item.items.sumOf { it.price * it.count }
+                        OrderModel(
+                            orderId = item.orderId,
+                            time = BanchanDateConvertUtil.convert(item.time),
+                            items = item.items.map { child -> child.toDomain() },
+                            deliveryState = item.deliveryState,
+                            deliveryFee = DeliveryConstant.run {
+                                if (price >= FreeDeliveryFeePrice)
+                                    FreeDeliveryFee
+                                else
+                                    DeliveryFee
+                            }
+                        )
+                    }
+                )
+            }
+    }.flowOn(coroutineDispatcher)
 
     override suspend fun getDeliveryOrderCount(): Flow<Int> = flow {
         orderDataSource.getDeliveryOrderCount()

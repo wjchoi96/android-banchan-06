@@ -30,8 +30,8 @@ interface OrderDao {
 
     @Query("update `${OrderTableEntity.TABLE_NAME}` set " +
             "${OrderTableEntity.COLUMN_STATE} = :deliveryState " +
-            "where ${OrderTableEntity.COLUMN_ID} = :orderId")
-    fun update(orderId: Long, deliveryState: Boolean): Int
+            "where ${OrderTableEntity.COLUMN_ID} in (:orderId)")
+    fun update(vararg orderId: Long, deliveryState: Boolean): Int
 
     @Transaction
     @Query("select * from `${OrderTableEntity.TABLE_NAME}` where ${OrderTableEntity.COLUMN_ID} = :orderId")
@@ -40,6 +40,11 @@ interface OrderDao {
     @Transaction
     @Query("SELECT * FROM `${OrderTableEntity.TABLE_NAME}` ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) DESC")
     fun fetchOrdersPaging(): PagingSource<Int, OrderDto>
+
+    @Query("select * FROM `${OrderTableEntity.TABLE_NAME}` " +
+            "where ${OrderTableEntity.COLUMN_STATE} = 1 " +
+            "ORDER BY datetime(${OrderTableEntity.COLUMN_TIME}) ASC")
+    fun fetchDeliveryOrders(): List<OrderDto>
 
     // true => 1
     @Query("select COUNT(*) FROM `${OrderTableEntity.TABLE_NAME}` where ${OrderTableEntity.COLUMN_STATE} = 1")
