@@ -30,7 +30,7 @@ class DeliveryAlarmReceiver: BroadcastReceiver() {
     }
 
     private fun setDeliveryWorker(context: Context, orderId: Long, orderTitle: String?){
-        val deliveryWorkRequest = DeliveryWorker.getRequest(orderId, orderTitle)
+        val deliveryWorkRequest = DeliveryWorker.getRequest(orderId = longArrayOf(orderId), orderTitle)
         WorkManager.getInstance(context.applicationContext)
             .enqueue(deliveryWorkRequest)
     }

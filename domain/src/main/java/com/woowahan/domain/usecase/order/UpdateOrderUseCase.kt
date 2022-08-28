@@ -10,10 +10,10 @@ class UpdateOrderUseCase(
     private val orderRepository: OrderRepository
 ) {
     suspend operator fun invoke(
-        orderId: Long, deliveryState: Boolean
+        vararg orderId: Long, deliveryState: Boolean
     ): Flow<DomainEvent<Boolean>> = flow<DomainEvent<Boolean>> {
         orderRepository.updateOrder(
-            orderId, deliveryState
+            orderId = orderId, deliveryState
         ).collect {
             emit(DomainEvent.success(it))
         }

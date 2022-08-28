@@ -48,7 +48,7 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
     private val adapter: RecentViewedAdapter by lazy {
         RecentViewedAdapter(
             viewModel.clickInsertCartButton,
-            viewModel.itemClickListener,
+            viewModel.itemClickListener
         )
     }
 
@@ -100,14 +100,6 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                 Timber.d("idx[$idx] => left[${outRect.left}], right[${outRect.right}]")
             }
         })
-
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
-                viewModel.showEmptyView()
-            } else {
-                viewModel.hideEmptyView()
-            }
-        }
     }
 
     private fun observeData() {
@@ -123,11 +115,11 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                         )
 
                         is RecentViewedViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
+                            DialogUtil.show(supportFragmentManager, it.dialogBuilder)
                         }
 
                         is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {
-                            it.bottomSheet.show(supportFragmentManager, "cart_bottom_sheet")
+                            it.bottomSheet.show(supportFragmentManager)
                         }
 
                         is RecentViewedViewModel.UiEvent.ShowCartView -> {
@@ -148,8 +140,8 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                 }
             }
             launch {
-                viewModel.recentPaging.collect {
-                    adapter.submitData(it)
+                viewModel.banchans.collect {
+                    adapter.updateList(it)
                 }
             }
         }

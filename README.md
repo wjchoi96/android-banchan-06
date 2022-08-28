@@ -16,6 +16,7 @@
 2. 멀티 모듈 적용
 3. DataLayer 작업시 테스트 코드 작성을 함께 진행  
 4. Flow 사용  
+5. DataBinding 패턴 사용
 
 ### 문서
 - [DataBase](https://github.com/woowa-techcamp-2022/android-banchan-06/wiki/DataBase)

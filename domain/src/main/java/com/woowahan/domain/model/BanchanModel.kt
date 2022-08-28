@@ -27,6 +27,15 @@ data class BanchanModel(
         Default(0, "기본 정렬순"),
         PriceHigher(1, "금액 높은순"),
         PriceLower(2, "금액 낮은순"),
-        SalePercentHigher(3, "할인율순")
+        SalePercentHigher(3, "할인율순");
+        companion object {
+            fun find(value: Any): FilterType?{
+                values().forEach {
+                    if(it.title == value || it.value == value)
+                        return it
+                }
+                return null
+            }
+        }
     }
 }

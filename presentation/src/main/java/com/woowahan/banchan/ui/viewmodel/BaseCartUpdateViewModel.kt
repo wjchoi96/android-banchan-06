@@ -70,7 +70,13 @@ abstract class BaseCartUpdateViewModel: BaseErrorViewModel() {
         )
     }
 
-    protected fun List<BanchanModel>.filterType(filterType: BanchanModel.FilterType): List<BanchanModel> {
+    protected fun List<BanchanModel>.filterType(
+        filterType: BanchanModel.FilterType,
+        defaultFilterList: List<BanchanModel>
+    ): List<BanchanModel> {
+        if(filterType == BanchanModel.FilterType.Default){
+            return defaultFilterList
+        }
         return listOf(
             BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Banner),
             BanchanModel.empty().copy(viewType = BanchanModel.ViewType.Header),
