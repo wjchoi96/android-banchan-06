@@ -4,60 +4,40 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.DialogCartAddBinding
+import com.woowahan.banchan.extension.repeatOnStarted
+import com.woowahan.banchan.ui.viewmodel.CartItemInsertBottomSheetViewModel
 import com.woowahan.domain.model.BaseBanchan
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import timber.log.Timber
+import kotlinx.coroutines.launch
 
-class CartItemInsertBottomSheet constructor(
-    private val banchan: BaseBanchan,
-    private val insertListener: (BaseBanchan, Int) -> (Unit)
-): BottomSheetDialogFragment() {
+class CartItemInsertBottomSheet: BottomSheetDialogFragment() {
     companion object {
-        const val TAG = "cart_bottom_sheet"
+        private const val EXTRA_BANCHAN = "extra_banchan"
+        private const val TAG = "cart_bottom_sheet"
+        fun get(banchan: BaseBanchan, insertListener: (BaseBanchan, Int) -> Unit): CartItemInsertBottomSheet {
+            return CartItemInsertBottomSheet().apply {
+                setInsertListener(insertListener)
+                arguments = bundleOf(EXTRA_BANCHAN to banchan)
+            }
+        }
     }
-
     private var _binding: DialogCartAddBinding? = null
     private val binding get() = _binding ?: error("Binding not Initialized")
 
-    private var _itemCount: MutableStateFlow<Int> = MutableStateFlow(1)
-    val itemCount = _itemCount.asStateFlow()
+    private val viewModel: CartItemInsertBottomSheetViewModel by viewModels()
 
-    private var _cartCost: MutableStateFlow<Long> =
-        MutableStateFlow(if(banchan.salePrice == 0L) banchan.price else banchan.salePrice)
-    var cartCost = _cartCost.asStateFlow()
-
-    val countUpListener: (Int) -> (Unit) = {
-        Timber.d("count up event[$it]")
-        _itemCount.value = it+1
-        setCartCost(it+1)
-    }
-    val countDownListener: (Int) -> (Unit) = {
-        Timber.d("count down event[$it]")
-        if(_itemCount.value != 1) {
-            _itemCount.value = it - 1
-            setCartCost(it-1)
-        }
-    }
-    val insertButtonClick: (BaseBanchan, Int) -> (Unit) = { banchan, count ->
-        insertListener(banchan, count)
-        this.dismiss()
+    private var insertListener: ((BaseBanchan, Int) -> (Unit))? = null
+    fun setInsertListener(insertListener: (BaseBanchan, Int) -> (Unit)){
+        this.insertListener = insertListener
     }
 
-    private fun setCartCost(count: Int){
-        _cartCost.value = when(banchan.salePrice){
-            0L -> banchan.price * count
-            else -> banchan.salePrice * count
-        }
-    }
-
-    val cancelListener: ()->(Unit) = {
-        Timber.d("cancel event")
-        this.dismiss()
+    override fun getTheme(): Int {
+        return R.style.CustomBottomSheetDialog
     }
 
     fun show(fragmentManager: FragmentManager){
@@ -72,13 +52,30 @@ class CartItemInsertBottomSheet constructor(
     ): View {
         _binding = DialogCartAddBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.banchan = banchan
-        binding.dialog = this
+        binding.viewModel = viewModel
+
+        insertListener?.let { viewModel.insertListener = it }
+        arguments?.let {
+            viewModel.banchan = it.getSerializable(EXTRA_BANCHAN) as BaseBanchan
+        }
+
         return binding.root
     }
 
-    override fun getTheme(): Int {
-        return R.style.CustomBottomSheetDialog
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.repeatOnStarted {
+            launch {
+                viewModel.eventFlow.collect {
+                    when(it) {
+                        is CartItemInsertBottomSheetViewModel.UiEvent.Dismiss -> {
+                            this@CartItemInsertBottomSheet.dismiss()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

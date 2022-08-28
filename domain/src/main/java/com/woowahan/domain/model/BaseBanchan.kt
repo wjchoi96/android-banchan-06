@@ -1,6 +1,8 @@
 package com.woowahan.domain.model
 
-abstract class BaseBanchan {
+import java.io.Serializable
+
+abstract class BaseBanchan: Serializable {
     abstract val hash: String
     abstract val imageUrl: String
     abstract val title: String

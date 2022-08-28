@@ -39,7 +39,7 @@ class SideDishBanchanViewModel @Inject constructor(
             when (isCartItem) {
                 true -> removeItemFromCart(banchan)
                 else -> {
-                    val dialog = CartItemInsertBottomSheet(banchan) { item, count ->
+                    val dialog = CartItemInsertBottomSheet.get(banchan) { item, count ->
                         insertItemsToCart(item, count)
                     }
                     _eventFlow.emit(UiEvent.ShowCartBottomSheet(dialog))
