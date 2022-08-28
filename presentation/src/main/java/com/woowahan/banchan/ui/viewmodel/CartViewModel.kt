@@ -26,7 +26,7 @@ class CartViewModel @Inject constructor(
     private val updateCartItemCountUseCase: UpdateCartItemCountUseCase,
     private val updateCartItemSelectUseCase: UpdateCartItemSelectUseCase,
     private val insertOrderUseCase: InsertOrderUseCase
-) : ViewModel() {
+) : BaseErrorViewModel() {
     private val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
@@ -53,18 +53,18 @@ class CartViewModel @Inject constructor(
     }
 
     private fun fetchCartItems() {
-        viewModelScope.launch {
+        _dataLoading.value = true
+        refreshJob()
+        prevJob = viewModelScope.launch {
             _dataLoading.value = true
-            fetchCartItemsUseCase().collect {
-                it.onSuccess {
+            fetchCartItemsUseCase().collect { event ->
+                event.onSuccess {
                     _cartItems.value = it.toList()
-                }.onFailureWithData { it, data ->
+                    hideErrorView()
+                }.onFailure {
                     it.printStackTrace()
                     it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                    }
-                    data?.let {
-                        _cartItems.value = it
+                       showErrorView(it, ErrorViewButtonType.Retry){ fetchCartItems() }
                     }
                 }.also {
                     _dataLoading.value = false

@@ -37,8 +37,8 @@ class OrderDataSourceImpl @Inject constructor(
         )
     }
 
-    override suspend fun updateOrder(orderId: Long, deliveryState: Boolean): Flow<Boolean> = flow {
-        emit(orderDao.update(orderId, deliveryState) != 0)
+    override suspend fun updateOrder(vararg orderId: Long, deliveryState: Boolean): Flow<Boolean> = flow {
+        emit(orderDao.update(orderId = orderId, deliveryState) != 0)
     }
 
     override suspend fun fetchOrder(orderId: Long): Flow<OrderEntity> = flow {
@@ -62,6 +62,10 @@ class OrderDataSourceImpl @Inject constructor(
                     it.toEntity()
                 }
             }
+    }
+
+    override suspend fun fetchDeliveryOrder(): Flow<List<OrderEntity>> = flow {
+        emit(orderDao.fetchDeliveryOrders().map { it.toEntity() })
     }
 
     override fun getDeliveryOrderCount(): Flow<Int> = flow {

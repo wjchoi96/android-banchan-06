@@ -32,6 +32,7 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
     private val adapter: DefaultBanchanAdapter by lazy {
         DefaultBanchanAdapter(
             getString(R.string.side_dish_banchan_banner_title),
+            viewModel.filter,
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.clickInsertCartButton,
@@ -79,11 +80,11 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
                         )
 
                         is SideDishBanchanViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                            DialogUtil.show(childFragmentManager, it.dialogBuilder)
                         }
 
                         is SideDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
-                            it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                            it.bottomSheet.show(childFragmentManager)
                         }
 
                         is SideDishBanchanViewModel.UiEvent.ShowCartView -> {

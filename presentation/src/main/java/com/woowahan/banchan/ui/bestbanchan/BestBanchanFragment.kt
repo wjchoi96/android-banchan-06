@@ -17,7 +17,6 @@ import com.woowahan.banchan.util.DialogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
@@ -56,11 +55,11 @@ class BestBanchanFragment: BaseFragment<FragmentBestBanchanBinding>() {
                         )
 
                         is BestBanchanViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                            DialogUtil.show(childFragmentManager, it.dialogBuilder)
                         }
 
                         is BestBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
-                            it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                            it.bottomSheet.show(childFragmentManager)
                         }
 
                         is BestBanchanViewModel.UiEvent.ShowCartView -> {

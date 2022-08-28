@@ -16,12 +16,13 @@ import timber.log.Timber
 
 class DefaultBanchanAdapter(
     private val bannerTitle: String,
+    defaultFilter: BanchanModel.FilterType,
     private val filterTypeList: List<String>,
     private val filterSelectedListener: (Int) -> Unit,
     private val banchanInsertCartListener: (BanchanModel, Boolean) -> (Unit),
     private val itemClickListener: (BanchanModel) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var selectedFilterPosition: Int = 0
+    private var selectedFilterPosition: Int = defaultFilter.value
     private var banchanList = listOf<BanchanModel>()
     private val cartStateChangePayload: String = "changePayload"
 

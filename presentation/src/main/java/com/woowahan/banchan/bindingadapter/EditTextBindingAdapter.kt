@@ -12,12 +12,26 @@ fun updateQuantityMethod(
     updateQuantity: (CartModel, Boolean) -> Unit
 ) {
     editText.setOnFocusChangeListener { v, hasFocus ->
-        updateQuantity(item, !hasFocus)
+        val quantity = if (editText.text.isEmpty()) 0 else {
+            editText.text.toString().toInt()
+        }
+        if (quantity > 0) {
+            updateQuantity(item, !hasFocus)
+        } else {
+            editText.setText(item.count.toString())
+        }
     }
 
     editText.setOnKeyListener { v, keyCode, event ->
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            updateQuantity(item, true)
+            val quantity = if (editText.text.isEmpty()) 0 else {
+                editText.text.toString().toInt()
+            }
+            if (quantity > 0) {
+                updateQuantity(item, true)
+            } else {
+                editText.setText(item.count.toString())
+            }
             true
         }
         false

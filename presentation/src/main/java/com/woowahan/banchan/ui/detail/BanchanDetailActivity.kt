@@ -96,14 +96,14 @@ class BanchanDetailActivity : BaseNetworkActivity<ActivityBanchanDetailBinding>(
                             binding.layoutBackground
                         )
                         is DetailViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(this@BanchanDetailActivity, it.dialogBuilder)
+                            DialogUtil.show(supportFragmentManager, it.dialogBuilder)
                         }
                         is DetailViewModel.UiEvent.ShowCartView -> {
                             startActivity(CartActivity.get(this@BanchanDetailActivity))
                         }
                         is DetailViewModel.UiEvent.FinishView -> {
                             it.message?.let {
-                                DialogUtil.show(this@BanchanDetailActivity, it, "닫기") {
+                                DialogUtil.show(supportFragmentManager, it, "닫기") {
                                     finish()
                                 }
                             }

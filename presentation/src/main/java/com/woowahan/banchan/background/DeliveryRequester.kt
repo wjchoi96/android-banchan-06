@@ -16,7 +16,10 @@ object DeliveryRequester {
         orderItemCount: Int,
         minute: Int
     ) {
-        val title = context.getString(R.string.order_items_title, orderTitle ?: "상품", orderItemCount)
+        val title = when(orderItemCount > 1){
+            true -> context.getString(R.string.order_items_title, orderTitle ?: context.getString(R.string.order_default_product), orderItemCount-1)
+            else -> orderTitle ?: context.getString(R.string.order_default_product)
+        }
         val alarmManager = context.getSystemService(AlarmManager::class.java)
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
