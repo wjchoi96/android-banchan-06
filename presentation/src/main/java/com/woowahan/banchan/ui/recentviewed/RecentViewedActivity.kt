@@ -123,7 +123,7 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                         )
 
                         is RecentViewedViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(this@RecentViewedActivity, it.dialogBuilder)
+                            DialogUtil.show(supportFragmentManager, it.dialogBuilder)
                         }
 
                         is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {

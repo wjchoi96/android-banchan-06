@@ -79,7 +79,7 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
                         )
 
                         is SideDishBanchanViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                            DialogUtil.show(childFragmentManager, it.dialogBuilder)
                         }
 
                         is SideDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {

@@ -1,8 +1,7 @@
 package com.woowahan.banchan.util
 
-import android.content.Context
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.woowahan.banchan.ui.dialog.MainDialog
+import androidx.fragment.app.FragmentManager
+import com.woowahan.banchan.ui.dialog.MainDialogFragment
 
 object DialogUtil {
     class DialogCustomBuilder(
@@ -12,13 +11,13 @@ object DialogUtil {
     )
 
     fun show(
-        context: Context,
+        fragmentManager: FragmentManager,
         customBuilder: DialogCustomBuilder
     ){
         when (customBuilder.negative) {
             null -> {
                 show(
-                    context,
+                    fragmentManager,
                     customBuilder.content,
                     customBuilder.positive.first,
                     customBuilder.positive.second
@@ -26,7 +25,7 @@ object DialogUtil {
             }
             else -> {
                 show(
-                    context,
+                    fragmentManager,
                     customBuilder.content,
                     customBuilder.positive.first,
                     customBuilder.positive.second,
@@ -38,36 +37,30 @@ object DialogUtil {
     }
 
     private fun show(
-        context: Context,
+        fragmentManager: FragmentManager,
         content: String,
         positive: String,
         positiveListener: ()->Unit,
         negative: String,
         negativeListener: ()->Unit
     ){
-        MainDialog(context).apply {
-            setMessage(content)
-            setNegativeBtn(negative){
-                negativeListener()
-            }
-            setPositiveBtn (positive){
-                positiveListener()
-            }
-        }.show()
+        MainDialogFragment.get(
+            content,
+            positive to positiveListener,
+            negative to negativeListener
+        ).show(fragmentManager)
     }
 
     fun show(
-        context: Context,
+        fragmentManager: FragmentManager,
         content: String,
         positive: String,
         positiveListener: ()->Unit
     ){
-        MainDialog(context).apply {
-            setMessage(content)
-            setPositiveBtn (positive){
-                positiveListener()
-            }
-        }.show()
+        MainDialogFragment.get(
+            content,
+            positive to positiveListener
+        ).show(fragmentManager)
     }
 
 }

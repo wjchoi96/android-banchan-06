@@ -95,7 +95,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                         )
 
                         is MainDishBanchanViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                            DialogUtil.show(childFragmentManager, it.dialogBuilder)
                         }
 
                         is MainDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {

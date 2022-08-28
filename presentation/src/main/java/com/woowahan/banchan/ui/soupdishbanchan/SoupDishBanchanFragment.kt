@@ -81,7 +81,7 @@ class SoupDishBanchanFragment : BaseFragment<FragmentSoupDishBanchanBinding>() {
                         )
 
                         is SoupDishBanchanViewModel.UiEvent.ShowDialog -> {
-                            DialogUtil.show(requireContext(), it.dialogBuilder)
+                            DialogUtil.show(childFragmentManager, it.dialogBuilder)
                         }
 
                         is SoupDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
