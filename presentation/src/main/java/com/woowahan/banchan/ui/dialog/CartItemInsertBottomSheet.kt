@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.woowahan.banchan.R
 import com.woowahan.banchan.databinding.DialogCartAddBinding
@@ -16,6 +17,10 @@ class CartItemInsertBottomSheet constructor(
     private val banchan: BaseBanchan,
     private val insertListener: (BaseBanchan, Int) -> (Unit)
 ): BottomSheetDialogFragment() {
+    companion object {
+        const val TAG = "cart_bottom_sheet"
+    }
+
     private var _binding: DialogCartAddBinding? = null
     private val binding get() = _binding ?: error("Binding not Initialized")
 
@@ -53,6 +58,11 @@ class CartItemInsertBottomSheet constructor(
     val cancelListener: ()->(Unit) = {
         Timber.d("cancel event")
         this.dismiss()
+    }
+
+    fun show(fragmentManager: FragmentManager){
+        if(fragmentManager.findFragmentByTag(TAG) == null)
+            this.show(fragmentManager, TAG)
     }
 
     override fun onCreateView(

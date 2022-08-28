@@ -119,7 +119,7 @@ class RecentViewedActivity : BaseNetworkActivity<ActivityRecentViewedBinding>() 
                         }
 
                         is RecentViewedViewModel.UiEvent.ShowCartBottomSheet -> {
-                            it.bottomSheet.show(supportFragmentManager, "cart_bottom_sheet")
+                            it.bottomSheet.show(supportFragmentManager)
                         }
 
                         is RecentViewedViewModel.UiEvent.ShowCartView -> {

@@ -84,7 +84,7 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
                         }
 
                         is SideDishBanchanViewModel.UiEvent.ShowCartBottomSheet -> {
-                            it.bottomSheet.show(childFragmentManager, "cart_bottom_sheet")
+                            it.bottomSheet.show(childFragmentManager)
                         }
 
                         is SideDishBanchanViewModel.UiEvent.ShowCartView -> {
