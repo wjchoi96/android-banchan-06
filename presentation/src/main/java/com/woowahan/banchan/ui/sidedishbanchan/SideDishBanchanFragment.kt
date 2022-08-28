@@ -32,6 +32,7 @@ class SideDishBanchanFragment : BaseFragment<FragmentSideDishBanchanBinding>() {
     private val adapter: DefaultBanchanAdapter by lazy {
         DefaultBanchanAdapter(
             getString(R.string.side_dish_banchan_banner_title),
+            viewModel.filter,
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.clickInsertCartButton,

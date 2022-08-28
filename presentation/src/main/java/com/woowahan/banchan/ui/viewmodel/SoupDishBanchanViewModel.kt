@@ -29,6 +29,8 @@ class SoupDishBanchanViewModel @Inject constructor(
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    var filter = BanchanModel.FilterType.Default
+        private set
 
     private lateinit var defaultBanchans: List<BanchanModel>
 
@@ -44,7 +46,7 @@ class SoupDishBanchanViewModel @Inject constructor(
                 .collect { res ->
                     res.onSuccess {
                         defaultBanchans = it
-                        _banchans.value = defaultBanchans
+                        _banchans.value = it.filterType(filter, defaultBanchans)
                         hideErrorView()
                     }.onFailure {
                         it.printStackTrace()
@@ -127,40 +129,9 @@ class SoupDishBanchanViewModel @Inject constructor(
             }
         }
 
-    private fun filterBanchan(filterType: BanchanModel.FilterType) {
-        viewModelScope.launch {
-            if (filterType ==
-                BanchanModel.FilterType.Default
-            ) {
-                _banchans.value = defaultBanchans
-            } else {
-                kotlin.runCatching {
-                    _banchans.value = defaultBanchans.filterType(filterType)
-                }.onFailure {
-                    it.printStackTrace()
-                    it.message?.let { message ->
-                        _eventFlow.emit(UiEvent.ShowToast(message))
-                    }
-                }
-            }
-        }
-    }
-
     val filterItemSelect: (Int) -> Unit = {
-        when (it) {
-            BanchanModel.FilterType.Default.value -> {
-                filterBanchan(BanchanModel.FilterType.Default)
-            }
-            BanchanModel.FilterType.PriceHigher.value -> {
-                filterBanchan(BanchanModel.FilterType.PriceHigher)
-            }
-            BanchanModel.FilterType.PriceLower.value -> {
-                filterBanchan(BanchanModel.FilterType.PriceLower)
-            }
-            else -> {
-                filterBanchan(BanchanModel.FilterType.SalePercentHigher)
-            }
-        }
+        filter = BanchanModel.FilterType.find(it) ?: BanchanModel.FilterType.Default
+        _banchans.value = _banchans.value.filterType(filter, defaultBanchans)
     }
 
     sealed class UiEvent {
