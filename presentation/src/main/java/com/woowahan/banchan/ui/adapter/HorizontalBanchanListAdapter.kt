@@ -21,8 +21,8 @@ class HorizontalBanchanListAdapter(
     private var banchanList = listOf<BanchanModel>()
     private val cartStateChangePayload: String = "changePayload"
 
-    fun updateList(newList: List<BanchanModel>) {
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun updateList(newList: List<BanchanModel>) {
+        withContext(Dispatchers.Default) {
             val diffCallback =
                 BanchanModelDiffUtilCallback(banchanList, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
