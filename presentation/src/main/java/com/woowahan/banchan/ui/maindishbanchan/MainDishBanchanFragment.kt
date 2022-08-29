@@ -33,7 +33,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         ViewModeToggleBanchanAdapter(
             getString(R.string.main_dish_banchan_banner_title),
             viewModel.filter,
-            viewModel.gridViewMode.value,
+            viewModel.gridViewModel,
             BanchanModel.getFilterList(),
             viewModel.filterItemSelect,
             viewModel.viewModeToggleEvent,
@@ -41,8 +41,6 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
             viewModel.itemClickListener
         )
     }
-
-    private val spanCount = 2
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,7 +53,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     }
 
     private fun setUpRecyclerView(){
-        binding.rvMainDish.layoutManager = GridLayoutManager(context, spanCount).apply {
+        binding.rvMainDish.layoutManager = GridLayoutManager(context, viewModel.spanCount).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (position < 2) {
@@ -65,10 +63,14 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                 }
             }
         }
+        when(viewModel.gridViewModel){
+            true -> setUpGridRecyclerView()
+            false -> setUpLinearRecyclerView()
+        }
     }
 
     private fun setUpGridRecyclerView() {
-        (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = spanCount
+        (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = viewModel.spanCount
         binding.rvMainDish.let {
             while(it.itemDecorationCount != 0) it.removeItemDecorationAt(it.itemDecorationCount - 1)
             it.addItemDecoration(gridItemDecoration)
@@ -79,7 +81,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
         binding.rvMainDish.let {
             while (it.itemDecorationCount != 0) it.removeItemDecorationAt(it.itemDecorationCount - 1)
         }
-        (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = 1
+        (binding.rvMainDish.layoutManager as GridLayoutManager).spanCount = viewModel.spanCount
     }
 
     private fun observeData() {
@@ -109,18 +111,16 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
                         is MainDishBanchanViewModel.UiEvent.ShowDetailView -> {
                             startActivity(BanchanDetailActivity.get(requireContext(), it.banchanModel.hash, it.banchanModel.title))
                         }
-                    }
-                }
-            }
 
-            launch {
-                viewModel.gridViewMode.collect {
-                    Timber.d("gridViewMode => $it")
-                    when(it){
-                        true -> setUpGridRecyclerView()
-                        else -> setUpLinearRecyclerView()
+                        is MainDishBanchanViewModel.UiEvent.ChangeViewMode -> {
+                            Timber.d("gridViewMode => ${it.isGridMode}")
+                            when(it.isGridMode){
+                                true -> setUpGridRecyclerView()
+                                else -> setUpLinearRecyclerView()
+                            }
+                            adapter.refreshList()
+                        }
                     }
-                    adapter.refreshList()
                 }
             }
 
@@ -135,7 +135,7 @@ class MainDishBanchanFragment : BaseFragment<FragmentMainDishBanchanBinding>() {
     private val gridItemDecoration by lazy {
         GridItemDecoration(
             requireContext(),
-            spanCount
+            viewModel.gridSpanCount
         ).decoration
     }
 }
