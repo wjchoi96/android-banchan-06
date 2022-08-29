@@ -18,8 +18,8 @@ class RecentViewedHorizontalAdapter(
     RecyclerView.Adapter<RecentViewedHorizontalAdapter.RecentViewedHorizontalViewHolder>() {
     private var banchanList = listOf<RecentViewedItemModel>()
 
-    fun updateList(newList: List<RecentViewedItemModel>) {
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun updateList(newList: List<RecentViewedItemModel>) {
+        withContext(Dispatchers.Default) {
             val diffCallback =
                 RecentViewedModelDiffUtilCallback(banchanList, newList, "Not need payload")
             val diffRes = DiffUtil.calculateDiff(diffCallback)

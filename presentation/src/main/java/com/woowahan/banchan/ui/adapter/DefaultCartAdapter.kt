@@ -1,8 +1,9 @@
 package com.woowahan.banchan.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.woowahan.banchan.databinding.ItemCartContentBinding
@@ -12,7 +13,6 @@ import com.woowahan.banchan.databinding.ItemCartHeaderBinding
 import com.woowahan.banchan.extension.toCashString
 import com.woowahan.domain.model.CartListItemModel
 import com.woowahan.domain.model.CartModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -127,6 +127,7 @@ class DefaultCartAdapter(
 
     class CartFooterViewHolder(
         private val binding: ItemCartFooterBinding,
+        parent: ViewGroup,
         val moveToRecentViewedActivity: () -> Unit,
         val orderClicked: () -> Unit,
         private val itemClickListener: (String, String) -> Unit
@@ -148,18 +149,23 @@ class DefaultCartAdapter(
                         parent,
                         false
                     ),
+                    parent,
                     moveToRecentViewedActivity,
                     orderClicked,
                     itemClickListener
                 )
         }
 
+        private val parentLifecycleOwner = parent.findViewTreeLifecycleOwner()
+
         fun bind(item: CartListItemModel.Footer) {
             bindTotalPrice(item)
             binding.holder = this
             binding.recentViewedAdapter = recentViewedAdapter
             binding.isViewedItemEmpty = item.recentViewedItems.isEmpty()
-            recentViewedAdapter.updateList(item.recentViewedItems)
+            parentLifecycleOwner?.lifecycleScope?.launch {
+                recentViewedAdapter.updateList(item.recentViewedItems)
+            }
         }
 
         fun bindTotalPrice(item: CartListItemModel.Footer) {
@@ -179,7 +185,9 @@ class DefaultCartAdapter(
         }
 
         fun bindRecentViewedItems(item: CartListItemModel.Footer) {
-            recentViewedAdapter.updateList(item.recentViewedItems)
+            parentLifecycleOwner?.lifecycleScope?.launch {
+                recentViewedAdapter.updateList(item.recentViewedItems)
+            }
             binding.rvRecentViewed.post {
                 binding.rvRecentViewed.smoothScrollToPosition(0)
             }
