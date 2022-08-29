@@ -23,8 +23,8 @@ class OrderItemAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val headerStatePayload = "header_state_payload"
 
     private var orderItems: List<OrderItemTypeModel> = emptyList()
-    fun updateList(newList: List<OrderItemTypeModel>){
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun updateList(newList: List<OrderItemTypeModel>){
+        withContext(Dispatchers.Default) {
             val diffCallback = OrderItemDiffUtilCallback(orderItems, newList, headerTimePayload, headerStatePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main){

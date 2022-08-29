@@ -19,9 +19,9 @@ class RecentViewedAdapter(
     private var banchans: List<RecentViewedItemModel> = emptyList()
     private val cartStateChangePayload: String = "changePayload"
 
-    fun updateList(list: List<RecentViewedItemModel>){
+    suspend fun updateList(list: List<RecentViewedItemModel>){
         val newList = list.toList()
-        CoroutineScope(Dispatchers.Default).launch {
+        withContext(Dispatchers.Default) {
             val diffCallback = RecentViewedPagingDiffUtilCallback(banchans, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {

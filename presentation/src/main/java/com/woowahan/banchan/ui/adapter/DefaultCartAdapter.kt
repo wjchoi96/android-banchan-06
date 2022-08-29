@@ -1,5 +1,6 @@
 package com.woowahan.banchan.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -29,12 +30,12 @@ class DefaultCartAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var cartList = listOf<CartListItemModel>()
 
-    fun updateList(newList: List<CartListItemModel>) {
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun updateList(newList: List<CartListItemModel>) {
+         withContext(Dispatchers.Default){
             val diffCallback = CartListModelDiffUtilCallback(cartList, newList)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
-            cartList = newList
             withContext(Dispatchers.Main) {
+                cartList = newList
                 diffRes.dispatchUpdatesTo(this@DefaultCartAdapter)
             }
         }

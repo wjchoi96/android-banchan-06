@@ -41,8 +41,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.cart.CartActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
+            android:exported="false" />
         <activity
             android:name=".ui.root.RootActivity"
             android:exported="true"
