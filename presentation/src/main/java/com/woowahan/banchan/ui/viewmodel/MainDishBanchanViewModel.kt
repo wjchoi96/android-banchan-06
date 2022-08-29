@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,15 +24,22 @@ class MainDishBanchanViewModel @Inject constructor(
     override val _dataLoading: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val dataLoading = _dataLoading.asStateFlow()
 
-    private val _gridViewMode: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    val gridViewMode = _gridViewMode.asStateFlow()
-
     private val _banchans: MutableStateFlow<List<BanchanModel>> = MutableStateFlow(emptyList())
     val banchans = _banchans.asStateFlow()
 
     private val _eventFlow: MutableSharedFlow<UiEvent> = MutableSharedFlow()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    val gridSpanCount = 2
+    private val linearSpanCount = 1
+    var spanCount = 2
+        private set
+    var gridViewModel: Boolean = true
+        private set
+        get() {
+            Timber.d("gridViewModel get : $field")
+            return field
+        }
     var filter = BanchanModel.FilterType.Default
         private set
     private lateinit var defaultBanchans: List<BanchanModel>
@@ -70,7 +78,12 @@ class MainDishBanchanViewModel @Inject constructor(
     }
 
     val viewModeToggleEvent: (Boolean) -> (Unit) = {
-        _gridViewMode.value = it
+        gridViewModel = it
+        spanCount = when(it){
+            true -> gridSpanCount
+            else -> linearSpanCount
+        }
+        viewModelScope.launch { _eventFlow.emit(UiEvent.ChangeViewMode(it)) }
     }
 
     val clickInsertCartButton: (BanchanModel, Boolean) -> (Unit) = { banchan, isCartItem ->
@@ -144,5 +157,6 @@ class MainDishBanchanViewModel @Inject constructor(
         data class ShowCartBottomSheet(val bottomSheet: CartItemInsertBottomSheet) : UiEvent()
         object ShowCartView : UiEvent()
         data class ShowDetailView(val banchanModel: BanchanModel) : UiEvent()
+        data class ChangeViewMode(val isGridMode: Boolean) : UiEvent()
     }
 }
