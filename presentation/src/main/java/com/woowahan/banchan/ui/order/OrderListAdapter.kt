@@ -17,8 +17,8 @@ class OrderListAdapter(
     private val deliveryStatePayload = "delivery_state_payload"
 
     private var orders: List<OrderModel> = emptyList()
-    fun updateList(newList: List<OrderModel>) {
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun updateList(newList: List<OrderModel>) {
+        withContext(Dispatchers.Default) {
             val diffCallback = OrderListDiffUtilCallback(orders, newList, deliveryStatePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main){

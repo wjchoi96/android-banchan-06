@@ -26,10 +26,9 @@ class DefaultBanchanAdapter(
     private var banchanList = listOf<BanchanModel>()
     private val cartStateChangePayload: String = "changePayload"
 
-    fun updateList(newList: List<BanchanModel>) {
-        CoroutineScope(Dispatchers.Default).launch {
-            val diffCallback =
-                BanchanModelDiffUtilCallback(banchanList, newList, cartStateChangePayload)
+    suspend fun updateList(newList: List<BanchanModel>) {
+        withContext(Dispatchers.Default) {
+            val diffCallback = BanchanModelDiffUtilCallback(banchanList, newList, cartStateChangePayload)
             val diffRes = DiffUtil.calculateDiff(diffCallback)
             withContext(Dispatchers.Main) {
                 banchanList = newList.toList()
@@ -60,6 +59,7 @@ class DefaultBanchanAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Timber.d("onBindViewHolder[$position]")
         when (holder) {
             is BanchanListBannerViewHolder -> holder.bind(bannerTitle)
             is CountHeaderViewHolder -> holder.bind(selectedFilterPosition, banchanList.size)

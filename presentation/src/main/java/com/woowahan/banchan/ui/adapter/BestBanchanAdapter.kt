@@ -29,8 +29,8 @@ class BestBanchanAdapter(
     private var bestBanchans = listOf<BestBanchanModel>()
     private val cartStateChangePayload: String = "changePayload"
 
-    fun updateList(newList: List<BestBanchanModel>){
-        CoroutineScope(Dispatchers.Default).launch {
+    suspend fun updateList(newList: List<BestBanchanModel>){
+        withContext(Dispatchers.Default) {
             val callback = BestBanchanModelDiffUtilCallback(bestBanchans, newList, cartStateChangePayload)
             val res = DiffUtil.calculateDiff(callback)
             withContext(Dispatchers.Main){
