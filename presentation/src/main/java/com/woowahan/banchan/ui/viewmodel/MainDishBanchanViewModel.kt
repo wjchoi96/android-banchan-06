@@ -36,10 +36,7 @@ class MainDishBanchanViewModel @Inject constructor(
         private set
     var gridViewModel: Boolean = true
         private set
-        get() {
-            Timber.d("gridViewModel get : $field")
-            return field
-        }
+
     var filter = BanchanModel.FilterType.Default
         private set
     private lateinit var defaultBanchans: List<BanchanModel>
