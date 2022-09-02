@@ -5,6 +5,9 @@ import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -87,6 +90,7 @@ class BestBanchanAdapter(
 
     class HorizontalListViewHolder(
         private val binding: ItemMenuHorizontalListBinding,
+        parent: ViewGroup,
         private val context: Context,
         private val banchanInsertCartListener: (BanchanModel, Boolean) -> Unit,
         private val itemClickListener: (BanchanModel) -> Unit
@@ -102,11 +106,13 @@ class BestBanchanAdapter(
                     parent,
                     false
                 ),
+                parent,
                 parent.context,
                 banchanInsertCartListener,
                 itemClickListener
             )
         }
+        private val parentLifecycleOwner = parent.findViewTreeLifecycleOwner()
         private val childAdapter: HorizontalBanchanListAdapter by lazy {
             HorizontalBanchanListAdapter(
                 banchanInsertCartListener,
@@ -155,15 +161,20 @@ class BestBanchanAdapter(
         }
 
         fun bind(item: BestBanchanModel){
+            Timber.d("holder binding lifeCycleOwner => $parentLifecycleOwner")
             listSize = item.banchans.size
             binding.title = item.title
             binding.adapter = childAdapter
-            childAdapter.updateList(item.banchans.toList())
+            parentLifecycleOwner?.lifecycleScope?.launch {
+                childAdapter.updateList(item.banchans.toList())
+            }
 
         }
 
         fun bindCartStateChangePayload(item: BestBanchanModel){
-            childAdapter.updateList(item.banchans.toList())
+            parentLifecycleOwner?.lifecycleScope?.launch {
+                childAdapter.updateList(item.banchans.toList())
+            }
         }
     }
 
